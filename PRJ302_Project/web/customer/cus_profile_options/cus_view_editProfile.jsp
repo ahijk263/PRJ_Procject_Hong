@@ -47,7 +47,7 @@
 
             <c:choose>
                 <c:when test="${!edit}">
-                    <a href="cus_view_editProfile.jsp?edit=true">Edit Profile</a>
+                    <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_view_editProfile.jsp?edit=true">Edit Profile</a>
                 </c:when>
                 <c:otherwise>
                     <input type="submit" value="UPDATE PROFILE"/>
