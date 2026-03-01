@@ -1,0 +1,11 @@
+# Chặn thư mục cấu hình cá nhân của NetBeans
+nbproject/private/
+build/
+dist/
+nbbuild/
+nbinternals/
+
+# Chặn các file hệ thống và file tạm
+Thumbs.db
+.DS_Store
+/PRJ302_Project/nbproject/private
