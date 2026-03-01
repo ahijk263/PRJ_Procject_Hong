@@ -8,6 +8,7 @@
         <h1>MY ACCOUNT</h1>
         <ul>
             <li><a href="cus_view_editProfile.jsp">View / Edit Profile</a></li>
+            <li><a href="cus_changePassword.jsp">Change Password</a></li>
             <li><a href="cus_cars.jsp">My Cars</a></li>
             <li><a href="cus_favourite_cars.jsp">Favourite Cars</a></li>
             
@@ -18,6 +19,6 @@
             </li>
         </ul>
         <br>
-        <a href="welcome.jsp">Back to Home</a>
+        <a href="${pageContext.request.contextPath}/customer/welcome.jsp">Back to Home</a>
     </body>
 </html>

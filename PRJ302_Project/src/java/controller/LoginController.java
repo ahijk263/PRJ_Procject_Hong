@@ -53,7 +53,7 @@ public class LoginController extends HttpServlet {
 
             if (user == null) {
                 request.setAttribute("txtUsername", txtUsername);
-                url = "index.jsp";
+                url = "login.jsp";
                 request.setAttribute("message", "Invalid username or password");
                 request.setAttribute("openLoginSignal", "true");
             } else if (!"ACTIVE".equals(user.getStatus())) {
