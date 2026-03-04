@@ -58,7 +58,7 @@ public class LoginController extends HttpServlet {
                 request.setAttribute("openLoginSignal", "true");
             } else if (!"ACTIVE".equals(user.getStatus())) {
 
-                url = "E403.jsp";
+                url = "e403.jsp";
 
             } else {
                 // login thành công
@@ -69,7 +69,7 @@ public class LoginController extends HttpServlet {
                     response.sendRedirect("admin/dashboard.jsp");
                     return;
                 } else {
-                    response.sendRedirect("customer/welcome.jsp");
+                    response.sendRedirect("index.jsp");
                     return;
                 }
             }
