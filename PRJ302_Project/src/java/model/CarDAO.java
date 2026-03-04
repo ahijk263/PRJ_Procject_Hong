@@ -11,8 +11,8 @@ import java.util.List;
 import utils.DbUtils;
 
 /**
- * CarDAO - Data Access Object cho bảng Car
- * Đã fix: exception handling rõ ràng, getAllCarsFiltered thay cho getCarsByPageWithFilter 99999
+ * CarDAO - Data Access Object cho bảng Car Đã fix: exception handling rõ ràng,
+ * getAllCarsFiltered thay cho getCarsByPageWithFilter 99999
  */
 public class CarDAO {
 
@@ -22,7 +22,6 @@ public class CarDAO {
     // =====================================================
     // LẤY TẤT CẢ XE (dùng cho trang danh sách)
     // =====================================================
-
     /**
      * Lấy TOÀN BỘ xe, không filter, sắp xếp mới nhất trước
      */
@@ -34,14 +33,14 @@ public class CarDAO {
 
         try {
             conn = DbUtils.getConnection();
-            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, " +
-                         "c.transmission, c.mileage, c.status, c.description, " +
-                         "c.created_at, c.updated_at, " +
-                         "cm.model_name, b.brand_name, b.brand_id " +
-                         "FROM Car c " +
-                         "INNER JOIN CarModel cm ON c.model_id = cm.model_id " +
-                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
-                         "ORDER BY c.car_id DESC";
+            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, "
+                    + "c.transmission, c.mileage, c.status, c.description, "
+                    + "c.created_at, c.updated_at, "
+                    + "cm.model_name, b.brand_name, b.brand_id "
+                    + "FROM Car c "
+                    + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
+                    + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
+                    + "ORDER BY c.car_id DESC";
 
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
@@ -69,11 +68,11 @@ public class CarDAO {
     }
 
     /**
-     * Lấy TOÀN BỘ xe có áp dụng filter (brand, category, giá)
-     * Dùng cho trang cars khi người dùng lọc xe
+     * Lấy TOÀN BỘ xe có áp dụng filter (brand, category, giá) Dùng cho trang
+     * cars khi người dùng lọc xe
      */
     public List<CarDTO> getAllCarsFiltered(Integer brandId, Integer categoryId,
-                                           BigDecimal minPrice, BigDecimal maxPrice) {
+            BigDecimal minPrice, BigDecimal maxPrice) {
         List<CarDTO> list = new ArrayList<>();
         Connection conn = null;
         PreparedStatement pst = null;
@@ -169,7 +168,6 @@ public class CarDAO {
     // =====================================================
     // PAGINATION (giữ lại để dùng chỗ khác nếu cần)
     // =====================================================
-
     public List<CarDTO> getCarsByPage(int page, int carsPerPage) {
         List<CarDTO> list = new ArrayList<>();
         Connection conn = null;
@@ -180,15 +178,15 @@ public class CarDAO {
             conn = DbUtils.getConnection();
             int offset = (page - 1) * carsPerPage;
 
-            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, " +
-                         "c.transmission, c.mileage, c.status, c.description, " +
-                         "c.created_at, c.updated_at, " +
-                         "cm.model_name, b.brand_name, b.brand_id " +
-                         "FROM Car c " +
-                         "INNER JOIN CarModel cm ON c.model_id = cm.model_id " +
-                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
-                         "ORDER BY c.car_id DESC " +
-                         "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, "
+                    + "c.transmission, c.mileage, c.status, c.description, "
+                    + "c.created_at, c.updated_at, "
+                    + "cm.model_name, b.brand_name, b.brand_id "
+                    + "FROM Car c "
+                    + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
+                    + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
+                    + "ORDER BY c.car_id DESC "
+                    + "OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
 
             pst = conn.prepareStatement(sql);
             pst.setInt(1, offset);
@@ -208,9 +206,9 @@ public class CarDAO {
     }
 
     public List<CarDTO> getCarsByPageWithFilter(int page, int carsPerPage,
-                                                 Integer brandId, Integer categoryId,
-                                                 BigDecimal minPrice, BigDecimal maxPrice,
-                                                 String status) {
+            Integer brandId, Integer categoryId,
+            BigDecimal minPrice, BigDecimal maxPrice,
+            String status) {
         // Nếu page=1 và carsPerPage rất lớn => dùng getAllCarsFiltered cho đơn giản
         if (page == 1 && carsPerPage >= 99999) {
             return getAllCarsFiltered(brandId, categoryId, minPrice, maxPrice);
@@ -241,11 +239,26 @@ public class CarDAO {
             List<String> conditions = new ArrayList<>();
             List<Object> params = new ArrayList<>();
 
-            if (brandId != null) { conditions.add("b.brand_id = ?"); params.add(brandId); }
-            if (categoryId != null) { conditions.add("cc.category_id = ?"); params.add(categoryId); }
-            if (minPrice != null) { conditions.add("c.price >= ?"); params.add(minPrice); }
-            if (maxPrice != null) { conditions.add("c.price <= ?"); params.add(maxPrice); }
-            if (status != null && !status.isEmpty()) { conditions.add("c.status = ?"); params.add(status); }
+            if (brandId != null) {
+                conditions.add("b.brand_id = ?");
+                params.add(brandId);
+            }
+            if (categoryId != null) {
+                conditions.add("cc.category_id = ?");
+                params.add(categoryId);
+            }
+            if (minPrice != null) {
+                conditions.add("c.price >= ?");
+                params.add(minPrice);
+            }
+            if (maxPrice != null) {
+                conditions.add("c.price <= ?");
+                params.add(maxPrice);
+            }
+            if (status != null && !status.isEmpty()) {
+                conditions.add("c.status = ?");
+                params.add(status);
+            }
 
             if (!conditions.isEmpty()) {
                 sql.append("WHERE ").append(String.join(" AND ", conditions)).append(" ");
@@ -258,9 +271,13 @@ public class CarDAO {
 
             int idx = 1;
             for (Object p : params) {
-                if (p instanceof Integer) pst.setInt(idx++, (Integer) p);
-                else if (p instanceof BigDecimal) pst.setBigDecimal(idx++, (BigDecimal) p);
-                else if (p instanceof String) pst.setString(idx++, (String) p);
+                if (p instanceof Integer) {
+                    pst.setInt(idx++, (Integer) p);
+                } else if (p instanceof BigDecimal) {
+                    pst.setBigDecimal(idx++, (BigDecimal) p);
+                } else if (p instanceof String) {
+                    pst.setString(idx++, (String) p);
+                }
             }
             pst.setInt(idx++, offset);
             pst.setInt(idx, carsPerPage);
@@ -281,7 +298,6 @@ public class CarDAO {
     // =====================================================
     // COUNT
     // =====================================================
-
     public int getTotalCars() {
         Connection conn = null;
         PreparedStatement pst = null;
@@ -290,7 +306,9 @@ public class CarDAO {
             conn = DbUtils.getConnection();
             pst = conn.prepareStatement("SELECT COUNT(*) as total FROM Car");
             rs = pst.executeQuery();
-            if (rs.next()) return rs.getInt("total");
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
         } catch (Exception e) {
             System.err.println("[CarDAO] getTotalCars() ERROR: " + e.getMessage());
             e.printStackTrace();
@@ -301,8 +319,8 @@ public class CarDAO {
     }
 
     public int getTotalCarsWithFilter(Integer brandId, Integer categoryId,
-                                       BigDecimal minPrice, BigDecimal maxPrice,
-                                       String status) {
+            BigDecimal minPrice, BigDecimal maxPrice,
+            String status) {
         Connection conn = null;
         PreparedStatement pst = null;
         ResultSet rs = null;
@@ -323,11 +341,26 @@ public class CarDAO {
             List<String> conditions = new ArrayList<>();
             List<Object> params = new ArrayList<>();
 
-            if (brandId != null) { conditions.add("b.brand_id = ?"); params.add(brandId); }
-            if (categoryId != null) { conditions.add("cc.category_id = ?"); params.add(categoryId); }
-            if (minPrice != null) { conditions.add("c.price >= ?"); params.add(minPrice); }
-            if (maxPrice != null) { conditions.add("c.price <= ?"); params.add(maxPrice); }
-            if (status != null && !status.isEmpty()) { conditions.add("c.status = ?"); params.add(status); }
+            if (brandId != null) {
+                conditions.add("b.brand_id = ?");
+                params.add(brandId);
+            }
+            if (categoryId != null) {
+                conditions.add("cc.category_id = ?");
+                params.add(categoryId);
+            }
+            if (minPrice != null) {
+                conditions.add("c.price >= ?");
+                params.add(minPrice);
+            }
+            if (maxPrice != null) {
+                conditions.add("c.price <= ?");
+                params.add(maxPrice);
+            }
+            if (status != null && !status.isEmpty()) {
+                conditions.add("c.status = ?");
+                params.add(status);
+            }
 
             if (!conditions.isEmpty()) {
                 sql.append("WHERE ").append(String.join(" AND ", conditions));
@@ -336,13 +369,19 @@ public class CarDAO {
             pst = conn.prepareStatement(sql.toString());
             int idx = 1;
             for (Object p : params) {
-                if (p instanceof Integer) pst.setInt(idx++, (Integer) p);
-                else if (p instanceof BigDecimal) pst.setBigDecimal(idx++, (BigDecimal) p);
-                else if (p instanceof String) pst.setString(idx++, (String) p);
+                if (p instanceof Integer) {
+                    pst.setInt(idx++, (Integer) p);
+                } else if (p instanceof BigDecimal) {
+                    pst.setBigDecimal(idx++, (BigDecimal) p);
+                } else if (p instanceof String) {
+                    pst.setString(idx++, (String) p);
+                }
             }
 
             rs = pst.executeQuery();
-            if (rs.next()) return rs.getInt("total");
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
 
         } catch (Exception e) {
             System.err.println("[CarDAO] getTotalCarsWithFilter() ERROR: " + e.getMessage());
@@ -356,7 +395,6 @@ public class CarDAO {
     // =====================================================
     // CRUD & UTILITIES
     // =====================================================
-
     public CarDTO searchById(int id) {
         CarDTO car = null;
         Connection conn = null;
@@ -365,18 +403,20 @@ public class CarDAO {
 
         try {
             conn = DbUtils.getConnection();
-            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, " +
-                         "c.transmission, c.mileage, c.status, c.description, " +
-                         "c.created_at, c.updated_at, " +
-                         "cm.model_name, b.brand_name, b.brand_id " +
-                         "FROM Car c " +
-                         "INNER JOIN CarModel cm ON c.model_id = cm.model_id " +
-                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
-                         "WHERE c.car_id = ?";
+            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, "
+                    + "c.transmission, c.mileage, c.status, c.description, "
+                    + "c.created_at, c.updated_at, "
+                    + "cm.model_name, b.brand_name, b.brand_id "
+                    + "FROM Car c "
+                    + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
+                    + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
+                    + "WHERE c.car_id = ?";
             pst = conn.prepareStatement(sql);
             pst.setInt(1, id);
             rs = pst.executeQuery();
-            if (rs.next()) car = extractCarFromResultSet(rs);
+            if (rs.next()) {
+                car = extractCarFromResultSet(rs);
+            }
         } catch (Exception e) {
             System.err.println("[CarDAO] searchById() ERROR: " + e.getMessage());
             e.printStackTrace();
@@ -393,18 +433,20 @@ public class CarDAO {
         ResultSet rs = null;
         try {
             conn = DbUtils.getConnection();
-            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, " +
-                         "c.transmission, c.mileage, c.status, c.description, " +
-                         "c.created_at, c.updated_at, " +
-                         "cm.model_name, b.brand_name, b.brand_id " +
-                         "FROM Car c " +
-                         "INNER JOIN CarModel cm ON c.model_id = cm.model_id " +
-                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
-                         "WHERE c.status = 'AVAILABLE' " +
-                         "ORDER BY c.created_at DESC";
+            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, "
+                    + "c.transmission, c.mileage, c.status, c.description, "
+                    + "c.created_at, c.updated_at, "
+                    + "cm.model_name, b.brand_name, b.brand_id "
+                    + "FROM Car c "
+                    + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
+                    + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
+                    + "WHERE c.status = 'AVAILABLE' "
+                    + "ORDER BY c.created_at DESC";
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
-            while (rs.next()) list.add(extractCarFromResultSet(rs));
+            while (rs.next()) {
+                list.add(extractCarFromResultSet(rs));
+            }
         } catch (Exception e) {
             System.err.println("[CarDAO] getAvailableCars() ERROR: " + e.getMessage());
             e.printStackTrace();
@@ -421,19 +463,21 @@ public class CarDAO {
         ResultSet rs = null;
         try {
             conn = DbUtils.getConnection();
-            String sql = "SELECT TOP (?) c.car_id, c.model_id, c.price, c.color, c.engine, " +
-                         "c.transmission, c.mileage, c.status, c.description, " +
-                         "c.created_at, c.updated_at, " +
-                         "cm.model_name, b.brand_name, b.brand_id " +
-                         "FROM Car c " +
-                         "INNER JOIN CarModel cm ON c.model_id = cm.model_id " +
-                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
-                         "WHERE c.status = 'AVAILABLE' " +
-                         "ORDER BY c.created_at DESC";
+            String sql = "SELECT TOP (?) c.car_id, c.model_id, c.price, c.color, c.engine, "
+                    + "c.transmission, c.mileage, c.status, c.description, "
+                    + "c.created_at, c.updated_at, "
+                    + "cm.model_name, b.brand_name, b.brand_id "
+                    + "FROM Car c "
+                    + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
+                    + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
+                    + "WHERE c.status = 'AVAILABLE' "
+                    + "ORDER BY c.created_at DESC";
             pst = conn.prepareStatement(sql);
             pst.setInt(1, limit);
             rs = pst.executeQuery();
-            while (rs.next()) list.add(extractCarFromResultSet(rs));
+            while (rs.next()) {
+                list.add(extractCarFromResultSet(rs));
+            }
         } catch (Exception e) {
             System.err.println("[CarDAO] getNewestCars() ERROR: " + e.getMessage());
             e.printStackTrace();
@@ -450,18 +494,20 @@ public class CarDAO {
         ResultSet rs = null;
         try {
             conn = DbUtils.getConnection();
-            String sql = "SELECT TOP (?) c.car_id, c.model_id, c.price, c.color, c.engine, " +
-                         "c.transmission, c.mileage, c.status, c.description, " +
-                         "c.created_at, c.updated_at, " +
-                         "cm.model_name, b.brand_name, b.brand_id " +
-                         "FROM Car c " +
-                         "INNER JOIN CarModel cm ON c.model_id = cm.model_id " +
-                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
-                         "ORDER BY c.price DESC";
+            String sql = "SELECT TOP (?) c.car_id, c.model_id, c.price, c.color, c.engine, "
+                    + "c.transmission, c.mileage, c.status, c.description, "
+                    + "c.created_at, c.updated_at, "
+                    + "cm.model_name, b.brand_name, b.brand_id "
+                    + "FROM Car c "
+                    + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
+                    + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
+                    + "ORDER BY c.price DESC";
             pst = conn.prepareStatement(sql);
             pst.setInt(1, limit);
             rs = pst.executeQuery();
-            while (rs.next()) list.add(extractCarFromResultSet(rs));
+            while (rs.next()) {
+                list.add(extractCarFromResultSet(rs));
+            }
         } catch (Exception e) {
             System.err.println("[CarDAO] getTopExpensiveCars() ERROR: " + e.getMessage());
             e.printStackTrace();
@@ -478,18 +524,20 @@ public class CarDAO {
         ResultSet rs = null;
         try {
             conn = DbUtils.getConnection();
-            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, " +
-                         "c.transmission, c.mileage, c.status, c.description, " +
-                         "c.created_at, c.updated_at, " +
-                         "cm.model_name, b.brand_name, b.brand_id " +
-                         "FROM Car c " +
-                         "INNER JOIN CarModel cm ON c.model_id = cm.model_id " +
-                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
-                         "WHERE b.brand_id = ? ORDER BY c.car_id DESC";
+            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, "
+                    + "c.transmission, c.mileage, c.status, c.description, "
+                    + "c.created_at, c.updated_at, "
+                    + "cm.model_name, b.brand_name, b.brand_id "
+                    + "FROM Car c "
+                    + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
+                    + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
+                    + "WHERE b.brand_id = ? ORDER BY c.car_id DESC";
             pst = conn.prepareStatement(sql);
             pst.setInt(1, brandId);
             rs = pst.executeQuery();
-            while (rs.next()) list.add(extractCarFromResultSet(rs));
+            while (rs.next()) {
+                list.add(extractCarFromResultSet(rs));
+            }
         } catch (Exception e) {
             System.err.println("[CarDAO] getCarsByBrand() ERROR: " + e.getMessage());
             e.printStackTrace();
@@ -506,22 +554,26 @@ public class CarDAO {
         ResultSet rs = null;
         try {
             conn = DbUtils.getConnection();
-            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, " +
-                         "c.transmission, c.mileage, c.status, c.description, " +
-                         "c.created_at, c.updated_at, " +
-                         "cm.model_name, b.brand_name, b.brand_id " +
-                         "FROM Car c " +
-                         "INNER JOIN CarModel cm ON c.model_id = cm.model_id " +
-                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
-                         "WHERE cm.model_name LIKE ? OR b.brand_name LIKE ? " +
-                         "OR c.color LIKE ? OR c.description LIKE ? " +
-                         "ORDER BY c.car_id DESC";
+            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, "
+                    + "c.transmission, c.mileage, c.status, c.description, "
+                    + "c.created_at, c.updated_at, "
+                    + "cm.model_name, b.brand_name, b.brand_id "
+                    + "FROM Car c "
+                    + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
+                    + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
+                    + "WHERE cm.model_name LIKE ? OR b.brand_name LIKE ? "
+                    + "OR c.color LIKE ? OR c.description LIKE ? "
+                    + "ORDER BY c.car_id DESC";
             pst = conn.prepareStatement(sql);
             String p = "%" + keyword + "%";
-            pst.setString(1, p); pst.setString(2, p);
-            pst.setString(3, p); pst.setString(4, p);
+            pst.setString(1, p);
+            pst.setString(2, p);
+            pst.setString(3, p);
+            pst.setString(4, p);
             rs = pst.executeQuery();
-            while (rs.next()) list.add(extractCarFromResultSet(rs));
+            while (rs.next()) {
+                list.add(extractCarFromResultSet(rs));
+            }
         } catch (Exception e) {
             System.err.println("[CarDAO] searchCars() ERROR: " + e.getMessage());
             e.printStackTrace();
@@ -536,8 +588,8 @@ public class CarDAO {
         PreparedStatement pst = null;
         try {
             conn = DbUtils.getConnection();
-            String sql = "INSERT INTO Car (model_id, price, color, engine, transmission, mileage, status, description) " +
-                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Car (model_id, price, color, engine, transmission, mileage, status, description) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             pst = conn.prepareStatement(sql);
             pst.setInt(1, car.getModelId());
             pst.setBigDecimal(2, car.getPrice());
@@ -562,8 +614,8 @@ public class CarDAO {
         PreparedStatement pst = null;
         try {
             conn = DbUtils.getConnection();
-            String sql = "UPDATE Car SET model_id=?, price=?, color=?, engine=?, transmission=?, " +
-                         "mileage=?, status=?, description=?, updated_at=GETDATE() WHERE car_id=?";
+            String sql = "UPDATE Car SET model_id=?, price=?, color=?, engine=?, transmission=?, "
+                    + "mileage=?, status=?, description=?, updated_at=GETDATE() WHERE car_id=?";
             pst = conn.prepareStatement(sql);
             pst.setInt(1, car.getModelId());
             pst.setBigDecimal(2, car.getPrice());
@@ -628,7 +680,9 @@ public class CarDAO {
             pst = conn.prepareStatement("SELECT COUNT(*) as total FROM Car WHERE status=?");
             pst.setString(1, status);
             rs = pst.executeQuery();
-            if (rs.next()) return rs.getInt("total");
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
         } catch (Exception e) {
             System.err.println("[CarDAO] countCarsByStatus() ERROR: " + e.getMessage());
             e.printStackTrace();
@@ -645,18 +699,20 @@ public class CarDAO {
         ResultSet rs = null;
         try {
             conn = DbUtils.getConnection();
-            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, " +
-                         "c.transmission, c.mileage, c.status, c.description, " +
-                         "c.created_at, c.updated_at, " +
-                         "cm.model_name, b.brand_name, b.brand_id " +
-                         "FROM Car c " +
-                         "INNER JOIN CarModel cm ON c.model_id = cm.model_id " +
-                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
-                         "WHERE c.model_id = ? ORDER BY c.car_id DESC";
+            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, "
+                    + "c.transmission, c.mileage, c.status, c.description, "
+                    + "c.created_at, c.updated_at, "
+                    + "cm.model_name, b.brand_name, b.brand_id "
+                    + "FROM Car c "
+                    + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
+                    + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
+                    + "WHERE c.model_id = ? ORDER BY c.car_id DESC";
             pst = conn.prepareStatement(sql);
             pst.setInt(1, modelId);
             rs = pst.executeQuery();
-            while (rs.next()) list.add(extractCarFromResultSet(rs));
+            while (rs.next()) {
+                list.add(extractCarFromResultSet(rs));
+            }
         } catch (Exception e) {
             System.err.println("[CarDAO] getCarsByModel() ERROR: " + e.getMessage());
             e.printStackTrace();
@@ -673,19 +729,21 @@ public class CarDAO {
         ResultSet rs = null;
         try {
             conn = DbUtils.getConnection();
-            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, " +
-                         "c.transmission, c.mileage, c.status, c.description, " +
-                         "c.created_at, c.updated_at, " +
-                         "cm.model_name, b.brand_name, b.brand_id " +
-                         "FROM Car c " +
-                         "INNER JOIN CarModel cm ON c.model_id = cm.model_id " +
-                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
-                         "WHERE c.price BETWEEN ? AND ? ORDER BY c.price ASC";
+            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, "
+                    + "c.transmission, c.mileage, c.status, c.description, "
+                    + "c.created_at, c.updated_at, "
+                    + "cm.model_name, b.brand_name, b.brand_id "
+                    + "FROM Car c "
+                    + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
+                    + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
+                    + "WHERE c.price BETWEEN ? AND ? ORDER BY c.price ASC";
             pst = conn.prepareStatement(sql);
             pst.setBigDecimal(1, minPrice);
             pst.setBigDecimal(2, maxPrice);
             rs = pst.executeQuery();
-            while (rs.next()) list.add(extractCarFromResultSet(rs));
+            while (rs.next()) {
+                list.add(extractCarFromResultSet(rs));
+            }
         } catch (Exception e) {
             System.err.println("[CarDAO] filterByPrice() ERROR: " + e.getMessage());
             e.printStackTrace();
@@ -702,18 +760,20 @@ public class CarDAO {
         ResultSet rs = null;
         try {
             conn = DbUtils.getConnection();
-            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, " +
-                         "c.transmission, c.mileage, c.status, c.description, " +
-                         "c.created_at, c.updated_at, " +
-                         "cm.model_name, b.brand_name, b.brand_id " +
-                         "FROM Car c " +
-                         "INNER JOIN CarModel cm ON c.model_id = cm.model_id " +
-                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
-                         "WHERE c.status = ? ORDER BY c.car_id DESC";
+            String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, "
+                    + "c.transmission, c.mileage, c.status, c.description, "
+                    + "c.created_at, c.updated_at, "
+                    + "cm.model_name, b.brand_name, b.brand_id "
+                    + "FROM Car c "
+                    + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
+                    + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
+                    + "WHERE c.status = ? ORDER BY c.car_id DESC";
             pst = conn.prepareStatement(sql);
             pst.setString(1, status);
             rs = pst.executeQuery();
-            while (rs.next()) list.add(extractCarFromResultSet(rs));
+            while (rs.next()) {
+                list.add(extractCarFromResultSet(rs));
+            }
         } catch (Exception e) {
             System.err.println("[CarDAO] getCarsByStatus() ERROR: " + e.getMessage());
             e.printStackTrace();
@@ -726,31 +786,83 @@ public class CarDAO {
     // =====================================================
     // HELPER
     // =====================================================
-
     private CarDTO extractCarFromResultSet(ResultSet rs) throws SQLException {
-        int carId        = rs.getInt("car_id");
-        int modelId      = rs.getInt("model_id");
+        int carId = rs.getInt("car_id");
+        int modelId = rs.getInt("model_id");
         BigDecimal price = rs.getBigDecimal("price");
-        String color     = rs.getString("color");
-        String engine    = rs.getString("engine");
+        String color = rs.getString("color");
+        String engine = rs.getString("engine");
         String transmission = rs.getString("transmission");
-        int mileage      = rs.getInt("mileage");
-        String status    = rs.getString("status");
+        int mileage = rs.getInt("mileage");
+        String status = rs.getString("status");
         String description = rs.getString("description");
-        Timestamp createdAt  = rs.getTimestamp("created_at");
-        Timestamp updatedAt  = rs.getTimestamp("updated_at");
+        Timestamp createdAt = rs.getTimestamp("created_at");
+        Timestamp updatedAt = rs.getTimestamp("updated_at");
         String modelName = rs.getString("model_name");
         String brandName = rs.getString("brand_name");
-        int brandId      = rs.getInt("brand_id");
+        int brandId = rs.getInt("brand_id");
 
         return new CarDTO(carId, modelId, price, color, engine, transmission,
-                          mileage, status, description, createdAt, updatedAt,
-                          modelName, brandName, brandId);
+                mileage, status, description, createdAt, updatedAt,
+                modelName, brandName, brandId);
     }
 
     private void closeResources(Connection conn, PreparedStatement pst, ResultSet rs) {
-        try { if (rs   != null) rs.close();   } catch (SQLException e) { e.printStackTrace(); }
-        try { if (pst  != null) pst.close();  } catch (SQLException e) { e.printStackTrace(); }
-        try { if (conn != null) conn.close();  } catch (SQLException e) { e.printStackTrace(); }
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (pst != null) {
+                pst.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public CarDTO getCarDetailById(int carId) {
+        CarDTO car = null;
+        // Query kết nối 3 bảng để lấy thông tin toàn diện
+        String sql = "SELECT c.*, m.modelName, m.year, b.brandName, b.brandId "
+                + "FROM Cars c "
+                + "JOIN CarModels m ON c.modelId = m.modelId "
+                + "JOIN Brands b ON m.brandId = b.brandId "
+                + "WHERE c.carId = ?";
+        try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, carId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Khởi tạo CarDTO với các thông tin kỹ thuật
+                    car = new CarDTO();
+                    car.setCarId(rs.getInt("carId"));
+                    car.setPrice(rs.getBigDecimal("price"));
+                    car.setEngine(rs.getString("engine"));
+                    car.setTransmission(rs.getString("transmission"));
+                    car.setMileage(rs.getInt("mileage"));
+                    car.setColor(rs.getString("color"));
+                    car.setStatus(rs.getString("status"));
+                    car.setDescription(rs.getString("description"));
+
+                    // Gán thêm thông tin từ Model và Brand
+                    car.setModelName(rs.getString("modelName"));
+                    car.setBrandName(rs.getString("brandName"));
+                    car.setBrandId(rs.getInt("brandId"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return car;
     }
 }
