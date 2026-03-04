@@ -389,11 +389,9 @@
 
                     <div class="footer-section">
                         <h3>Dịch Vụ</h3>
-                        <div class="footer-links">
-                            <a href="#">Mua xe</a>
+                        <div class="footer-links">  
                             <a href="#">Bán xe</a>
                             <a href="#">Tư vấn</a>
-                            <a href="#">Bảo hiểm</a>
                             <a href="#">Đăng ký</a>
                         </div>
                     </div>

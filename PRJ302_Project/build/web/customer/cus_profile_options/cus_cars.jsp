@@ -40,6 +40,6 @@
 
         <br/>
         <hr>
-        <a href="${pageContext.request.contextPath}/customer/welcome.jsp">Back to Home</a>
+        <a href="${pageContext.request.contextPath}/index.jsp">Back to Home</a>
     </body>
 </html>

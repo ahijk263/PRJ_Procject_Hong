@@ -236,6 +236,114 @@
                 font-weight: 700;
                 border-bottom: 2px solid var(--primary-gold);
             }
+
+            /* Container chính của User Dropdown */
+            .user-dropdown {
+                position: relative;
+                list-style: none;
+                display: flex;
+                align-items: center;
+                padding: 10px 0 20px 20px; /* Tạo vùng đệm dưới để giữ hover */
+                margin-bottom: -10px;
+                cursor: pointer;
+            }
+
+            .avatar-trigger {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .avatar-img {
+                width: 35px;
+                height: 35px;
+                border-radius: 50%;
+                border: 2px solid var(--primary-gold);
+                transition: 0.3s;
+            }
+
+            .arrow-icon {
+                font-size: 0.7rem;
+                color: var(--primary-gold);
+            }
+
+            /* Menu thả xuống */
+            .dropdown-menu {
+                display: none;
+                position: absolute;
+                top: 100%; /* Nằm ngay dưới vùng đệm padding */
+                right: 0;
+                background: white;
+                min-width: 240px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+                border-radius: 4px;
+                z-index: 1000;
+                flex-direction: column;
+                border-top: 3px solid var(--primary-gold);
+                overflow: hidden;
+                margin-top: -5px; /* Kéo gần lại để không có kẽ hở */
+            }
+
+            /* Hiển thị khi hover */
+            .user-dropdown:hover .dropdown-menu {
+                display: flex;
+            }
+
+            /* Nội dung bên trong menu */
+            .user-profile-header {
+                padding: 15px 20px;
+                background: #f9f9f9;
+                border-bottom: 1px solid #eee;
+            }
+
+            .welcome-text {
+                font-size: 0.7rem;
+                color: #999;
+                text-transform: uppercase;
+                display: block;
+            }
+            .user-full-name {
+                font-size: 0.9rem;
+                font-weight: 700;
+                color: var(--primary-dark);
+            }
+
+            .dropdown-menu a {
+                padding: 12px 20px !important;
+                color: #444 !important;
+                text-decoration: none !important;
+                font-size: 0.85rem !important;
+                display: flex !important;
+                align-items: center;
+                gap: 12px;
+                transition: 0.2s;
+                text-transform: none !important;
+                font-weight: 500 !important;
+            }
+
+            .dropdown-menu a i {
+                color: var(--primary-gold);
+                width: 18px;
+                text-align: center;
+            }
+
+            .dropdown-menu a:hover {
+                background: #fdfaf0;
+                color: var(--primary-gold) !important;
+                padding-left: 25px !important;
+            }
+
+            .menu-divider {
+                height: 1px;
+                background: #eee;
+                margin: 5px 0;
+            }
+            .logout-btn {
+                color: #dc3545 !important;
+            }
+            .logout-btn:hover {
+                background: #fff5f5 !important;
+            }
         </style>
     </head>
     <body>
@@ -247,10 +355,46 @@
                         LUXURY<span>CARS</span>
                     </a>
                     <ul class="nav-menu">
-                        <li><a href="MainController?action=home" class="nav-link">Trang chủ</a></li>
                         <li><a href="MainController?action=searchCars" class="nav-link active">Xe bán</a></li>
-                        <li><a href="#" class="nav-link">Hãng xe</a></li>
-                        <li><a href="login.jsp" class="nav-link">Đăng nhập</a></li>
+                        <c:choose>
+                            <c:when test="${not empty user}">
+                                <%-- ĐÃ ĐĂNG NHẬP: Hiện Avatar & Dropdown --%>
+                                <li class="user-dropdown">
+                                    <div class="avatar-trigger">
+                                        <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=C5A021&color=fff&bold=true" class="avatar-img">
+                                        <i class="fas fa-chevron-down arrow-icon"></i>
+                                    </div>
+
+                                    <div class="dropdown-menu">
+                                        <div class="user-profile-header">
+                                            <span class="welcome-text">Xin chào,</span>
+                                            <span class="user-full-name">${user.fullName}</span>
+                                        </div>
+
+                                        <%-- Các link từ file My Profile của bạn --%>
+                                        <a href="customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
+                                        <a href="customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
+
+                                        <div class="menu-divider"></div>
+
+                                        <a href="customer/cus_profile_options/cus_cars.jsp"><i class="fas fa-car"></i> Xe của tôi</a>
+                                        <a href="customer/cus_profile_options/cus_favourite_cars.jsp"><i class="fas fa-heart"></i> Xe yêu thích</a>
+                                        <a href="customer/review.jsp"><i class="fas fa-star"></i> Đánh giá của tôi</a>
+
+                                        <div class="menu-divider"></div>
+
+                                        <a href="${pageContext.request.contextPath}/MainController?action=logout" class="logout-btn">
+                                            <i class="fas fa-power-off"></i> Đăng xuất
+                                        </a>
+                                    </div>
+                                </li>
+                            </c:when>
+
+                            <c:otherwise>
+                                <%-- CHƯA ĐĂNG NHẬP: Hiện nút đăng nhập --%>
+                                <li><a href="login.jsp" class="nav-link">Đăng nhập</a></li>
+                                </c:otherwise>
+                            </c:choose>
                     </ul>
                 </nav>
             </div>
