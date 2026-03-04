@@ -54,12 +54,12 @@ public class AuthFilter implements Filter {
         // Lấy đường dẫn request hiện tại
 
         if (uri.contains("/admin") && !user.getRole().equals("ADMIN")) {
-            res.sendRedirect(req.getContextPath() + "/E403.jsp");
+            res.sendRedirect(req.getContextPath() + "/e403.jsp");
             return;
         }
 
         if (uri.contains("/customer") && !user.getRole().equals("CUSTOMER")) {
-            res.sendRedirect(req.getContextPath() + "/E403.jsp");
+            res.sendRedirect(req.getContextPath() + "/e403.jsp");
             return;
         }
 

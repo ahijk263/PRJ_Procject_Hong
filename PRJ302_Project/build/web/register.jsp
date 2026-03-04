@@ -14,6 +14,7 @@
         :root {
             --primary-gold: #D4AF37;
             --primary-dark: #0A0E27;
+            --luxury-cream: #F9F7F2;
         }
 
         body {
