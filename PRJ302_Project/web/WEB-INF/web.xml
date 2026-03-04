@@ -12,6 +12,18 @@
         <servlet-name>ProfileController</servlet-name>
         <servlet-class>controller.ProfileController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CarDetailController</servlet-name>
+        <servlet-class>controller.CarDetailController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchCarController</servlet-name>
+        <servlet-class>controller.SearchCarController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ViewDetailController</servlet-name>
+        <servlet-class>controller.ViewDetailController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LogoutController</servlet-name>
         <url-pattern>/LogoutController</url-pattern>
@@ -24,12 +36,25 @@
         <servlet-name>ProfileController</servlet-name>
         <url-pattern>/ProfileController</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CarDetailController</servlet-name>
+        <url-pattern>/CarDetailController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchCarController</servlet-name>
+        <url-pattern>/SearchCarController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ViewDetailController</servlet-name>
+        <url-pattern>/ViewDetailController</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
     </session-config>
     <welcome-file-list>
+        <welcome-file>MainController</welcome-file>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
 </web-app>

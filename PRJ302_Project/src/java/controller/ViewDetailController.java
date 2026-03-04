@@ -6,22 +6,16 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.CarFullDetailDAO;
-import model.CarFullDetailDTO;
 
 /**
  *
- * @author VNT
+ * @author Lenove
  */
-@WebServlet(name = "MainController", urlPatterns = {"/MainController"})
-public class MainController extends HttpServlet {
+public class ViewDetailController extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,43 +28,18 @@ public class MainController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
-
-        String action = request.getParameter("action");
-        String url = "index.jsp"; // Mặc định về trang chủ
-
-        try {
-            CarFullDetailDAO dao = new CarFullDetailDAO();
-
-            // TRƯỜNG HỢP 1: Vừa vào trang web hoặc nhấn "Trang chủ"
-            if (action == null || action.trim().isEmpty() || action.equals("home")) {
-                // Lấy danh sách xe nổi bật (Featured) để hiện ở Index
-                List<CarFullDetailDTO> featured = dao.getFeaturedCars();
-                request.setAttribute("featuredCars", featured);
-                url = "index.jsp";
-            } // TRƯỜNG HỢP 2: Xem danh sách tất cả xe (Action từ nút "Xe bán")
-            else if (action.equals("searchCars")) {
-                url = "SearchCarController"; // Servlet này sẽ xử lý lọc và đổ ra search_cars.jsp
-            } // TRƯỜNG HỢP 3: Xem chi tiết 1 chiếc xe (QUAN TRỌNG)
-            else if (action.equals("viewDetail")) {
-                url = "ViewDetailController"; // Điều hướng sang Servlet chuyên xử lý 1 xe
-            } // CÁC TRƯỜNG HỢP USER HỆ THỐNG
-            else if (action.equals("login")) {
-                url = "LoginController";
-            } else if (action.equals("logout")) {
-                url = "LogoutController";
-            } else if (action.equals("register")) {
-                url = "RegisterController";
-            } else if (action.equals("updateProfile")) {
-                url = "ProfileController";
-            }
-
-        } catch (Exception e) {
-            log("Error at MainController: " + e.toString());
-        } finally {
-            request.getRequestDispatcher(url).forward(request, response);
+        try ( PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet ViewDetailController</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet ViewDetailController at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
         }
     }
 

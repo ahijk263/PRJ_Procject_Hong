@@ -1,55 +1,276 @@
-<%-- 
-    Document   : index (Clean Version)
-    Author     : Lenove
---%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>LuxuryCars - Home</title>
-    </head>
-    <body>
-
-        <c:choose>
-            <%-- TRƯỜNG HỢP 1: CHƯA ĐĂNG NHẬP --%>
-            <c:when test="${empty sessionScope.user}">
-                <h1>Welcome to LuxuryCars</h1>
-                <ul>
-                    <li><a href="login.jsp">Login</a></li>
-                    <li><a href="register.jsp">Register</a></li>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Luxury Car Sales - Mua bán xe sang cao cấp">
+    <title>Luxury Car Sales - Trang chủ</title>
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    
+    <header class="header" id="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="MainController" class="logo">
+                    LUXURY<span>CARS</span>
+                </a>
+                
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="MainController" class="nav-link active">Trang chủ</a></li>
+                    <li><a href="MainController?action=searchCars" class="nav-link">Xe bán</a></li>
+                    <li><a href="#brands" class="nav-link">Hãng xe</a></li>
+                    <li><a href="#about" class="nav-link">Về chúng tôi</a></li>
+                    <li><a href="#contact" class="nav-link">Liên hệ</a></li>
+                    
+                    <%-- Logic hiển thị Đăng nhập hoặc Tên người dùng --%>
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.USER}">
+                            <li><a href="profile.jsp" class="nav-link"><i class="fas fa-user"></i> ${sessionScope.USER.fullName}</a></li>
+                        </c:when>
+                        <c:otherwise>
+                            <li><a href="login.jsp" class="nav-link"><i class="fas fa-user"></i> Đăng nhập</a></li>
+                        </c:otherwise>
+                    </c:choose>
                 </ul>
-            </c:when>
-
-            <%-- TRƯỜNG HỢP 2: ĐÃ ĐĂNG NHẬP --%>
-            <c:otherwise>
-                <h1>Welcome, ${sessionScope.user.fullName}</h1>
                 
-                <p>Role: ${sessionScope.user.role}</p>
+                <div class="mobile-toggle" id="mobileToggle">
+                    <span></span><span></span><span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Khám Phá<br>Thế Giới Xe Sang</h1>
+                <p class="hero-subtitle">
+                    Trải nghiệm đẳng cấp với bộ sưu tập xe sang hàng đầu thế giới. 
+                    Mercedes, BMW, Audi, Lamborghini và nhiều hơn nữa.
+                </p>
+                <div class="hero-buttons">
+                    <a href="MainController?action=searchCars" class="btn btn-primary">Xem bộ sưu tập</a>
+                    <a href="#contact" class="btn btn-outline">Liên hệ ngay</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800" alt="Luxury Car">
+            </div>
+        </div>
+    </section>
+    
+    <section class="section" id="featured">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Xe Nổi Bật</h2>
+                <p class="section-subtitle">Những mẫu xe cao cấp được ưa chuộng nhất</p>
+            </div>
+            
+            <div class="car-grid">
+                <%-- LOGIC VÒNG LẶP ĐỔ DỮ LIỆU THẬT TỪ DATABASE --%>
+                <c:choose>
+                    <c:when test="${not empty featuredCars}">
+                        <c:forEach items="${featuredCars}" var="item">
+                            <div class="car-card">
+                                <div class="car-card-image">
+                                    <img src="${not empty item.primaryImage ? item.primaryImage : 'assets/images/default-car.jpg'}" alt="${item.model.modelName}">
+                                    <c:if test="${item.car.mileage == 0}">
+                                        <span class="car-badge">Mới về</span>
+                                    </c:if>
+                                </div>
+                                <div class="car-card-content">
+                                    <div class="car-brand">${item.brand.brandName}</div>
+                                    <h3 class="car-name">${item.model.modelName} ${item.model.year}</h3>
+                                    <div class="car-specs">
+                                        <div class="car-spec">
+                                            <i class="fas fa-tachometer-alt"></i>
+                                            <span>${item.car.mileage} km</span>
+                                        </div>
+                                        <div class="car-spec">
+                                            <i class="fas fa-cog"></i>
+                                            <span>${item.car.transmission}</span>
+                                        </div>
+                                        <div class="car-spec">
+                                            <i class="fas fa-gas-pump"></i>
+                                            <span>Xăng</span>
+                                        </div>
+                                    </div>
+                                    <div class="car-footer">
+                                        <div class="car-price">
+                                            <fmt:formatNumber value="${item.car.price}" type="number" groupingUsed="true"/> 
+                                            <span style="font-size: 0.6em">VNĐ</span>
+                                        </div>
+                                        <a href="MainController?action=viewDetail&id=${item.car.carId}" class="btn btn-primary btn-view">Chi tiết</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <%-- Nếu chưa có dữ liệu thật thì hiện thông báo hoặc giữ lại vài thẻ tĩnh để test --%>
+                        <p style="text-align: center; grid-column: 1/-1;">Đang tải danh sách xe...</p>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="MainController?action=searchCars" class="btn btn-outline">Xem tất cả xe</a>
+            </div>
+        </div>
+    </section>
+
+    <%-- CÁC PHẦN BRANDS, ABOUT, CONTACT --%>
+  <!-- BRANDS SECTION -->
+    <section class="section" id="brands" style="background: var(--light-gray);">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Hãng Xe Cao Cấp</h2>
+                <p class="section-subtitle">Chúng tôi phân phối các thương hiệu hàng đầu thế giới</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                <div style="background: white; padding: 2rem; text-align: center; transition: transform 0.3s;">
+                    <h3 style="font-size: 1.5rem; color: var(--primary-dark);">Mercedes-Benz</h3>
+                    <p style="color: var(--text-light); margin-top: 0.5rem;">Germany</p>
+                </div>
+                <div style="background: white; padding: 2rem; text-align: center; transition: transform 0.3s;">
+                    <h3 style="font-size: 1.5rem; color: var(--primary-dark);">BMW</h3>
+                    <p style="color: var(--text-light); margin-top: 0.5rem;">Germany</p>
+                </div>
+                <div style="background: white; padding: 2rem; text-align: center; transition: transform 0.3s;">
+                    <h3 style="font-size: 1.5rem; color: var(--primary-dark);">Audi</h3>
+                    <p style="color: var(--text-light); margin-top: 0.5rem;">Germany</p>
+                </div>
+                <div style="background: white; padding: 2rem; text-align: center; transition: transform 0.3s;">
+                    <h3 style="font-size: 1.5rem; color: var(--primary-dark);">Lamborghini</h3>
+                    <p style="color: var(--text-light); margin-top: 0.5rem;">Italy</p>
+                </div>
+                <div style="background: white; padding: 2rem; text-align: center; transition: transform 0.3s;">
+                    <h3 style="font-size: 1.5rem; color: var(--primary-dark);">Rolls-Royce</h3>
+                    <p style="color: var(--text-light); margin-top: 0.5rem;">UK</p>
+                </div>
+                <div style="background: white; padding: 2rem; text-align: center; transition: transform 0.3s;">
+                    <h3 style="font-size: 1.5rem; color: var(--primary-dark);">Porsche</h3>
+                    <p style="color: var(--text-light); margin-top: 0.5rem;">Germany</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ABOUT SECTION -->
+    <section class="section" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Về Chúng Tôi</h2>
+                <p class="section-subtitle">Đối tác tin cậy cho những chiếc xe sang đẳng cấp</p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; margin-top: 3rem;">
+                <div style="text-align: center;">
+                    <div style="width: 80px; height: 80px; background: var(--primary-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2rem;">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3 style="margin-bottom: 1rem;">100+ Xe Cao Cấp</h3>
+                    <p style="color: var(--text-light);">Bộ sưu tập đa dạng từ các thương hiệu hàng đầu thế giới</p>
+                </div>
                 
-                <nav>
-                    <c:if test="${sessionScope.user.role == 'ADMIN'}">
-                        <a href="admin/dashboard.jsp">Dashboard (Admin)</a><br/>
-                    </c:if>
-                    
-                    <c:if test="${sessionScope.user.role == 'CUSTOMER'}">
-                        <a href="customer/welcome.jsp">Go to Showroom</a><br/>
-                    </c:if>
-                    
-                    <a href="MainController?action=logout">Logout</a>
-                </nav>
-            </c:otherwise>
-        </c:choose>
-
-        <hr>
-        
-        <%-- Phần nội dung chính (Search/Information) --%>
-        <h2>Search Cars</h2>
-        <form action="MainController">
-            <input type="text" name="txtSearch" placeholder="Enter car name...">
-            <input type="submit" name="action" value="Search">
-        </form>
-
-    </body>
+                <div style="text-align: center;">
+                    <div style="width: 80px; height: 80px; background: var(--primary-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2rem;">
+                        <i class="fas fa-certificate"></i>
+                    </div>
+                    <h3 style="margin-bottom: 1rem;">Chất Lượng Đảm Bảo</h3>
+                    <p style="color: var(--text-light);">Mỗi xe đều được kiểm tra kỹ lưỡng trước khi bàn giao</p>
+                </div>
+                
+                <div style="text-align: center;">
+                    <div style="width: 80px; height: 80px; background: var(--primary-gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: white; font-size: 2rem;">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3 style="margin-bottom: 1rem;">Hỗ Trợ 24/7</h3>
+                    <p style="color: var(--text-light);">Đội ngũ tư vấn chuyên nghiệp luôn sẵn sàng hỗ trợ</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- CONTACT SECTION -->
+    <section class="section" id="contact" style="background: var(--primary-dark);">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" style="color: white;">Liên Hệ Với Chúng Tôi</h2>
+                <p class="section-subtitle" style="color: var(--light-gray);">Để lại thông tin, chúng tôi sẽ liên hệ ngay</p>
+            </div>
+            
+            <div style="max-width: 600px; margin: 3rem auto;">
+                <form style="display: flex; flex-direction: column; gap: 1.5rem;">
+                    <input type="text" placeholder="Họ và tên" style="padding: 1rem; border: 2px solid var(--secondary-gray); background: transparent; color: white; font-size: 1rem;">
+                    <input type="email" placeholder="Email" style="padding: 1rem; border: 2px solid var(--secondary-gray); background: transparent; color: white; font-size: 1rem;">
+                    <input type="tel" placeholder="Số điện thoại" style="padding: 1rem; border: 2px solid var(--secondary-gray); background: transparent; color: white; font-size: 1rem;">
+                    <textarea placeholder="Tin nhắn" rows="5" style="padding: 1rem; border: 2px solid var(--secondary-gray); background: transparent; color: white; font-size: 1rem; resize: vertical;"></textarea>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Gửi tin nhắn</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LUXURY<span style="color: var(--primary-gold);">CARS</span></h3>
+                    <p>Đối tác tin cậy cho những chiếc xe sang đẳng cấp thế giới.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Liên Kết</h3>
+                    <div class="footer-links">
+                        <a href="index.html">Trang chủ</a>
+                        <a href="cars.html">Xe bán</a>
+                        <a href="#brands">Hãng xe</a>
+                        <a href="#about">Về chúng tôi</a>
+                        <a href="#contact">Liên hệ</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Dịch Vụ</h3>
+                    <div class="footer-links">
+                        <a href="#">Mua xe</a>
+                        <a href="#">Bán xe</a>
+                        <a href="#">Tư vấn</a>
+                        <a href="#">Bảo hiểm</a>
+                        <a href="#">Đăng ký</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Liên Hệ</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q1, TP.HCM</p>
+                    <p><i class="fas fa-phone"></i> 1900 xxxx</p>
+                    <p><i class="fas fa-envelope"></i> info@luxurycars.vn</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 LuxuryCars. All rights reserved. Designed by Student Project.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="assets/js/Script.js"></script>
+</body>
 </html>
