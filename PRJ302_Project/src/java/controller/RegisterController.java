@@ -67,7 +67,7 @@ public class RegisterController extends HttpServlet {
             }
 
             if (phone == null || phone.trim().isEmpty()) {
-                error += "Phone number không được để trống<br/>";
+                error += "Số điện thoại không được để trống<br/>";
             }
 
             if (email != null && !email.trim().isEmpty()

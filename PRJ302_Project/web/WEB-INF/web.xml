@@ -24,6 +24,10 @@
         <servlet-name>ViewDetailController</servlet-name>
         <servlet-class>controller.ViewDetailController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CustomerController</servlet-name>
+        <servlet-class>controller.CustomerController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LogoutController</servlet-name>
         <url-pattern>/LogoutController</url-pattern>
@@ -47,6 +51,10 @@
     <servlet-mapping>
         <servlet-name>ViewDetailController</servlet-name>
         <url-pattern>/ViewDetailController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CustomerController</servlet-name>
+        <url-pattern>/CustomerController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

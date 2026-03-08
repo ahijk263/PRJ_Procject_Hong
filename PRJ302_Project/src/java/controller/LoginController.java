@@ -5,7 +5,6 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -63,6 +62,17 @@ public class LoginController extends HttpServlet {
             } else {
                 // login thành công
                 session.setAttribute("user", user);
+                // --- BỔ SUNG: Nạp danh sách xe yêu thích vào Session tại đây ---
+                try {
+                    // Import model.WishlistDAO ở đầu file nếu chưa có nhé
+                    model.WishlistDAO wdao = new model.WishlistDAO();
+                    java.util.List<Integer> favIds = wdao.getFavoriteCarIds(user.getUserId());
+
+                    session.setAttribute("favIds", favIds);
+                    session.setAttribute("favCount", favIds.size());
+                } catch (Exception e) {
+                    log("Error loading wishlist: " + e.getMessage());
+                }
 
                 // phân quyền
                 if ("ADMIN".equals(user.getRole())) {

@@ -106,13 +106,6 @@
             .menu-divider {
                 height: 1px;
                 background: #eee;
-                margin: 8px 0;
-            }
-
-
-            .menu-divider {
-                height: 1px;
-                background: #eee;
                 margin: 5px 0;
             }
 
@@ -123,6 +116,12 @@
             .logout-btn:hover {
                 background: #fff5f5 !important;
             }
+
+            /* Style cho nút yêu thích trên thẻ xe */
+            .car-card-image {
+                position: relative; /* Quan trọng để icon con bám vào */
+            }
+
         </style>
     </head>
     <body>
@@ -163,8 +162,12 @@
                                         <a href="customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
 
                                         <%-- Nhóm 2: Hoạt động của khách hàng --%>
-                                        <a href="customer/cus_profile_options/cus_cars.jsp"><i class="fas fa-car"></i> Xe của tôi</a>
-                                        <a href="customer/cus_profile_options/cus_favourite_cars.jsp"><i class="fas fa-heart"></i> Xe yêu thích</a>
+                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar">
+                                            <i class="fas fa-car"></i> Xe của tôi
+                                        </a>
+                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist">
+                                            <i class="fas fa-heart"></i> Xe yêu thích
+                                        </a>
                                         <a href="customer/review.jsp"><i class="fas fa-star"></i> Đánh giá của tôi</a>
 
                                         <%-- Nhóm 3: Thoát --%>
@@ -218,12 +221,12 @@
                     <%-- LOGIC VÒNG LẶP ĐỔ DỮ LIỆU THẬT TỪ DATABASE --%>
                     <c:choose>
                         <c:when test="${not empty featuredCars}">
-                            <c:forEach items="${featuredCars}" var="item">
-                                <div class="car-card">
+                            <c:forEach items="${featuredCars}" var="item" varStatus="status" end="8">
+                                <div class="car-card">                                    
                                     <div class="car-card-image">
                                         <img src="${not empty item.primaryImage ? item.primaryImage : 'assets/images/default-car.jpg'}" alt="${item.model.modelName}">
                                         <c:if test="${item.car.mileage == 0}">
-                                            <span class="car-badge">Mới về</span>
+                                            <span class="car-badge">Xe Mới</span>
                                         </c:if>
                                     </div>
                                     <div class="car-card-content">
@@ -379,8 +382,8 @@
                     <div class="footer-section">
                         <h3>Liên Kết</h3>
                         <div class="footer-links">
-                            <a href="index.html">Trang chủ</a>
-                            <a href="cars.html">Xe bán</a>
+                            <a href="index.jsp">Trang chủ</a>
+                            <a href="search_cars.jsp">Xe bán</a>
                             <a href="#brands">Hãng xe</a>
                             <a href="#about">Về chúng tôi</a>
                             <a href="#contact">Liên hệ</a>
@@ -390,9 +393,9 @@
                     <div class="footer-section">
                         <h3>Dịch Vụ</h3>
                         <div class="footer-links">  
-                            <a href="#">Bán xe</a>
+                            <a href="MainController?action=searchCars">Bán xe</a>
                             <a href="#">Tư vấn</a>
-                            <a href="#">Đăng ký</a>
+                            <a href="register.jsp">Đăng ký</a>
                         </div>
                     </div>
 
@@ -411,5 +414,8 @@
         </footer>
 
         <script src="assets/js/Script.js"></script>
+
     </body>
+
 </html>
+

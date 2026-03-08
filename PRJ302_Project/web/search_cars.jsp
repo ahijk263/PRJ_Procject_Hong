@@ -344,6 +344,34 @@
             .logout-btn:hover {
                 background: #fff5f5 !important;
             }
+
+            .wishlist-icon {
+                position: absolute;
+                top: 15px;
+                right: 15px;
+                width: 35px;
+                height: 35px;
+                background: rgba(255, 255, 255, 0.9); /* Nền trắng mờ */
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #333;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                z-index: 10;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            }
+
+            .wishlist-icon:hover {
+                background: var(--primary-gold); /* Màu vàng thương hiệu của bạn */
+                color: white;
+                transform: scale(1.1);
+            }
+
+            .wishlist-icon i {
+                font-size: 1.1rem;
+            }
         </style>
     </head>
     <body>
@@ -356,9 +384,9 @@
                     </a>
                     <ul class="nav-menu">
                         <li><a href="MainController?action=searchCars" class="nav-link active">Xe bán</a></li>
-                        <c:choose>
-                            <c:when test="${not empty user}">
-                                <%-- ĐÃ ĐĂNG NHẬP: Hiện Avatar & Dropdown --%>
+                            <c:choose>
+                                <c:when test="${not empty user}">
+                                    <%-- ĐÃ ĐĂNG NHẬP: Hiện Avatar & Dropdown --%>
                                 <li class="user-dropdown">
                                     <div class="avatar-trigger">
                                         <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=C5A021&color=fff&bold=true" class="avatar-img">
@@ -378,7 +406,9 @@
                                         <div class="menu-divider"></div>
 
                                         <a href="customer/cus_profile_options/cus_cars.jsp"><i class="fas fa-car"></i> Xe của tôi</a>
-                                        <a href="customer/cus_profile_options/cus_favourite_cars.jsp"><i class="fas fa-heart"></i> Xe yêu thích</a>
+                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist">
+                                            <i class="fas fa-heart"></i> Xe yêu thích
+                                        </a>
                                         <a href="customer/review.jsp"><i class="fas fa-star"></i> Đánh giá của tôi</a>
 
                                         <div class="menu-divider"></div>
@@ -448,8 +478,24 @@
                             <div class="luxury-card">
                                 <div class="card-img-wrapper">
                                     <c:if test="${item.car.mileage == 0}">
-                                        <span class="badge-condition">Mới 100%</span>
+                                        <span class="badge-condition">Mới</span>
                                     </c:if>
+
+                                    <%-- 1. Logic xử lý để xác định trạng thái Tim (Giữ nguyên) --%>
+                                    <c:set var="isFav" value="false" />
+                                    <c:forEach items="${sessionScope.favIds}" var="fId">
+                                        <c:if test="${fId == item.car.carId}">
+                                            <c:set var="isFav" value="true" />
+                                        </c:if>
+                                    </c:forEach>
+
+                                    <%-- 2. Thẻ <a> phải nằm TRỰC TIẾP ở đây, không bọc thêm div nào hết --%>
+                                    <a href="CustomerController?action=addFav&carId=${item.car.carId}" 
+                                       class="wishlist-icon ${isFav ? 'active' : ''}"
+                                       title="Yêu thích">
+                                        <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
+                                    </a>
+
                                     <img src="${not empty item.primaryImage ? item.primaryImage : 'assets/images/default-car.jpg'}" alt="Car Image">
                                 </div>
 
@@ -493,5 +539,40 @@
         </footer>
 
         <script src="assets/js/Script.js"></script>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.wishlist-icon').click(function (e) {
+                    e.preventDefault(); // Chặn reset trang
+
+                    var $this = $(this);
+                    var url = $this.attr('href');
+                    var icon = $this.find('i');
+
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function () {
+                            // Đổi trạng thái icon ngay lập tức
+                            if (icon.hasClass('far')) {
+                                icon.removeClass('far').addClass('fas'); // Tim rỗng thành tim đặc
+                                $this.addClass('active');
+                            } else {
+                                icon.removeClass('fas').addClass('far'); // Tim đặc thành tim rỗng
+                                $this.removeClass('active');
+                                // Nếu đang ở trang Wishlist thì có thể ẩn card đi luôn
+                                if (window.location.href.includes('viewWishlist')) {
+                                    $this.closest('.luxury-card').fadeOut();
+                                }
+                            }
+                        },
+                        error: function () {
+                            alert('Có lỗi xảy ra, vui lòng đăng nhập!');
+                        }
+                    });
+                });
+            });
+        </script>
     </body>
 </html>

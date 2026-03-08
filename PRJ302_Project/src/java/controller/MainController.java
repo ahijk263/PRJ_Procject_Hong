@@ -6,9 +6,7 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -51,14 +49,11 @@ public class MainController extends HttpServlet {
                 List<CarFullDetailDTO> featured = dao.getFeaturedCars();
                 request.setAttribute("featuredCars", featured);
                 url = "index.jsp";
-            } // TRƯỜNG HỢP 2: Xem danh sách tất cả xe (Action từ nút "Xe bán")
-            else if (action.equals("searchCars")) {
-                url = "SearchCarController"; // Servlet này sẽ xử lý lọc và đổ ra search_cars.jsp
-            } // TRƯỜNG HỢP 3: Xem chi tiết 1 chiếc xe (QUAN TRỌNG)
-            else if (action.equals("viewDetail")) {
-                url = "ViewDetailController"; // Điều hướng sang Servlet chuyên xử lý 1 xe
-            } // CÁC TRƯỜNG HỢP USER HỆ THỐNG
-            else if (action.equals("login")) {
+            } else if (action.equals("searchCars")) {
+                url = "SearchCarController";
+            } else if (action.equals("viewDetail")) {
+                url = "ViewDetailController";
+            } else if (action.equals("login")) {
                 url = "LoginController";
             } else if (action.equals("logout")) {
                 url = "LogoutController";
@@ -66,6 +61,10 @@ public class MainController extends HttpServlet {
                 url = "RegisterController";
             } else if (action.equals("updateProfile")) {
                 url = "ProfileController";
+            } else if (action.equals("viewWishlist") || action.equals("addFav") || action.equals("removeFav")) {
+                url = "CustomerController";
+            } else if (action.equals("viewMyCar")) {
+                url = "CustomerController";
             }
 
         } catch (Exception e) {

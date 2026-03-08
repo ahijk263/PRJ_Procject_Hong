@@ -58,7 +58,7 @@ public class ProfileController extends HttpServlet {
             error += "Email không hợp lệ<br/>";
         }
         if (phone == null || phone.trim().isEmpty()) {
-            error += "Phone không được để trống<br/>";
+            error += "Số điện thoại không được để trống<br/>";
         }
 
         // Check tồn tại email

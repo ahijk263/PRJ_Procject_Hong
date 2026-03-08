@@ -111,7 +111,7 @@ public class CarFullDetailDAO extends DbUtils {
     public List<CarFullDetailDTO> getFeaturedCars() {
         List<CarFullDetailDTO> list = new ArrayList<>();
         // Lấy Top 4 xe mới nhất dựa vào ID giảm dần
-        String sql = "SELECT TOP 4 c.car_id, c.price, c.transmission, c.mileage, m.model_name, m.year, b.brand_name, img.image_url, "
+        String sql = "SELECT TOP 9 c.car_id, c.price, c.transmission, c.mileage, m.model_name, m.year, b.brand_name, img.image_url, "
                 + "(SELECT AVG(CAST(rating AS FLOAT)) FROM Review r WHERE r.car_id = c.car_id) as avg_rating, "
                 + "(SELECT COUNT(*) FROM Review r WHERE r.car_id = c.car_id) as total_reviews "
                 + "FROM Car c JOIN CarModel m ON c.model_id = m.model_id "
@@ -155,5 +155,59 @@ public class CarFullDetailDAO extends DbUtils {
             e.printStackTrace();
         }
         return list;
+    }
+
+    public CarFullDetailDTO getCarFullDetailById(int carId) {
+        CarFullDetailDTO detail = null;
+        StringBuilder sql = new StringBuilder();
+        // Lấy đầy đủ các trường bạn muốn + Image + Rating
+        sql.append("SELECT c.*, m.model_name, m.year, b.brand_name, b.country, img.image_url, ");
+        sql.append("(SELECT AVG(CAST(rating AS FLOAT)) FROM Review r WHERE r.car_id = c.car_id) as avg_rating, ");
+        sql.append("(SELECT COUNT(*) FROM Review r WHERE r.car_id = c.car_id) as total_reviews ");
+        sql.append("FROM Car c ");
+        sql.append("JOIN CarModel m ON c.model_id = m.model_id ");
+        sql.append("JOIN Brand b ON m.brand_id = b.brand_id ");
+        sql.append("LEFT JOIN CarImage img ON c.car_id = img.car_id AND img.is_primary = 1 ");
+        sql.append("WHERE c.car_id = ?");
+
+        try ( Connection conn = getConnection();  PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            ps.setInt(1, carId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                detail = new CarFullDetailDTO();
+
+                // 1. Mapping CarDTO (Chứa các trường bạn liệt kê: price, color, engine, v.v.)
+                CarDTO car = new CarDTO();
+                car.setCarId(rs.getInt("car_id"));
+                car.setPrice(rs.getBigDecimal("price"));
+                car.setColor(rs.getString("color"));
+                car.setEngine(rs.getString("engine"));
+                car.setTransmission(rs.getString("transmission"));
+                car.setMileage(rs.getInt("mileage"));
+                car.setStatus(rs.getString("status"));
+                car.setDescription(rs.getString("description"));
+                detail.setCar(car);
+
+                // 2. Mapping CarModelDTO
+                CarModelDTO model = new CarModelDTO();
+                model.setModelName(rs.getString("model_name"));
+                model.setYear(rs.getInt("year"));
+                detail.setModel(model);
+
+                // 3. Mapping BrandDTO
+                BrandDTO brand = new BrandDTO();
+                brand.setBrandName(rs.getString("brand_name"));
+                brand.setCountry(rs.getString("country"));
+                detail.setBrand(brand);
+
+                // 4. Thông tin bổ sung (Hình ảnh và Rating)
+                detail.setPrimaryImage(rs.getString("image_url"));
+                detail.setAvgRating(rs.getDouble("avg_rating"));
+                detail.setTotalReviews(rs.getInt("total_reviews"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return detail;
     }
 }

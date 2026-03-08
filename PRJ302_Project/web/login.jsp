@@ -137,7 +137,7 @@
     </a>
 
     <div class="login-card">
-        <h2>Luxury Login</h2>
+        <h2>Đồng hành cùng Luxury</h2>
 
         <c:if test="${not empty message}">
             <div class="error-msg">
