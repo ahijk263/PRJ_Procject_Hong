@@ -1,14 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Timestamp;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,28 +11,15 @@ import model.ReviewDAO;
 import model.ReviewDTO;
 import model.UserDTO;
 
-/**
- *
- * @author Lenove
- */
-
+@WebServlet(name = "ReviewController", urlPatterns = {"/ReviewController"})
 public class ReviewController extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
-        HttpSession session = request.getSession(false);
+        // 1. Kiểm tra đăng nhập
+        HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute("user");
 
         if (user == null) {
@@ -46,74 +27,59 @@ public class ReviewController extends HttpServlet {
             return;
         }
 
-        String url = "customer/review.jsp";
-
         try {
-            int carId = Integer.parseInt(request.getParameter("carId"));
-            int rating = Integer.parseInt(request.getParameter("rating"));
+            // 2. Lấy dữ liệu từ Modal gửi về
+            String carIdRaw = request.getParameter("carId");
+            String ratingRaw = request.getParameter("rating");
             String comment = request.getParameter("comment");
 
-            ReviewDTO review = new ReviewDTO();
-            review.setUserId(user.getUserId());
-            review.setCarId(carId);
-            review.setRating(rating);
-            review.setComment(comment);
-            review.setReviewDate(new Timestamp(System.currentTimeMillis()));
+            if (carIdRaw != null && ratingRaw != null) {
+                int carId = Integer.parseInt(carIdRaw);
+                int rating = Integer.parseInt(ratingRaw);
+                int userId = user.getUserId();
 
-            ReviewDAO dao = new ReviewDAO();
+                ReviewDAO dao = new ReviewDAO();
 
-            if (dao.addReview(review)) {
-                request.setAttribute("msg", "Review submitted successfully!");
-            } else {
-                request.setAttribute("error", "Failed to submit review!");
+                // 3. HỆ THỐNG KIỂM TRA 2 TẦNG
+                // Tầng 1: Đã mua xe chưa?
+                if (!dao.checkUserBoughtCar(userId, carId)) {
+                    session.setAttribute("error", "Chỉ chủ sở hữu xe mới có quyền để lại đánh giá.");
+                } // Tầng 2: Đã đánh giá xe này bao giờ chưa?
+                else if (dao.hasReviewed(userId, carId)) {
+                    session.setAttribute("error", "Tuyệt tác này bạn đã đánh giá rồi, không thể đánh giá thêm.");
+                } // VƯỢT QUA 2 TẦNG THÌ MỚI LƯU
+                else {
+                    ReviewDTO review = new ReviewDTO();
+                    review.setUserId(userId);
+                    review.setCarId(carId);
+                    review.setRating(rating);
+                    review.setComment(comment);
+
+                    if (dao.insertReview(review)) {
+                        session.setAttribute("msg", "Cảm ơn bạn! Đánh giá của bạn đã được ghi nhận.");
+                    } else {
+                        session.setAttribute("error", "Hệ thống bận, vui lòng thử lại sau.");
+                    }
+                }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "System error!");
+            session.setAttribute("error", "Đã có lỗi xảy ra trong quá trình xử lý.");
         }
 
-        RequestDispatcher rd = request.getRequestDispatcher(url);
-        rd.forward(request, response);
+        // 5. Quay lại trang Gara
+        response.sendRedirect("MainController?action=viewMyCar");
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
 }

@@ -25,6 +25,7 @@ public class OrderDAO {
         o.setCustomerEmail(rs.getString("email"));
         o.setCustomerPhone(rs.getString("phone"));
         o.setCarInfo(rs.getString("car_info"));
+        o.setCarId(rs.getInt("car_id"));
         return o;
     }
 
@@ -33,6 +34,8 @@ public class OrderDAO {
             = "SELECT o.order_id, o.user_id, o.order_date, o.total_price, o.status, "
             + "       o.shipping_address, o.notes, o.created_at, o.updated_at, "
             + "       u.full_name, u.email, u.phone, "
+            // Lấy car_id từ OrderDetail (Xe đầu tiên của đơn hàng)
+            + "       (SELECT TOP 1 od_sub.car_id FROM OrderDetail od_sub WHERE od_sub.order_id = o.order_id) AS car_id, "
             + "       (SELECT TOP 1 b.brand_name + ' ' + cm.model_name + ' - ' + c.color "
             + "        FROM OrderDetail od "
             + "        INNER JOIN Car c ON od.car_id = c.car_id "
@@ -182,16 +185,17 @@ public class OrderDAO {
     // Lấy danh sách xe đã mua thành công của 1 khách hàng cụ thể
     public List<OrderDTO> getMyPurchasedCars(int userId) {
         List<OrderDTO> list = new ArrayList<>();
-        // Tận dụng BASE_SQL của bạn, chỉ cần thêm điều kiện WHERE userId và status thành công
-        // Câu SQL được sửa lại để khớp hoàn toàn với dữ liệu thực tế của bạn
+
+        // SQL giờ cực kỳ sạch sẽ vì BASE_SQL đã lo hết phần thông tin xe
         String sql = BASE_SQL
-                + " JOIN Payment p ON o.order_id = p.order_id "
+                + " LEFT JOIN Payment p ON o.order_id = p.order_id "
                 + " WHERE o.user_id = ? "
                 + " AND (o.status IN ('PAID', 'COMPLETED') "
                 + "      OR p.payment_status = 'COMPLETED') "
                 + " ORDER BY o.order_id DESC";
 
         try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
             ps.setInt(1, userId);
             try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -199,6 +203,7 @@ public class OrderDAO {
                 }
             }
         } catch (Exception e) {
+            System.err.println("Lỗi tại getMyPurchasedCars: " + e.getMessage());
             e.printStackTrace();
         }
         return list;

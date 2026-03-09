@@ -403,13 +403,12 @@
                                         <a href="customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
                                         <a href="customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
 
-                                        <div class="menu-divider"></div>
-
-                                        <a href="customer/cus_profile_options/cus_cars.jsp"><i class="fas fa-car"></i> Xe của tôi</a>
+                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar">
+                                            <i class="fas fa-car"></i> Xe của tôi
+                                        </a>
                                         <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist">
                                             <i class="fas fa-heart"></i> Xe yêu thích
                                         </a>
-                                        <a href="customer/review.jsp"><i class="fas fa-star"></i> Đánh giá của tôi</a>
 
                                         <div class="menu-divider"></div>
 
@@ -480,22 +479,22 @@
                                     <c:if test="${item.car.mileage == 0}">
                                         <span class="badge-condition">Mới</span>
                                     </c:if>
+                                    <c:if test="${not empty sessionScope.user}">
+                                        <%-- 1. Logic xử lý để xác định trạng thái Tim (Giữ nguyên) --%>
+                                        <c:set var="isFav" value="false" />
+                                        <c:forEach items="${sessionScope.favIds}" var="fId">
+                                            <c:if test="${fId == item.car.carId}">
+                                                <c:set var="isFav" value="true" />
+                                            </c:if>
+                                        </c:forEach>
 
-                                    <%-- 1. Logic xử lý để xác định trạng thái Tim (Giữ nguyên) --%>
-                                    <c:set var="isFav" value="false" />
-                                    <c:forEach items="${sessionScope.favIds}" var="fId">
-                                        <c:if test="${fId == item.car.carId}">
-                                            <c:set var="isFav" value="true" />
-                                        </c:if>
-                                    </c:forEach>
-
-                                    <%-- 2. Thẻ <a> phải nằm TRỰC TIẾP ở đây, không bọc thêm div nào hết --%>
-                                    <a href="CustomerController?action=addFav&carId=${item.car.carId}" 
-                                       class="wishlist-icon ${isFav ? 'active' : ''}"
-                                       title="Yêu thích">
-                                        <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
-                                    </a>
-
+                                        <%-- 2. Thẻ <a> phải nằm TRỰC TIẾP ở đây, không bọc thêm div nào hết --%>
+                                        <a href="CustomerController?action=addFav&carId=${item.car.carId}" 
+                                           class="wishlist-icon ${isFav ? 'active' : ''}"
+                                           title="Yêu thích">
+                                            <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
+                                        </a>
+                                    </c:if>
                                     <img src="${not empty item.primaryImage ? item.primaryImage : 'assets/images/default-car.jpg'}" alt="Car Image">
                                 </div>
 

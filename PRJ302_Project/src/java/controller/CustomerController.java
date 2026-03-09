@@ -5,8 +5,6 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,9 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import model.CarDAO;
-import model.CarFullDetailDAO;
-import model.CarFullDetailDTO;
 import model.OrderDAO;
 import model.OrderDTO;
 import model.UserDTO;
@@ -130,11 +125,18 @@ public class CustomerController extends HttpServlet {
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute("user");
 
-        OrderDAO dao = new OrderDAO();
-        // Gọi hàm mình vừa viết ở trên
-        List<OrderDTO> list = dao.getMyPurchasedCars(user.getUserId());
+        try {
+            OrderDAO dao = new OrderDAO();
+            // Đảm bảo getUserId() không trả về null hoặc 0 không hợp lệ
+            List<OrderDTO> list = dao.getMyPurchasedCars(user.getUserId());
 
-        request.setAttribute("myCars", list);
+            request.setAttribute("myCars", list);
+        } catch (Exception e) {
+            log("Error at doViewMyCar: " + e.toString());
+            // Có thể set một thông báo lỗi để JSP hiển thị
+            request.setAttribute("ERROR", "Không thể tải danh sách xe. Vui lòng thử lại!");
+        }
+
         request.getRequestDispatcher("/customer/cus_profile_options/cus_cars.jsp").forward(request, response);
     }
 

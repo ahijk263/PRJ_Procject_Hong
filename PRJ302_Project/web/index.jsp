@@ -168,7 +168,6 @@
                                         <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist">
                                             <i class="fas fa-heart"></i> Xe yêu thích
                                         </a>
-                                        <a href="customer/review.jsp"><i class="fas fa-star"></i> Đánh giá của tôi</a>
 
                                         <%-- Nhóm 3: Thoát --%>
                                         <div class="menu-divider"></div>

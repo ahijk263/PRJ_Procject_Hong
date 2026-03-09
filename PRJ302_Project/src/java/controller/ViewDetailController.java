@@ -1,10 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,11 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import model.CarFullDetailDAO;
 import model.CarFullDetailDTO;
 import model.ReviewDAO;
+import model.ReviewDTO; // Nhớ import DTO này nhé
 
-/**
- *
- * @author Lenove
- */
 @WebServlet(name = "ViewDetailController", urlPatterns = {"/ViewDetailController"})
 public class ViewDetailController extends HttpServlet {
 
@@ -29,16 +23,22 @@ public class ViewDetailController extends HttpServlet {
             if (idStr != null) {
                 int carId = Integer.parseInt(idStr);
 
-                // Sử dụng DAO chuyên biệt của bạn
+                // 1. Lấy thông tin chi tiết xe
                 CarFullDetailDAO dao = new CarFullDetailDAO();
                 CarFullDetailDTO detail = dao.getCarFullDetailById(carId);
 
                 if (detail != null) {
-                    // Đẩy dữ liệu sang JSP với tên biến CAR_DETAIL
+                    // 2. LẤY DANH SÁCH ĐÁNH GIÁ (Phần mới thêm)
+                    ReviewDAO rDao = new ReviewDAO();
+                    List<ReviewDTO> reviewList = rDao.getReviewsByCarId(carId);
+
+                    // 3. Đẩy dữ liệu sang JSP
                     request.setAttribute("CAR_DETAIL", detail);
+                    request.setAttribute("reviewList", reviewList); // Đặt tên biến là reviewList để dùng trong c:forEach
+
                     request.getRequestDispatcher("view_car_detail.jsp").forward(request, response);
                 } else {
-                    response.sendRedirect("search_cars.jsp"); // Không thấy xe thì về trang danh sách
+                    response.sendRedirect("search_cars.jsp");
                 }
             }
         } catch (Exception e) {

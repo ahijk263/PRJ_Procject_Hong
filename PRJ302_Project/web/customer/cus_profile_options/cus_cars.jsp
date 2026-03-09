@@ -42,7 +42,9 @@
                 letter-spacing: 1px;
             }
 
-            header.header .logo span { color: #C5A021 !important; }
+            header.header .logo span {
+                color: #C5A021 !important;
+            }
 
             .page-header {
                 font-family: 'Playfair Display', serif;
@@ -106,8 +108,14 @@
                 display: inline-block;
             }
 
-            .status-completed { background: #e8f5e9; color: #2e7d32; }
-            .status-paid { background: #e3f2fd; color: #1565c0; }
+            .status-completed {
+                background: #e8f5e9;
+                color: #2e7d32;
+            }
+            .status-paid {
+                background: #e3f2fd;
+                color: #1565c0;
+            }
 
             .btn-home {
                 font-family: 'Montserrat', sans-serif;
@@ -119,7 +127,53 @@
                 transition: 0.3s;
             }
 
-            .btn-home:hover { color: var(--luxury-gold); }
+            .btn-home:hover {
+                color: var(--luxury-gold);
+            }
+            /* Gộp chung để cả 2 nút xem chi tiết và viết đánh giá đổi màu vàng khi hover */
+            .review-link:hover,
+            .btn-view-detail:hover {
+                color: var(--luxury-gold) !important;
+                border-bottom-color: var(--luxury-gold) !important;
+                transform: translateX(3px); /* Thêm hiệu ứng nhích nhẹ sang phải cho sang */
+                transition: 0.3s;
+            }
+
+            /*nut * danh gia*/
+            .star-rating-luxury {
+                display: flex;
+                flex-direction: row-reverse; /* Đảo ngược để khi hover/click nó sáng từ trái qua */
+                justify-content: center;
+            }
+
+            .star-rating-luxury input {
+                display: none; /* Ẩn cái nút tròn mặc định */
+            }
+
+            .star-rating-luxury label {
+                font-size: 2rem;
+                color: #444; /* Màu sao mặc định (xám tối cho sang) */
+                padding: 0 5px;
+                cursor: pointer;
+                transition: transform 0.2s, color 0.2s;
+            }
+
+            /* Khi di chuột qua: Ngôi sao đang chọn và các ngôi sao ĐỨNG TRƯỚC nó sẽ sáng lên */
+            .star-rating-luxury label:hover,
+            .star-rating-luxury label:hover ~ label {
+                color: #d4af37; /* Màu vàng Gold Luxury */
+                transform: scale(1.2);
+            }
+
+            /* Khi ĐÃ BẤM CHỌN: Giữ cho các ngôi sao đó sáng màu Gold */
+            .star-rating-luxury input:checked ~ label {
+                color: #ffc107;
+            }
+
+            /* Hiệu ứng nhẹ khi nhấn vào */
+            .star-rating-luxury label:active {
+                transform: scale(0.9);
+            }
         </style>
     </head>
     <body>
@@ -137,7 +191,19 @@
 
         <div class="container py-4">
             <h1 class="page-header" data-aos="fade-right">Gara Của Tôi</h1>
+            <c:if test="${not empty msg}">
+                <div class="alert alert-success" style="border-radius:0; border-left:5px solid gold;">
+                    ${msg}
+                </div>
+                <c:remove var="msg" scope="session"/>
+            </c:if>
 
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger" style="border-radius:0;">
+                    ${error}
+                </div>
+                <c:remove var="error" scope="session"/>
+            </c:if>
             <c:choose>
                 <c:when test="${empty myCars}">
                     <div class="text-center py-5" data-aos="zoom-in">
@@ -149,7 +215,7 @@
                 </c:when>
                 <c:otherwise>
                     <div class="table-container" data-aos="fade-up">
-                        <table class="table luxury-table">
+                        <table class="table luxury-table">                           
                             <thead>
                                 <tr>
                                     <th>STT</th>
@@ -157,6 +223,7 @@
                                     <th>Tổng Chi Phí</th>
                                     <th>Ngày Giao Dịch</th>
                                     <th class="text-center">Trạng Thái</th>
+                                    <th class="text-center">Đánh Giá</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -187,18 +254,82 @@
                                                 ${order.status}
                                             </span>
                                         </td>
+                                        <td class="text-center"> 
+                                            <a href="MainController?action=viewDetail&id=${order.carId}" 
+                                               class="btn-view-detail text-uppercase d-block mb-2"
+                                               style="text-decoration: none; color: #1A1A1A; font-size: 0.7rem; font-family: 'Montserrat', sans-serif; letter-spacing: 1.5px; transition: 0.3s; font-weight: 700;">
+                                                <i class="fa-solid fa-eye me-1"></i> Chi tiết xe
+                                            </a>
+
+                                            <a href="javascript:void(0)" class="review-link text-uppercase d-block" 
+                                               style="text-decoration: none; color: #888; font-size: 0.7rem; font-family: 'Montserrat', sans-serif; letter-spacing: 1.5px; border-bottom: 1px solid transparent; transition: 0.3s;"
+                                               data-bs-toggle="modal" 
+                                               data-bs-target="#reviewModal${order.carId}">
+                                                <i class="fa-solid fa-pen-to-square me-1"></i> Viết đánh giá
+                                            </a>
+                                        </td>
                                     </tr>
-                                </c:forEach>
+                                </c:forEach>S
                             </tbody>
                         </table>
+
                     </div>
                 </c:otherwise>
             </c:choose>
         </div>
+        <c:forEach var="order" items="${myCars}">
+            <div class="modal fade" id="reviewModal${order.carId}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content" style="border-radius: 0; border: none;">
+                        <form action="ReviewController" method="POST">
+                            <div class="modal-header" style="background: var(--dark-accent); color: white; border: none;">
+                                <h5 class="modal-title" style="font-family: 'Playfair Display', serif;">Đánh Giá Tuyệt Tác</h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-4">
+                                <input type="hidden" name="carId" value="${order.carId}">
+                                <input type="hidden" name="orderId" value="${order.orderId}">
 
+                                <p class="text-muted small mb-4">Chia sẻ trải nghiệm của bạn về chiếc <strong>${order.carInfo}</strong></p>
+
+                                <div class="mb-3 text-center">
+                                    <label class="form-label small fw-bold text-uppercase d-block mb-3" style="letter-spacing: 2px;">Xếp hạng trải nghiệm</label>
+                                    <div class="star-rating-luxury">
+                                        <input type="radio" id="star5-${order.carId}" name="rating" value="5" />
+                                        <label for="star5-${order.carId}"><i class="fas fa-star"></i></label>
+
+                                        <input type="radio" id="star4-${order.carId}" name="rating" value="4" />
+                                        <label for="star4-${order.carId}"><i class="fas fa-star"></i></label>
+
+                                        <input type="radio" id="star3-${order.carId}" name="rating" value="3" />
+                                        <label for="star3-${order.carId}"><i class="fas fa-star"></i></label>
+
+                                        <input type="radio" id="star2-${order.carId}" name="rating" value="2" />
+                                        <label for="star2-${order.carId}"><i class="fas fa-star"></i></label>
+
+                                        <input type="radio" id="star1-${order.carId}" name="rating" value="1" />
+                                        <label for="star1-${order.carId}"><i class="fas fa-star"></i></label>
+                                    </div>
+                                </div>
+
+                                <div class="mb-0">
+                                    <label class="form-label small fw-bold text-uppercase" style="letter-spacing: 1px;">Cảm nhận</label>
+                                    <textarea name="comment" class="form-control" rows="4" style="border-radius: 0;" placeholder="Điều gì làm bạn ấn tượng nhất..."></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer" style="border: none;">
+                                <button type="button" class="btn text-muted small text-uppercase" data-bs-dismiss="modal">Hủy</button>
+                                <button type="submit" class="btn btn-dark px-4" style="border-radius: 0; background: var(--luxury-gold); border: none;">GỬI ĐÁNH GIÁ</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </c:forEach>
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
-            AOS.init({ duration: 800, once: true });
+            AOS.init({duration: 800, once: true});
         </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
 </html>
