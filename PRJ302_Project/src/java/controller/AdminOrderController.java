@@ -36,7 +36,7 @@ public class AdminOrderController extends HttpServlet {
         String filterStatus = request.getParameter("filterStatus");
         OrderDAO orderDAO   = new OrderDAO();
 
-        String base = request.getContextPath() + "/admin/manageorders.jsp";
+        String base = request.getContextPath() + "/admin/orders";
         if (filterStatus != null && !filterStatus.isEmpty())
             base += "?filter=" + filterStatus;
 
@@ -58,7 +58,12 @@ public class AdminOrderController extends HttpServlet {
                 boolean ok = orderDAO.updateStatus(orderId, "CANCELLED");
                 redirectUrl = base + sep + (ok ? "msg=" + enc("Đã hủy đơn hàng")
                                                : "error=" + enc("Thao tác thất bại"));
-            }
+            }else if ("changeStatus".equals(action)) {
+    String newStatus = request.getParameter("newStatus");
+    boolean ok       = orderDAO.updateStatus(orderId, newStatus);
+    redirectUrl = base + sep + (ok ? "msg=" + enc("Đã cập nhật trạng thái đơn #" + orderId)
+                                   : "error=" + enc("Cập nhật thất bại"));
+}
         } catch (Exception e) {
             e.printStackTrace();
             String sep = base.contains("?") ? "&" : "?";
@@ -71,6 +76,6 @@ public class AdminOrderController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath() + "/admin/manageorders.jsp");
+        response.sendRedirect(request.getContextPath() + "/admin/orders");
     }
 }

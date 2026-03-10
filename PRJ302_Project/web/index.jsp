@@ -136,7 +136,7 @@
                     <ul class="nav-menu" id="navMenu">
                         <li><a href="MainController" class="nav-link active">Trang chủ</a></li>
                         <li><a href="MainController?action=searchCars" class="nav-link">Xe bán</a></li>
-                        <li><a href="#brands" class="nav-link">Hãng xe</a></li>
+                        <li><a href="brands" class="nav-link">Hãng xe</a></li>
                         <li><a href="#about" class="nav-link">Về chúng tôi</a></li>
                         <li><a href="#contact" class="nav-link">Liên hệ</a></li>
 

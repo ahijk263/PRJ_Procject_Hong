@@ -76,7 +76,7 @@ public class LoginController extends HttpServlet {
 
                 // phân quyền
                 if ("ADMIN".equals(user.getRole())) {
-                    response.sendRedirect("admin/dashboard.jsp");
+                    response.sendRedirect("admin/dashboard");
                     return;
                 } else {
                     response.sendRedirect("index.jsp");
