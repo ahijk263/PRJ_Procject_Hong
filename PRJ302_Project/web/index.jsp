@@ -119,6 +119,35 @@
 
             /* Style cho nút yêu thích trên thẻ xe */
             .car-card { cursor: pointer; }
+            /* Trạng thái xe đã bán */
+            .car-card.sold-card {
+                pointer-events: none;
+                opacity: 0.75;
+            }
+            .sold-overlay {
+                position: absolute;
+                inset: 0;
+                background: rgba(0,0,0,0.55);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 5;
+                border-radius: inherit;
+            }
+            .sold-stamp {
+                border: 3px solid #e74c3c;
+                color: #e74c3c;
+                font-weight: 800;
+                font-size: 1.3rem;
+                letter-spacing: 3px;
+                padding: 8px 20px;
+                text-transform: uppercase;
+                transform: rotate(-15deg);
+                background: rgba(0,0,0,0.3);
+            }
+            .badge-sold {
+                background: #e74c3c !important;
+            }
             .car-card-image {
                 position: relative; /* Quan trọng để icon con bám vào */
             }
@@ -222,12 +251,20 @@
                     <c:choose>
                         <c:when test="${not empty featuredCars}">
                             <c:forEach items="${featuredCars}" var="item" varStatus="status" end="8">
-                                <a class="car-card" href="MainController?action=viewDetail&id=${item.car.carId}">                                    
-                                    <div class="car-card-image">
+                                <a class="car-card ${item.car.status == 'SOLD' ? 'sold-card' : ''}" href="${item.car.status != 'SOLD' ? 'MainController?action=viewDetail&id='.concat(item.car.carId) : '#'}">                                    
+                                    <div class="car-card-image" style="position:relative;">
                                         <img src="${not empty item.primaryImage ? item.primaryImage : 'assets/images/default-car.jpg'}" alt="${item.model.modelName}">
-                                        <c:if test="${item.car.mileage == 0}">
-                                            <span class="car-badge">Xe Mới</span>
-                                        </c:if>
+                                        <c:choose>
+                                            <c:when test="${item.car.status == 'SOLD'}">
+                                                <div class="sold-overlay">
+                                                    <div class="sold-stamp">Đã Bán</div>
+                                                </div>
+                                                <span class="car-badge badge-sold">Hết Hàng</span>
+                                            </c:when>
+                                            <c:when test="${item.car.mileage == 0}">
+                                                <span class="car-badge">Xe Mới</span>
+                                            </c:when>
+                                        </c:choose>
                                     </div>
                                     <div class="car-card-content">
                                         <div class="car-brand">${item.brand.brandName}</div>
@@ -375,17 +412,6 @@
                             <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
                             <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
                             <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
-                        </div>
-                    </div>
-
-                    <div class="footer-section">
-                        <h3>Liên Kết</h3>
-                        <div class="footer-links">
-                            <a href="index.jsp">Trang chủ</a>
-                            <a href="search_cars.jsp">Xe bán</a>
-                            <a href="#brands">Hãng xe</a>
-                            <a href="#about">Về chúng tôi</a>
-                            <a href="#contact">Liên hệ</a>
                         </div>
                     </div>
 

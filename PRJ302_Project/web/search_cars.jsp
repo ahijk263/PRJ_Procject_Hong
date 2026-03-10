@@ -372,6 +372,35 @@
             .wishlist-icon i {
                 font-size: 1.1rem;
             }
+
+            /* Trạng thái xe đã bán */
+            .luxury-card.sold-card {
+                pointer-events: none;
+                opacity: 0.75;
+            }
+            .sold-overlay {
+                position: absolute;
+                inset: 0;
+                background: rgba(0,0,0,0.55);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 5;
+            }
+            .sold-stamp {
+                border: 3px solid #e74c3c;
+                color: #e74c3c;
+                font-weight: 800;
+                font-size: 1.3rem;
+                letter-spacing: 3px;
+                padding: 8px 20px;
+                text-transform: uppercase;
+                transform: rotate(-15deg);
+                background: rgba(0,0,0,0.3);
+            }
+            .badge-sold {
+                background: #e74c3c !important;
+            }
         </style>
     </head>
     <body>
@@ -386,8 +415,8 @@
                         <li><a href="MainController" class="nav-link">Trang chủ</a></li>
                         <li><a href="MainController?action=searchCars" class="nav-link active">Xe bán</a></li>
                         <li><a href="brands" class="nav-link">Hãng xe</a></li>
-                        <li><a href="MainController#about" class="nav-link">Về chúng tôi</a></li>
-                        <li><a href="MainController#contact" class="nav-link">Liên hệ</a></li>
+                        <li><a href="#about" class="nav-link">Về chúng tôi</a></li>
+                        <li><a href="#contact" class="nav-link">Liên hệ</a></li>
                             <c:choose>
                                 <c:when test="${not empty user}">
                                     <%-- ĐÃ ĐĂNG NHẬP: Hiện Avatar & Dropdown --%>
@@ -478,11 +507,23 @@
                 <c:choose>
                     <c:when test="${not empty carList}">
                         <c:forEach items="${carList}" var="item">
-                            <a class="luxury-card" href="MainController?action=viewDetail&id=${item.car.carId}" style="text-decoration:none;color:inherit;display:block;">
+                            <c:choose>
+                                <c:when test="${item.car.status == 'SOLD'}">
+                                    <div class="luxury-card sold-card" style="cursor:default;">
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="luxury-card" style="cursor:pointer;" onclick="window.location='MainController?action=viewDetail&id=${item.car.carId}'">
+                                </c:otherwise>
+                            </c:choose>
                                 <div class="card-img-wrapper">
-                                    <c:if test="${item.car.mileage == 0}">
-                                        <span class="badge-condition">Mới</span>
-                                    </c:if>
+                                    <c:choose>
+                                        <c:when test="${item.car.status == 'SOLD'}">
+                                            <span class="badge-condition badge-sold">Hết Hàng</span>
+                                        </c:when>
+                                        <c:when test="${item.car.mileage == 0}">
+                                            <span class="badge-condition">Mới</span>
+                                        </c:when>
+                                    </c:choose>
                                     <c:if test="${not empty sessionScope.user}">
                                         <%-- 1. Logic xử lý để xác định trạng thái Tim (Giữ nguyên) --%>
                                         <c:set var="isFav" value="false" />
@@ -500,6 +541,11 @@
                                         </a>
                                     </c:if>
                                     <img src="${not empty item.primaryImage ? item.primaryImage : 'assets/images/default-car.jpg'}" alt="Car Image">
+                                    <c:if test="${item.car.status == 'SOLD'}">
+                                        <div class="sold-overlay">
+                                            <div class="sold-stamp">Đã Bán</div>
+                                        </div>
+                                    </c:if>
                                 </div>
 
                                 <div class="card-content">
@@ -517,7 +563,7 @@
                                         <small style="font-size: 0.6rem; vertical-align: middle;"> VNĐ</small>
                                     </div>
                                 </div>
-                            </a>
+                            </div><%-- /luxury-card --%>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
@@ -531,9 +577,38 @@
             </div>
         </div>
 
-        <footer class="footer" style="margin-top: 50px;">
-            <div class="container" style="text-align: center; color: #777; padding: 40px 0; border-top: 1px solid #eee;">
-                <p>&copy; 2024 LUXURY CARS. All rights reserved.</p>
+        <!-- FOOTER -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3>LUXURY<span style="color: var(--primary-gold);">CARS</span></h3>
+                        <p>Đối tác tin cậy cho những chiếc xe sang đẳng cấp thế giới.</p>
+                        <div class="social-links">
+                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                        </div>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Dịch Vụ</h3>
+                        <div class="footer-links">
+                            <a href="MainController?action=searchCars">Bán xe</a>
+                            <a href="#">Tư vấn</a>
+                            <a href="register.jsp">Đăng ký</a>
+                        </div>
+                    </div>
+                    <div class="footer-section">
+                        <h3>Liên Hệ</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q1, TP.HCM</p>
+                        <p><i class="fas fa-phone"></i> 1900 xxxx</p>
+                        <p><i class="fas fa-envelope"></i> info@luxurycars.vn</p>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 LuxuryCars. All rights reserved.</p>
+                </div>
             </div>
         </footer>
 
