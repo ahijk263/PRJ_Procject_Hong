@@ -180,7 +180,7 @@
                 <a href="${pageContext.request.contextPath}/MainController" class="logo">
                     LUXURY<span>CARS</span>
                 </a>
-                <a href="${pageContext.request.contextPath}/index.jsp" class="btn-home">
+                <a href="${pageContext.request.contextPath}/MainController" class="btn-home">
                     <i class="fa-solid fa-chevron-left me-1"></i> QUAY LẠI TRANG CHỦ
                 </a>
             </div>

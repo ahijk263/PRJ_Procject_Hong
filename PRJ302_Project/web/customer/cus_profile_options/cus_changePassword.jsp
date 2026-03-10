@@ -151,7 +151,7 @@
                 <a href="${pageContext.request.contextPath}/MainController" class="logo">
                     LUXURY<span>CARS</span>
                 </a>
-                <a href="${pageContext.request.contextPath}/index.jsp" style="text-decoration:none; color: var(--dark-accent); font-weight: 600; font-size: 0.8rem; font-family: 'Montserrat';">
+                <a href="${pageContext.request.contextPath}/MainController" style="text-decoration:none; color: var(--dark-accent); font-weight: 600; font-size: 0.8rem; font-family: 'Montserrat';">
                     <i class="fa-solid fa-chevron-left me-1"></i> TRANG CHỦ
                 </a>
             </div>

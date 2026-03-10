@@ -90,18 +90,17 @@
                 width: 100px;
                 height: 100px;
                 margin: 0 auto 1.2rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background: white;
                 border-radius: 50%;
                 box-shadow: var(--shadow-md);
                 overflow: hidden;
+                background: #111;
             }
             .brand-logo img {
-                width: 70px;
-                height: 70px;
-                object-fit: contain;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                object-position: center;
+                display: block;
             }
             .brand-logo-icon {
                 font-size: 2.5rem;
@@ -491,16 +490,6 @@
                             <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
                             <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
                             <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
-                        </div>
-                    </div>
-                    <div class="footer-section">
-                        <h3>Liên Kết</h3>
-                        <div class="footer-links">
-                            <a href="MainController">Trang chủ</a>
-                            <a href="MainController?action=searchCars">Xe bán</a>
-                            <a href="brands">Hãng xe</a>
-                            <a href="MainController#about">Về chúng tôi</a>
-                            <a href="MainController#contact">Liên hệ</a>
                         </div>
                     </div>
                     <div class="footer-section">
