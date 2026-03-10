@@ -193,10 +193,6 @@
                         <i class="fa-solid fa-exclamation-triangle me-2"></i> ${error}
                     </div>
                 </c:if>
-
-                <a href="cus_view_editProfile.jsp" class="back-link">
-                    QUAY LẠI HỒ SƠ CÁ NHÂN
-                </a>
             </div>
         </div>
 

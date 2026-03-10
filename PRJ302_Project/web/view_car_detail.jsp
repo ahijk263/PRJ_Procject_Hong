@@ -176,7 +176,44 @@
             .btn-wishlist-detail.active i {
                 transform: scale(1.2);
             }
+            /* Style cho phần đánh giá khách hàng */
+            .reviews-container {
+                margin-top: 80px;
+                padding-top: 50px;
+                border-top: 1px solid #f0f0f0;
+            }
 
+            .review-card {
+                background: #fdfdfd;
+                border: 1px solid #f8f8f8;
+                padding: 25px;
+                transition: all 0.3s ease;
+                border-radius: 8px;
+            }
+
+            .review-card:hover {
+                box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+                background: #fff;
+                transform: translateY(-5px);
+            }
+
+            .user-avatar {
+                width: 45px;
+                height: 45px;
+                background: var(--dark-accent);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                font-weight: 700;
+                font-size: 0.9rem;
+            }
+
+            .star-rating-display {
+                color: #FFC107;
+                font-size: 0.8rem;
+            }
         </style>
     </head>
     <body>
@@ -262,6 +299,56 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="reviews-container" data-aos="fade-up">
+                <div class="row mb-5">
+                    <div class="col-md-12 text-center">
+                        <h2 class="car-model-title" style="font-size: 2.5rem;">Cảm nhận chủ nhân</h2>
+                        <p class="text-muted text-uppercase small" style="letter-spacing: 3px;">Tiếng nói từ những người đã trải nghiệm</p>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <c:choose>
+                        <c:when test="${empty reviewList}">
+                            <div class="col-12 text-center py-5">
+                                <i class="fa-regular fa-comment-dots mb-3 text-muted" style="font-size: 2rem;"></i>
+                                <p class="text-muted italic">Chiếc xe này đang chờ đợi đánh giá đầu tiên từ chủ nhân tương lai.</p>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach var="rev" items="${reviewList}">
+                                <div class="col-md-6">
+                                    <div class="review-card h-100">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="user-avatar me-3">
+                                                ${rev.userFullName.substring(0,1).toUpperCase()}
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold">${rev.userFullName}</h6>
+                                                <div class="star-rating-display">
+                                                    <c:forEach begin="1" end="${rev.rating}">
+                                                        <i class="fa-solid fa-star"></i>
+                                                    </c:forEach>
+                                                    <c:forEach begin="${rev.rating + 1}" end="5">
+                                                        <i class="fa-regular fa-star" style="color: #ddd;"></i>
+                                                    </c:forEach>
+                                                </div>
+                                            </div>
+                                            <div class="ms-auto text-muted small">
+                                                <fmt:formatDate value="${rev.reviewDate}" pattern="dd/MM/yyyy"/>
+                                            </div>
+                                        </div>
+                                        <p class="mb-0 text-muted" style="line-height: 1.6; font-style: italic;">
+                                            "${rev.comment}"
+                                        </p>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </div>

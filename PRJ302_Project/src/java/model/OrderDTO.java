@@ -22,6 +22,7 @@ public class OrderDTO {
 
     // JOIN từ OrderDetail + Car + CarModel + Brand (xe đầu tiên)
     private String carInfo;   // "Brand ModelName Color"
+    private int carId;
 
     public OrderDTO() {
     }
@@ -128,5 +129,13 @@ public class OrderDTO {
 
     public void setCarInfo(String carInfo) {
         this.carInfo = carInfo;
+    }
+
+    public int getCarId() {
+        return carId;
+    }
+
+    public void setCarId(int carId) {
+        this.carId = carId;
     }
 }
