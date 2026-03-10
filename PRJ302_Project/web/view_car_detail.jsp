@@ -4,6 +4,9 @@
 <!DOCTYPE html>
 <html lang="vi">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${CAR_DETAIL.brand.brandName} ${CAR_DETAIL.model.modelName} - LuxuryCars</title>
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Montserrat:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,7 +23,6 @@
                 color: var(--dark-accent);
             }
 
-            /* Tiêu đề kiểu tạp chí xe hơi */
             .car-model-title {
                 font-family: 'Playfair Display', serif;
                 font-size: 3.5rem;
@@ -35,7 +37,6 @@
                 font-size: 0.85rem;
             }
 
-            /* Định dạng giá tiền nổi bật */
             .price-large {
                 font-size: 2.5rem;
                 font-weight: 700;
@@ -43,22 +44,6 @@
                 letter-spacing: -1px;
             }
 
-            /* Hiệu ứng ảnh xe */
-            .main-image-container {
-                overflow: hidden;
-                border-radius: 15px;
-                box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            }
-
-            .main-car-img {
-                transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
-            }
-
-            .main-car-img:hover {
-                transform: scale(1.05);
-            }
-
-            /* Bảng thông số kỹ thuật tối giản */
             .spec-item {
                 border-bottom: 1px solid #eee;
                 padding: 15px 0;
@@ -76,7 +61,6 @@
                 font-size: 1.1rem;
             }
 
-            /* Nút bấm Luxury */
             .btn-luxury {
                 background-color: var(--dark-accent);
                 color: white;
@@ -102,9 +86,8 @@
                 padding-left: 20px;
             }
 
-            /* 1. Thiết lập Header chuẩn Index */
             header.header {
-                height: 105px; /* Chiều cao cố định giống Index */
+                height: 105px;
                 background: white !important;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.05);
                 display: flex;
@@ -114,24 +97,21 @@
                 z-index: 1000;
             }
 
-            /* 2. Căn chỉnh Logo */
             header.header .logo {
-                font-family: 'Playfair Display', serif; /* Font chữ tiêu chuẩn của Luxury Cars */
-                font-size: 1.8rem; /* Kích cỡ chữ chuẩn */
-                font-weight: 800; /* Độ dày cực đại để tạo vẻ quyền lực */
-                color: #1A1A1A !important; /* Màu đen chủ đạo (var--primary-dark) */
+                font-family: 'Playfair Display', serif;
+                font-size: 1.8rem;
+                font-weight: 800;
+                color: #1A1A1A !important;
                 text-decoration: none !important;
                 letter-spacing: 1px;
                 display: flex;
                 align-items: center;
             }
 
-            /* 3. Phần chữ vàng trong Logo */
             header.header .logo span {
-                color: #C5A021 !important; /* Màu vàng Gold đặc trưng (var--primary-gold) */
+                color: #C5A021 !important;
             }
 
-            /* 4. Đảm bảo Container luôn dàn hàng ngang */
             header.header .container {
                 display: flex;
                 justify-content: space-between;
@@ -139,7 +119,6 @@
                 width: 100%;
             }
 
-            /* Nút Wishlist trong trang Chi tiết */
             .btn-wishlist-detail {
                 background-color: #ffffff;
                 color: var(--dark-accent);
@@ -176,7 +155,7 @@
             .btn-wishlist-detail.active i {
                 transform: scale(1.2);
             }
-            /* Style cho phần đánh giá khách hàng */
+
             .reviews-container {
                 margin-top: 80px;
                 padding-top: 50px;
@@ -214,6 +193,272 @@
                 color: #FFC107;
                 font-size: 0.8rem;
             }
+
+            /* ===================== GALLERY ===================== */
+            .gallery-wrap { position: relative; }
+
+            /* Khung ảnh chính — tỉ lệ 4:3 cố định, nền tối để ảnh ngang không bị méo */
+            .main-frame {
+                position: relative;
+                width: 100%;
+                aspect-ratio: 4 / 3;
+                background: #111;
+                border-radius: 14px;
+                overflow: hidden;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            }
+
+            .main-slide {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                pointer-events: none;
+            }
+
+            .main-slide.active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            /* object-fit: contain giữ toàn bộ xe trong khung, không crop */
+            .main-slide img {
+                max-width: 100%;
+                max-height: 100%;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+                display: block;
+                cursor: zoom-in;
+                transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+
+            .main-slide.active img:hover { transform: scale(1.04); }
+
+            /* Nút prev / next */
+            .gallery-nav {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                background: rgba(255,255,255,0.9);
+                border: none;
+                border-radius: 50%;
+                width: 44px;
+                height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1rem;
+                color: #1A1A1A;
+                cursor: pointer;
+                z-index: 10;
+                box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+                transition: all 0.25s;
+            }
+
+            .gallery-nav:hover {
+                background: var(--luxury-gold);
+                color: #fff;
+                transform: translateY(-50%) scale(1.1);
+            }
+
+            .gallery-nav.prev { left: 14px; }
+            .gallery-nav.next { right: 14px; }
+
+            /* Dots */
+            .gallery-dots {
+                position: absolute;
+                bottom: 12px;
+                left: 50%;
+                transform: translateX(-50%);
+                display: flex;
+                gap: 7px;
+                z-index: 10;
+            }
+
+            .g-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.45);
+                cursor: pointer;
+                transition: all 0.25s;
+                border: none;
+                padding: 0;
+            }
+
+            .g-dot.active {
+                background: var(--luxury-gold);
+                transform: scale(1.35);
+            }
+
+            /* Hint zoom */
+            .zoom-hint {
+                position: absolute;
+                top: 12px;
+                right: 14px;
+                background: rgba(0,0,0,0.5);
+                color: rgba(255,255,255,0.85);
+                font-size: 0.7rem;
+                padding: 5px 10px;
+                border-radius: 20px;
+                pointer-events: none;
+                letter-spacing: 0.5px;
+                z-index: 10;
+            }
+
+            /* Bộ đếm ảnh góc trái */
+            .img-counter {
+                position: absolute;
+                top: 12px;
+                left: 14px;
+                background: rgba(0,0,0,0.5);
+                color: rgba(255,255,255,0.85);
+                font-size: 0.72rem;
+                padding: 5px 10px;
+                border-radius: 20px;
+                pointer-events: none;
+                z-index: 10;
+                display: none; /* hiện bằng JS khi > 1 ảnh */
+            }
+
+            /* Thumbnail strip */
+            .thumb-strip {
+                display: flex;
+                gap: 8px;
+                margin-top: 10px;
+                overflow-x: auto;
+                padding-bottom: 4px;
+                scrollbar-width: thin;
+                scrollbar-color: #ddd transparent;
+            }
+
+            .thumb-strip::-webkit-scrollbar { height: 4px; }
+            .thumb-strip::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+
+            .thumb-item {
+                flex-shrink: 0;
+                width: 80px;
+                height: 60px;
+                border-radius: 6px;
+                overflow: hidden;
+                cursor: pointer;
+                border: 2px solid transparent;
+                transition: border-color 0.2s, opacity 0.2s;
+                opacity: 0.55;
+                background: #111;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .thumb-item img {
+                max-width: 100%;
+                max-height: 100%;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+            }
+
+            .thumb-item.active, .thumb-item:hover {
+                border-color: var(--luxury-gold);
+                opacity: 1;
+            }
+
+            /* =================== LIGHTBOX =================== */
+            .lightbox-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.94);
+                z-index: 9999;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .lightbox-overlay.open {
+                display: flex;
+                animation: lbFadeIn 0.2s ease;
+            }
+
+            @keyframes lbFadeIn {
+                from { opacity: 0; }
+                to   { opacity: 1; }
+            }
+
+            .lightbox-img-wrap {
+                max-width: 90vw;
+                max-height: 88vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .lightbox-img-wrap img {
+                max-width: 90vw;
+                max-height: 88vh;
+                object-fit: contain;
+                border-radius: 4px;
+                box-shadow: 0 0 60px rgba(0,0,0,0.5);
+                transition: opacity 0.2s;
+            }
+
+            .lightbox-close {
+                position: fixed;
+                top: 18px;
+                right: 22px;
+                background: rgba(255,255,255,0.12);
+                border: none;
+                color: white;
+                width: 46px;
+                height: 46px;
+                border-radius: 50%;
+                font-size: 1.3rem;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background 0.2s;
+                z-index: 10001;
+            }
+
+            .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+
+            .lightbox-nav {
+                position: fixed;
+                top: 50%;
+                transform: translateY(-50%);
+                background: rgba(255,255,255,0.1);
+                border: none;
+                color: white;
+                width: 54px;
+                height: 54px;
+                border-radius: 50%;
+                font-size: 1.4rem;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: background 0.2s;
+                z-index: 10001;
+            }
+
+            .lightbox-nav:hover { background: rgba(212,175,55,0.65); }
+            .lightbox-prev { left: 18px; }
+            .lightbox-next { right: 18px; }
+
+            .lightbox-counter {
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                color: rgba(255,255,255,0.55);
+                font-size: 0.85rem;
+                letter-spacing: 1px;
+            }
         </style>
     </head>
     <body>
@@ -227,10 +472,54 @@
 
         <div class="container py-5 mt-4">
             <div class="row g-5">
+
+                <!-- ============ CỘT TRÁI: GALLERY ============ -->
                 <div class="col-lg-7" data-aos="fade-right">
-                    <div class="main-image-container">
-                        <img src="${CAR_DETAIL.primaryImage}" class="img-fluid main-car-img" alt="Luxury Car">
-                    </div>
+                    <div class="gallery-wrap">
+
+                        <!-- Khung ảnh chính -->
+                        <div class="main-frame" id="mainFrame">
+
+                            <c:choose>
+                                <c:when test="${not empty CAR_DETAIL.imageList}">
+                                    <c:forEach var="img" items="${CAR_DETAIL.imageList}" varStatus="st">
+                                        <div class="main-slide ${st.first ? 'active' : ''}" data-index="${st.index}">
+                                            <img src="${img}"
+                                                 alt="${CAR_DETAIL.brand.brandName} ${CAR_DETAIL.model.modelName} - ảnh ${st.index + 1}"
+                                                 onclick="openLightbox(${st.index})">
+                                        </div>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <!-- fallback: chỉ có primary -->
+                                    <div class="main-slide active" data-index="0">
+                                        <img src="${CAR_DETAIL.primaryImage}"
+                                             alt="${CAR_DETAIL.brand.brandName}"
+                                             onclick="openLightbox(0)">
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+
+                            <!-- Nút điều hướng (JS sẽ ẩn nếu chỉ 1 ảnh) -->
+                            <button class="gallery-nav prev" id="btnPrev" onclick="slideGallery(-1)" aria-label="Ảnh trước">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <button class="gallery-nav next" id="btnNext" onclick="slideGallery(1)" aria-label="Ảnh tiếp">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+
+                            <!-- Dots -->
+                            <div class="gallery-dots" id="galleryDots"></div>
+
+                            <!-- Bộ đếm & hint -->
+                            <span class="img-counter" id="imgCounter"></span>
+                            <span class="zoom-hint"><i class="fa-solid fa-magnifying-glass-plus"></i> Click để phóng to</span>
+                        </div>
+
+                        <!-- Thumbnail strip -->
+                        <div class="thumb-strip" id="thumbStrip"></div>
+
+                    </div><!-- /gallery-wrap -->
 
                     <div class="mt-5 p-4" data-aos="fade-up" data-aos-delay="200">
                         <h4 class="fw-bold mb-4 font-serif text-uppercase small" style="letter-spacing: 2px;">Chi tiết sản phẩm</h4>
@@ -238,6 +527,7 @@
                     </div>
                 </div>
 
+                <!-- ============ CỘT PHẢI: THÔNG TIN ============ -->
                 <div class="col-lg-5">
                     <div class="sticky-top" style="top: 30px;" data-aos="fade-left">
                         <span class="brand-label text-uppercase d-block mb-3">${CAR_DETAIL.brand.brandName} • ${CAR_DETAIL.brand.country}</span>
@@ -277,7 +567,6 @@
                         </div>
 
                         <div class="mt-5">
-                            <%-- kiểm tra xem xe này đã nằm trong Wishlist chưa --%>
                             <c:set var="isFav" value="false" />
                             <c:forEach items="${sessionScope.favIds}" var="fId">
                                 <c:if test="${fId == CAR_DETAIL.car.carId}">
@@ -287,7 +576,7 @@
                             <a href="index.jsp#contact" class="btn btn-luxury w-100 mb-3 shadow d-flex align-items-center justify-content-center" style="text-decoration: none;">
                                 Đặt lịch xem xe trực tiếp
                             </a>
-                            <a href="CustomerController?action=addFav&carId=${CAR_DETAIL.car.carId}" 
+                            <a href="CustomerController?action=addFav&carId=${CAR_DETAIL.car.carId}"
                                class="btn-wishlist-detail w-100 mb-3 ${isFav ? 'active' : ''}">
                                 <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
                                 <span>${isFav ? 'Đã lưu vào danh sách' : 'Thêm vào yêu thích'}</span>
@@ -302,6 +591,7 @@
                 </div>
             </div>
 
+            <!-- ============ ĐÁNH GIÁ ============ -->
             <div class="reviews-container" data-aos="fade-up">
                 <div class="row mb-5">
                     <div class="col-md-12 text-center">
@@ -353,15 +643,153 @@
             </div>
         </div>
 
+        <!-- =================== LIGHTBOX =================== -->
+        <div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
+            <button class="lightbox-close" onclick="closeLightbox()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <button class="lightbox-nav lightbox-prev" onclick="event.stopPropagation(); lightboxNav(-1)">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <div class="lightbox-img-wrap" onclick="event.stopPropagation()">
+                <img id="lightboxImg" src="" alt="Xem ảnh lớn">
+            </div>
+            <button class="lightbox-nav lightbox-next" onclick="event.stopPropagation(); lightboxNav(1)">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+            <div class="lightbox-counter" id="lightboxCounter"></div>
+        </div>
+
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
-            // Khởi tạo hiệu ứng trượt AOS
-            AOS.init({
-                duration: 1000,
-                once: true,
-                offset: 100
+            AOS.init({ duration: 1000, once: true, offset: 100 });
+
+            /* ============ GALLERY ============ */
+            const slides    = Array.from(document.querySelectorAll('.main-slide'));
+            const dotsWrap  = document.getElementById('galleryDots');
+            const thumbStrip = document.getElementById('thumbStrip');
+            const counter   = document.getElementById('imgCounter');
+            const btnPrev   = document.getElementById('btnPrev');
+            const btnNext   = document.getElementById('btnNext');
+            let current     = 0;
+
+            // Lấy src tất cả ảnh từ slides
+            const imgSrcs = slides.map(s => s.querySelector('img').src);
+
+            function buildUI() {
+                const total = slides.length;
+
+                if (total <= 1) {
+                    // Chỉ 1 ảnh → ẩn nav, dots, counter
+                    btnPrev.style.display = 'none';
+                    btnNext.style.display = 'none';
+                    return;
+                }
+
+                // Tạo dots
+                slides.forEach((_, i) => {
+                    const d = document.createElement('button');
+                    d.className = 'g-dot' + (i === 0 ? ' active' : '');
+                    d.setAttribute('aria-label', 'Ảnh ' + (i + 1));
+                    d.onclick = () => goToSlide(i);
+                    dotsWrap.appendChild(d);
+                });
+
+                // Tạo thumbnails
+                slides.forEach((s, i) => {
+                    const div = document.createElement('div');
+                    div.className = 'thumb-item' + (i === 0 ? ' active' : '');
+                    const img = document.createElement('img');
+                    img.src = imgSrcs[i];
+                    img.alt = 'Thumbnail ' + (i + 1);
+                    img.loading = 'lazy';
+                    div.appendChild(img);
+                    div.onclick = () => goToSlide(i);
+                    thumbStrip.appendChild(div);
+                });
+
+                // Hiện counter
+                counter.style.display = 'block';
+                updateCounter();
+            }
+
+            function goToSlide(idx) {
+                const dots   = dotsWrap.querySelectorAll('.g-dot');
+                const thumbs = thumbStrip.querySelectorAll('.thumb-item');
+
+                slides[current].classList.remove('active');
+                dots[current]  && dots[current].classList.remove('active');
+                thumbs[current] && thumbs[current].classList.remove('active');
+
+                current = (idx + slides.length) % slides.length;
+
+                slides[current].classList.add('active');
+                dots[current]  && dots[current].classList.add('active');
+                if (thumbs[current]) {
+                    thumbs[current].classList.add('active');
+                    thumbs[current].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+                updateCounter();
+            }
+
+            function slideGallery(dir) { goToSlide(current + dir); }
+
+            function updateCounter() {
+                counter.textContent = (current + 1) + ' / ' + slides.length;
+            }
+
+            // Swipe mobile
+            let touchStartX = 0;
+            const frame = document.getElementById('mainFrame');
+            frame.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+            frame.addEventListener('touchend',   e => {
+                const dx = e.changedTouches[0].clientX - touchStartX;
+                if (Math.abs(dx) > 40) slideGallery(dx < 0 ? 1 : -1);
             });
+
+            // Phím mũi tên
+            document.addEventListener('keydown', e => {
+                const lb = document.getElementById('lightboxOverlay');
+                if (lb.classList.contains('open')) {
+                    if (e.key === 'ArrowLeft')  lightboxNav(-1);
+                    if (e.key === 'ArrowRight') lightboxNav(1);
+                    if (e.key === 'Escape')     closeLightbox();
+                } else {
+                    if (e.key === 'ArrowLeft')  slideGallery(-1);
+                    if (e.key === 'ArrowRight') slideGallery(1);
+                }
+            });
+
+            buildUI(); // Khởi tạo
+
+            /* ============ LIGHTBOX ============ */
+            const lb = document.getElementById('lightboxOverlay');
+
+            function openLightbox(idx) {
+                lb._index = idx !== undefined ? idx : current;
+                lb.classList.add('open');
+                refreshLightbox();
+            }
+
+            function closeLightbox() {
+                lb.classList.remove('open');
+            }
+
+            function lightboxNav(dir) {
+                lb._index = (lb._index + dir + imgSrcs.length) % imgSrcs.length;
+                const imgEl = document.getElementById('lightboxImg');
+                imgEl.style.opacity = '0';
+                setTimeout(() => {
+                    refreshLightbox();
+                    imgEl.style.opacity = '1';
+                }, 120);
+            }
+
+            function refreshLightbox() {
+                document.getElementById('lightboxImg').src = imgSrcs[lb._index];
+                document.getElementById('lightboxCounter').textContent = (lb._index + 1) + ' / ' + imgSrcs.length;
+            }
         </script>
     </body>
 </html>

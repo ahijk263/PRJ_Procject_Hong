@@ -73,7 +73,7 @@ public class CarModelDAO {
             String sql = "SELECT cm.*, b.brand_name, b.country as brand_country " +
                         "FROM CarModel cm " +
                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
-                        "ORDER BY b.brand_name ASC, cm.model_name ASC";
+                        "ORDER BY cm.model_id DESC";
             
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
@@ -108,7 +108,7 @@ public class CarModelDAO {
                         "FROM CarModel cm " +
                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
                         "WHERE cm.brand_id=? " +
-                        "ORDER BY cm.model_name ASC";
+                        "ORDER BY cm.model_id DESC";
             
             pst = conn.prepareStatement(sql);
             pst.setInt(1, brandId);
@@ -144,7 +144,7 @@ public class CarModelDAO {
                         "FROM CarModel cm " +
                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
                         "WHERE cm.year=? " +
-                        "ORDER BY b.brand_name ASC, cm.model_name ASC";
+                        "ORDER BY cm.model_id DESC";
             
             pst = conn.prepareStatement(sql);
             pst.setInt(1, year);
@@ -180,7 +180,7 @@ public class CarModelDAO {
                         "FROM CarModel cm " +
                         "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
                         "WHERE cm.model_name LIKE ? OR b.brand_name LIKE ? OR cm.description LIKE ? " +
-                        "ORDER BY b.brand_name ASC, cm.model_name ASC";
+                        "ORDER BY cm.model_id DESC";
             
             pst = conn.prepareStatement(sql);
             String searchPattern = "%" + keyword + "%";
@@ -411,4 +411,3 @@ public class CarModelDAO {
         }
     }
 }
-    

@@ -96,7 +96,7 @@ public class CategoryDAO {
         
         try {
             conn = DbUtils.getConnection();
-            String sql = "SELECT * FROM Category ORDER BY category_name ASC";
+            String sql = "SELECT * FROM Category ORDER BY category_id DESC";
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
             
@@ -281,7 +281,7 @@ public class CategoryDAO {
             String sql = "SELECT c.* FROM Category c " +
                         "INNER JOIN CarCategory cc ON c.category_id = cc.category_id " +
                         "WHERE cc.car_id = ? " +
-                        "ORDER BY c.category_name ASC";
+                        "ORDER BY c.category_id DESC";
             
             pst = conn.prepareStatement(sql);
             pst.setInt(1, carId);

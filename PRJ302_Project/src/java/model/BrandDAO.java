@@ -96,7 +96,7 @@ public class BrandDAO {
         
         try {
             conn = DbUtils.getConnection();
-            String sql = "SELECT * FROM Brand ORDER BY brand_name ASC";
+            String sql = "SELECT * FROM Brand ORDER BY brand_id DESC";
             pst = conn.prepareStatement(sql);
             rs = pst.executeQuery();
             
@@ -160,7 +160,7 @@ public class BrandDAO {
         
         try {
             conn = DbUtils.getConnection();
-            String sql = "SELECT * FROM Brand WHERE country=? ORDER BY brand_name ASC";
+            String sql = "SELECT * FROM Brand WHERE country=? ORDER BY brand_id DESC";
             pst = conn.prepareStatement(sql);
             pst.setString(1, country);
             rs = pst.executeQuery();

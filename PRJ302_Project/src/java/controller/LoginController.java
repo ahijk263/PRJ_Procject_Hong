@@ -79,7 +79,7 @@ public class LoginController extends HttpServlet {
                     response.sendRedirect("admin/dashboard");
                     return;
                 } else {
-                    response.sendRedirect("index.jsp");
+                    response.sendRedirect("MainController");
                     return;
                 }
             }
