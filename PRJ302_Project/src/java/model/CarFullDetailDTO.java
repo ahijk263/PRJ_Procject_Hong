@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CarFullDetailDTO {
@@ -12,10 +13,10 @@ public class CarFullDetailDTO {
     private CarModelDTO model;
     private BrandDTO brand;
     private String primaryImage;
+    private List<String> imageList = new ArrayList<>();
     private double avgRating;
     private int totalReviews;
 
-    // QUAN TRỌNG: Phải có đầy đủ Getter và Setter thì JSP mới lấy được dữ liệu
     public CarDTO getCar() {
         return car;
     }
@@ -46,6 +47,14 @@ public class CarFullDetailDTO {
 
     public void setPrimaryImage(String primaryImage) {
         this.primaryImage = primaryImage;
+    }
+
+    public List<String> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<String> imageList) {
+        this.imageList = imageList;
     }
 
     public double getAvgRating() {

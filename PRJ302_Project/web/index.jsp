@@ -118,6 +118,7 @@
             }
 
             /* Style cho nút yêu thích trên thẻ xe */
+            .car-card { cursor: pointer; }
             .car-card-image {
                 position: relative; /* Quan trọng để icon con bám vào */
             }
@@ -221,7 +222,7 @@
                     <c:choose>
                         <c:when test="${not empty featuredCars}">
                             <c:forEach items="${featuredCars}" var="item" varStatus="status" end="8">
-                                <div class="car-card">                                    
+                                <a class="car-card" href="MainController?action=viewDetail&id=${item.car.carId}">                                    
                                     <div class="car-card-image">
                                         <img src="${not empty item.primaryImage ? item.primaryImage : 'assets/images/default-car.jpg'}" alt="${item.model.modelName}">
                                         <c:if test="${item.car.mileage == 0}">
@@ -250,10 +251,9 @@
                                                 <fmt:formatNumber value="${item.car.price}" type="number" groupingUsed="true"/> 
                                                 <span style="font-size: 0.6em">VNĐ</span>
                                             </div>
-                                            <a href="MainController?action=viewDetail&id=${item.car.carId}" class="btn btn-primary btn-view">Chi tiết</a>
                                         </div>
                                     </div>
-                                </div>
+                                </a>
                             </c:forEach>
                         </c:when>
                         <c:otherwise>

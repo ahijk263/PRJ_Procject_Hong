@@ -386,8 +386,8 @@
                         <li><a href="MainController" class="nav-link">Trang chủ</a></li>
                         <li><a href="MainController?action=searchCars" class="nav-link active">Xe bán</a></li>
                         <li><a href="brands" class="nav-link">Hãng xe</a></li>
-                        <li><a href="#about" class="nav-link">Về chúng tôi</a></li>
-                        <li><a href="#contact" class="nav-link">Liên hệ</a></li>
+                        <li><a href="MainController#about" class="nav-link">Về chúng tôi</a></li>
+                        <li><a href="MainController#contact" class="nav-link">Liên hệ</a></li>
                             <c:choose>
                                 <c:when test="${not empty user}">
                                     <%-- ĐÃ ĐĂNG NHẬP: Hiện Avatar & Dropdown --%>
@@ -478,7 +478,7 @@
                 <c:choose>
                     <c:when test="${not empty carList}">
                         <c:forEach items="${carList}" var="item">
-                            <div class="luxury-card">
+                            <a class="luxury-card" href="MainController?action=viewDetail&id=${item.car.carId}" style="text-decoration:none;color:inherit;display:block;">
                                 <div class="card-img-wrapper">
                                     <c:if test="${item.car.mileage == 0}">
                                         <span class="badge-condition">Mới</span>
@@ -516,12 +516,8 @@
                                         <fmt:formatNumber value="${item.car.price}" type="number" groupingUsed="true" />
                                         <small style="font-size: 0.6rem; vertical-align: middle;"> VNĐ</small>
                                     </div>
-
-                                    <a href="MainController?action=viewDetail&id=${item.car.carId}" class="btn-view-detail">
-                                        XEM CHI TIẾT <i class="fas fa-arrow-right" style="font-size: 0.7rem; margin-left: 5px;"></i>
-                                    </a>
                                 </div>
-                            </div>
+                            </a>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>

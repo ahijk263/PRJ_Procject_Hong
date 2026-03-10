@@ -204,6 +204,21 @@ public class CarFullDetailDAO extends DbUtils {
                 detail.setPrimaryImage(rs.getString("image_url"));
                 detail.setAvgRating(rs.getDouble("avg_rating"));
                 detail.setTotalReviews(rs.getInt("total_reviews"));
+
+                // 5. Load TẤT CẢ ảnh của xe (primary trước, sau đó các ảnh còn lại)
+                String imgSql = "SELECT image_url FROM CarImage WHERE car_id = ? AND image_url IS NOT NULL ORDER BY is_primary DESC, image_id ASC";
+                try (PreparedStatement imgPs = conn.prepareStatement(imgSql)) {
+                    imgPs.setInt(1, carId);
+                    ResultSet imgRs = imgPs.executeQuery();
+                    List<String> imgs = new ArrayList<>();
+                    while (imgRs.next()) {
+                        String url = imgRs.getString("image_url");
+                        if (url != null && !url.trim().isEmpty()) {
+                            imgs.add(url);
+                        }
+                    }
+                    detail.setImageList(imgs);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
