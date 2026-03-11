@@ -195,7 +195,9 @@
             }
 
             /* ===================== GALLERY ===================== */
-            .gallery-wrap { position: relative; }
+            .gallery-wrap {
+                position: relative;
+            }
 
             /* Khung ảnh chính — tỉ lệ 4:3 cố định, nền tối để ảnh ngang không bị méo */
             .main-frame {
@@ -236,7 +238,9 @@
                 transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
             }
 
-            .main-slide.active img:hover { transform: scale(1.04); }
+            .main-slide.active img:hover {
+                transform: scale(1.04);
+            }
 
             /* Nút prev / next */
             .gallery-nav {
@@ -265,8 +269,12 @@
                 transform: translateY(-50%) scale(1.1);
             }
 
-            .gallery-nav.prev { left: 14px; }
-            .gallery-nav.next { right: 14px; }
+            .gallery-nav.prev {
+                left: 14px;
+            }
+            .gallery-nav.next {
+                right: 14px;
+            }
 
             /* Dots */
             .gallery-dots {
@@ -336,8 +344,13 @@
                 scrollbar-color: #ddd transparent;
             }
 
-            .thumb-strip::-webkit-scrollbar { height: 4px; }
-            .thumb-strip::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+            .thumb-strip::-webkit-scrollbar {
+                height: 4px;
+            }
+            .thumb-strip::-webkit-scrollbar-thumb {
+                background: #ddd;
+                border-radius: 4px;
+            }
 
             .thumb-item {
                 flex-shrink: 0;
@@ -385,8 +398,12 @@
             }
 
             @keyframes lbFadeIn {
-                from { opacity: 0; }
-                to   { opacity: 1; }
+                from {
+                    opacity: 0;
+                }
+                to   {
+                    opacity: 1;
+                }
             }
 
             .lightbox-img-wrap {
@@ -425,7 +442,9 @@
                 z-index: 10001;
             }
 
-            .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+            .lightbox-close:hover {
+                background: rgba(255,255,255,0.25);
+            }
 
             .lightbox-nav {
                 position: fixed;
@@ -446,9 +465,15 @@
                 z-index: 10001;
             }
 
-            .lightbox-nav:hover { background: rgba(212,175,55,0.65); }
-            .lightbox-prev { left: 18px; }
-            .lightbox-next { right: 18px; }
+            .lightbox-nav:hover {
+                background: rgba(212,175,55,0.65);
+            }
+            .lightbox-prev {
+                left: 18px;
+            }
+            .lightbox-next {
+                right: 18px;
+            }
 
             .lightbox-counter {
                 position: fixed;
@@ -466,6 +491,9 @@
             <div class="container">
                 <a href="MainController" class="logo">
                     LUXURY<span>CARS</span>
+                </a>
+                <a href="javascript:history.back()" style="text-decoration:none; color: var(--dark-accent); font-weight: 600; font-size: 0.8rem; font-family: 'Montserrat';">
+                    <i class="fa-solid fa-chevron-left me-1"></i> QUAY LẠI
                 </a>
             </div>
         </header>
@@ -513,7 +541,7 @@
 
                             <!-- Bộ đếm & hint -->
                             <span class="img-counter" id="imgCounter"></span>
-                            <span class="zoom-hint"><i class="fa-solid fa-magnifying-glass-plus"></i> Click để phóng to</span>
+                            <span class="zoom-hint"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
                         </div>
 
                         <!-- Thumbnail strip -->
@@ -663,133 +691,143 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
-            AOS.init({ duration: 1000, once: true, offset: 100 });
+                AOS.init({duration: 1000, once: true, offset: 100});
 
-            /* ============ GALLERY ============ */
-            const slides    = Array.from(document.querySelectorAll('.main-slide'));
-            const dotsWrap  = document.getElementById('galleryDots');
-            const thumbStrip = document.getElementById('thumbStrip');
-            const counter   = document.getElementById('imgCounter');
-            const btnPrev   = document.getElementById('btnPrev');
-            const btnNext   = document.getElementById('btnNext');
-            let current     = 0;
+                /* ============ GALLERY ============ */
+                const slides = Array.from(document.querySelectorAll('.main-slide'));
+                const dotsWrap = document.getElementById('galleryDots');
+                const thumbStrip = document.getElementById('thumbStrip');
+                const counter = document.getElementById('imgCounter');
+                const btnPrev = document.getElementById('btnPrev');
+                const btnNext = document.getElementById('btnNext');
+                let current = 0;
 
-            // Lấy src tất cả ảnh từ slides
-            const imgSrcs = slides.map(s => s.querySelector('img').src);
+                // Lấy src tất cả ảnh từ slides
+                const imgSrcs = slides.map(s => s.querySelector('img').src);
 
-            function buildUI() {
-                const total = slides.length;
+                function buildUI() {
+                    const total = slides.length;
 
-                if (total <= 1) {
-                    // Chỉ 1 ảnh → ẩn nav, dots, counter
-                    btnPrev.style.display = 'none';
-                    btnNext.style.display = 'none';
-                    return;
+                    if (total <= 1) {
+                        // Chỉ 1 ảnh → ẩn nav, dots, counter
+                        btnPrev.style.display = 'none';
+                        btnNext.style.display = 'none';
+                        return;
+                    }
+
+                    // Tạo dots
+                    slides.forEach((_, i) => {
+                        const d = document.createElement('button');
+                        d.className = 'g-dot' + (i === 0 ? ' active' : '');
+                        d.setAttribute('aria-label', 'Ảnh ' + (i + 1));
+                        d.onclick = () => goToSlide(i);
+                        dotsWrap.appendChild(d);
+                    });
+
+                    // Tạo thumbnails
+                    slides.forEach((s, i) => {
+                        const div = document.createElement('div');
+                        div.className = 'thumb-item' + (i === 0 ? ' active' : '');
+                        const img = document.createElement('img');
+                        img.src = imgSrcs[i];
+                        img.alt = 'Thumbnail ' + (i + 1);
+                        img.loading = 'lazy';
+                        div.appendChild(img);
+                        div.onclick = () => goToSlide(i);
+                        thumbStrip.appendChild(div);
+                    });
+
+                    // Hiện counter
+                    counter.style.display = 'block';
+                    updateCounter();
                 }
 
-                // Tạo dots
-                slides.forEach((_, i) => {
-                    const d = document.createElement('button');
-                    d.className = 'g-dot' + (i === 0 ? ' active' : '');
-                    d.setAttribute('aria-label', 'Ảnh ' + (i + 1));
-                    d.onclick = () => goToSlide(i);
-                    dotsWrap.appendChild(d);
-                });
+                function goToSlide(idx) {
+                    const dots = dotsWrap.querySelectorAll('.g-dot');
+                    const thumbs = thumbStrip.querySelectorAll('.thumb-item');
 
-                // Tạo thumbnails
-                slides.forEach((s, i) => {
-                    const div = document.createElement('div');
-                    div.className = 'thumb-item' + (i === 0 ? ' active' : '');
-                    const img = document.createElement('img');
-                    img.src = imgSrcs[i];
-                    img.alt = 'Thumbnail ' + (i + 1);
-                    img.loading = 'lazy';
-                    div.appendChild(img);
-                    div.onclick = () => goToSlide(i);
-                    thumbStrip.appendChild(div);
-                });
+                    slides[current].classList.remove('active');
+                    dots[current] && dots[current].classList.remove('active');
+                    thumbs[current] && thumbs[current].classList.remove('active');
 
-                // Hiện counter
-                counter.style.display = 'block';
-                updateCounter();
-            }
+                    current = (idx + slides.length) % slides.length;
 
-            function goToSlide(idx) {
-                const dots   = dotsWrap.querySelectorAll('.g-dot');
-                const thumbs = thumbStrip.querySelectorAll('.thumb-item');
-
-                slides[current].classList.remove('active');
-                dots[current]  && dots[current].classList.remove('active');
-                thumbs[current] && thumbs[current].classList.remove('active');
-
-                current = (idx + slides.length) % slides.length;
-
-                slides[current].classList.add('active');
-                dots[current]  && dots[current].classList.add('active');
-                if (thumbs[current]) {
-                    thumbs[current].classList.add('active');
-                    thumbs[current].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                    slides[current].classList.add('active');
+                    dots[current] && dots[current].classList.add('active');
+                    if (thumbs[current]) {
+                        thumbs[current].classList.add('active');
+                        thumbs[current].scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
+                    }
+                    updateCounter();
                 }
-                updateCounter();
-            }
 
-            function slideGallery(dir) { goToSlide(current + dir); }
+                function slideGallery(dir) {
+                    goToSlide(current + dir);
+                }
 
-            function updateCounter() {
-                counter.textContent = (current + 1) + ' / ' + slides.length;
-            }
+                function updateCounter() {
+                    counter.textContent = (current + 1) + ' / ' + slides.length;
+                }
 
-            // Swipe mobile
-            let touchStartX = 0;
-            const frame = document.getElementById('mainFrame');
-            frame.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
-            frame.addEventListener('touchend',   e => {
-                const dx = e.changedTouches[0].clientX - touchStartX;
-                if (Math.abs(dx) > 40) slideGallery(dx < 0 ? 1 : -1);
-            });
+                // Swipe mobile
+                let touchStartX = 0;
+                const frame = document.getElementById('mainFrame');
+                frame.addEventListener('touchstart', e => {
+                    touchStartX = e.changedTouches[0].clientX;
+                }, {passive: true});
+                frame.addEventListener('touchend', e => {
+                    const dx = e.changedTouches[0].clientX - touchStartX;
+                    if (Math.abs(dx) > 40)
+                        slideGallery(dx < 0 ? 1 : -1);
+                });
 
-            // Phím mũi tên
-            document.addEventListener('keydown', e => {
+                // Phím mũi tên
+                document.addEventListener('keydown', e => {
+                    const lb = document.getElementById('lightboxOverlay');
+                    if (lb.classList.contains('open')) {
+                        if (e.key === 'ArrowLeft')
+                            lightboxNav(-1);
+                        if (e.key === 'ArrowRight')
+                            lightboxNav(1);
+                        if (e.key === 'Escape')
+                            closeLightbox();
+                    } else {
+                        if (e.key === 'ArrowLeft')
+                            slideGallery(-1);
+                        if (e.key === 'ArrowRight')
+                            slideGallery(1);
+                    }
+                });
+
+                buildUI(); // Khởi tạo
+
+                /* ============ LIGHTBOX ============ */
                 const lb = document.getElementById('lightboxOverlay');
-                if (lb.classList.contains('open')) {
-                    if (e.key === 'ArrowLeft')  lightboxNav(-1);
-                    if (e.key === 'ArrowRight') lightboxNav(1);
-                    if (e.key === 'Escape')     closeLightbox();
-                } else {
-                    if (e.key === 'ArrowLeft')  slideGallery(-1);
-                    if (e.key === 'ArrowRight') slideGallery(1);
-                }
-            });
 
-            buildUI(); // Khởi tạo
-
-            /* ============ LIGHTBOX ============ */
-            const lb = document.getElementById('lightboxOverlay');
-
-            function openLightbox(idx) {
-                lb._index = idx !== undefined ? idx : current;
-                lb.classList.add('open');
-                refreshLightbox();
-            }
-
-            function closeLightbox() {
-                lb.classList.remove('open');
-            }
-
-            function lightboxNav(dir) {
-                lb._index = (lb._index + dir + imgSrcs.length) % imgSrcs.length;
-                const imgEl = document.getElementById('lightboxImg');
-                imgEl.style.opacity = '0';
-                setTimeout(() => {
+                function openLightbox(idx) {
+                    lb._index = idx !== undefined ? idx : current;
+                    lb.classList.add('open');
                     refreshLightbox();
-                    imgEl.style.opacity = '1';
-                }, 120);
-            }
+                }
 
-            function refreshLightbox() {
-                document.getElementById('lightboxImg').src = imgSrcs[lb._index];
-                document.getElementById('lightboxCounter').textContent = (lb._index + 1) + ' / ' + imgSrcs.length;
-            }
+                function closeLightbox() {
+                    lb.classList.remove('open');
+                }
+
+                function lightboxNav(dir) {
+                    lb._index = (lb._index + dir + imgSrcs.length) % imgSrcs.length;
+                    const imgEl = document.getElementById('lightboxImg');
+                    imgEl.style.opacity = '0';
+                    setTimeout(() => {
+                        refreshLightbox();
+                        imgEl.style.opacity = '1';
+                    }, 120);
+                }
+
+                function refreshLightbox() {
+                    document.getElementById('lightboxImg').src = imgSrcs[lb._index];
+                    document.getElementById('lightboxCounter').textContent = (lb._index + 1) + ' / ' + imgSrcs.length;
+                }
         </script>
     </body>
 </html>

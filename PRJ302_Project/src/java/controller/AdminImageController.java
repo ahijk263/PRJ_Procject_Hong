@@ -107,9 +107,10 @@ public class AdminImageController extends HttpServlet {
         // ĐỔi ĐƯỜNG DẪN ĐỂN LẤY ẢNH TỪ THƯ MỤC NHA
         // đường dẫn của project + \\web\\assets\\images
         // nhơ là 2 dâu \\ nha
+        //KHANG: D:\code\file\Github\PRJ_Procject_Hong\PRJ302_Project\web\assets\images
+        //
         
-        
-        String uploadDir = "D:\\code\\file\\Github\\PRJ_Procject_Hong\\web\\assets\\images";
+        String uploadDir = "D:\\code\\file\\Github\\PRJ_Procject_Hong\\PRJ302_Project\\web\\assets\\images";
         File dir = new File(uploadDir);
         if (!dir.exists()) dir.mkdirs();
 
