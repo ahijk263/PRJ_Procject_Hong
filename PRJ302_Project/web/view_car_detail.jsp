@@ -156,6 +156,182 @@
                 transform: scale(1.2);
             }
 
+            .btn-add-cart {
+                background-color: var(--luxury-gold);
+                color: var(--dark-accent);
+                border: 1px solid var(--luxury-gold);
+                padding: 18px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                cursor: pointer;
+                width: 100%;
+                font-family: 'Inter', sans-serif;
+                font-size: 0.9rem;
+            }
+
+            .btn-add-cart:hover {
+                background-color: #b8952d;
+                border-color: #b8952d;
+                color: white;
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(212,175,55,0.35);
+            }
+
+            .btn-add-cart:disabled,
+            .btn-add-cart.sold-out {
+                background-color: #e0e0e0;
+                border-color: #e0e0e0;
+                color: #999;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+
+            /* Cart icon in header */
+            .cart-icon-wrap {
+                position: relative;
+                display: inline-flex;
+                align-items: center;
+                color: #1A1A1A;
+                text-decoration: none;
+                font-size: 1.2rem;
+                transition: color 0.2s;
+            }
+
+            .cart-icon-wrap:hover {
+                color: var(--luxury-gold);
+            }
+
+            .cart-badge {
+                position: absolute;
+                top: -8px;
+                right: -10px;
+                background: var(--luxury-gold);
+                color: #1A1A1A;
+                border-radius: 50%;
+                width: 19px;
+                height: 19px;
+                font-size: 0.65rem;
+                font-weight: 800;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                line-height: 1;
+            }
+
+            /* Nav links in header */
+            .header-nav {
+                display: flex;
+                align-items: center;
+                gap: 28px;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .header-nav a {
+                color: #555;
+                text-decoration: none;
+                font-size: 0.82rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                font-weight: 600;
+                transition: color 0.2s;
+            }
+
+            .header-nav a:hover {
+                color: var(--luxury-gold);
+            }
+
+            .user-dropdown {
+                position: relative;
+                padding-bottom: 15px;
+                cursor: pointer;
+            }
+
+            .avatar-img {
+                width: 36px;
+                height: 36px;
+                border-radius: 50%;
+                border: 2px solid var(--luxury-gold);
+            }
+
+            .dropdown-menu-custom {
+                display: none;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background: white;
+                min-width: 230px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+                border-top: 3px solid var(--luxury-gold);
+                flex-direction: column;
+                z-index: 1000;
+            }
+
+            .user-dropdown:hover .dropdown-menu-custom {
+                display: flex;
+            }
+
+            .dropdown-profile-header {
+                padding: 14px 18px;
+                background: #f9f9f9;
+                border-bottom: 1px solid #eee;
+            }
+
+            .dropdown-profile-header .welcome-text {
+                font-size: 0.7rem;
+                color: #999;
+                text-transform: uppercase;
+                display: block;
+            }
+
+            .dropdown-profile-header .user-full-name {
+                font-size: 0.9rem;
+                font-weight: 700;
+            }
+
+            .dropdown-menu-custom a {
+                padding: 11px 18px;
+                color: #444;
+                text-decoration: none;
+                font-size: 0.83rem;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                transition: 0.2s;
+            }
+
+            .dropdown-menu-custom a i {
+                color: var(--luxury-gold);
+                width: 16px;
+            }
+
+            .dropdown-menu-custom a:hover {
+                background: #fdfaf0;
+                color: var(--luxury-gold);
+            }
+
+            .menu-divider {
+                height: 1px;
+                background: #eee;
+                margin: 4px 0;
+            }
+
+            .logout-link {
+                color: #dc3545 !important;
+            }
+
+            .logout-link:hover {
+                background: #fff5f5 !important;
+            }
+
             .reviews-container {
                 margin-top: 80px;
                 padding-top: 50px;
@@ -195,9 +371,7 @@
             }
 
             /* ===================== GALLERY ===================== */
-            .gallery-wrap {
-                position: relative;
-            }
+            .gallery-wrap { position: relative; }
 
             /* Khung ảnh chính — tỉ lệ 4:3 cố định, nền tối để ảnh ngang không bị méo */
             .main-frame {
@@ -238,9 +412,7 @@
                 transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
             }
 
-            .main-slide.active img:hover {
-                transform: scale(1.04);
-            }
+            .main-slide.active img:hover { transform: scale(1.04); }
 
             /* Nút prev / next */
             .gallery-nav {
@@ -269,12 +441,8 @@
                 transform: translateY(-50%) scale(1.1);
             }
 
-            .gallery-nav.prev {
-                left: 14px;
-            }
-            .gallery-nav.next {
-                right: 14px;
-            }
+            .gallery-nav.prev { left: 14px; }
+            .gallery-nav.next { right: 14px; }
 
             /* Dots */
             .gallery-dots {
@@ -344,13 +512,8 @@
                 scrollbar-color: #ddd transparent;
             }
 
-            .thumb-strip::-webkit-scrollbar {
-                height: 4px;
-            }
-            .thumb-strip::-webkit-scrollbar-thumb {
-                background: #ddd;
-                border-radius: 4px;
-            }
+            .thumb-strip::-webkit-scrollbar { height: 4px; }
+            .thumb-strip::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
 
             .thumb-item {
                 flex-shrink: 0;
@@ -398,12 +561,8 @@
             }
 
             @keyframes lbFadeIn {
-                from {
-                    opacity: 0;
-                }
-                to   {
-                    opacity: 1;
-                }
+                from { opacity: 0; }
+                to   { opacity: 1; }
             }
 
             .lightbox-img-wrap {
@@ -442,9 +601,7 @@
                 z-index: 10001;
             }
 
-            .lightbox-close:hover {
-                background: rgba(255,255,255,0.25);
-            }
+            .lightbox-close:hover { background: rgba(255,255,255,0.25); }
 
             .lightbox-nav {
                 position: fixed;
@@ -465,15 +622,9 @@
                 z-index: 10001;
             }
 
-            .lightbox-nav:hover {
-                background: rgba(212,175,55,0.65);
-            }
-            .lightbox-prev {
-                left: 18px;
-            }
-            .lightbox-next {
-                right: 18px;
-            }
+            .lightbox-nav:hover { background: rgba(212,175,55,0.65); }
+            .lightbox-prev { left: 18px; }
+            .lightbox-next { right: 18px; }
 
             .lightbox-counter {
                 position: fixed;
@@ -492,9 +643,63 @@
                 <a href="MainController" class="logo">
                     LUXURY<span>CARS</span>
                 </a>
-                <a href="javascript:history.back()" style="text-decoration:none; color: var(--dark-accent); font-weight: 600; font-size: 0.8rem; font-family: 'Montserrat';">
-                    <i class="fa-solid fa-chevron-left me-1"></i> QUAY LẠI
-                </a>
+
+                <ul class="header-nav">
+                    <li><a href="MainController">Trang chủ</a></li>
+                    <li><a href="MainController?action=searchCars">Xe bán</a></li>
+                    <li><a href="brands">Thương hiệu</a></li>
+
+                    <%-- Icon giỏ hàng --%>
+                    <li>
+                        <a href="CartController?action=view" class="cart-icon-wrap" title="Giỏ hàng">
+                            <i class="fas fa-shopping-cart"></i>
+                            <c:if test="${cartCount > 0}">
+                                <span class="cart-badge">${cartCount}</span>
+                            </c:if>
+                        </a>
+                    </li>
+
+                    <%-- User dropdown hoặc nút đăng nhập --%>
+                    <c:choose>
+                        <c:when test="${not empty user}">
+                            <li class="user-dropdown">
+                                <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=C5A021&color=fff&bold=true"
+                                     class="avatar-img" alt="${user.fullName}">
+                                <div class="dropdown-menu-custom">
+                                    <div class="dropdown-profile-header">
+                                        <span class="welcome-text">Xin chào,</span>
+                                        <span class="user-full-name">${user.fullName}</span>
+                                    </div>
+                                    <a href="customer/cus_profile_options/cus_view_editProfile.jsp">
+                                        <i class="fas fa-user-edit"></i> Hồ sơ cá nhân
+                                    </a>
+                                    <div class="menu-divider"></div>
+                                    <a href="OrderController?action=viewMyOrders">
+                                        <i class="fas fa-receipt"></i> Đơn hàng của tôi
+                                    </a>
+                                    <a href="CartController?action=view">
+                                        <i class="fas fa-shopping-cart"></i> Giỏ hàng
+                                        <c:if test="${cartCount > 0}">
+                                            <span style="margin-left:auto;background:var(--luxury-gold);
+                                                         color:#1A1A1A;border-radius:10px;padding:1px 8px;
+                                                         font-size:0.72rem;font-weight:700;">${cartCount}</span>
+                                        </c:if>
+                                    </a>
+                                    <a href="CustomerController?action=viewWishlist">
+                                        <i class="fas fa-heart"></i> Xe yêu thích
+                                    </a>
+                                    <div class="menu-divider"></div>
+                                    <a href="MainController?action=logout" class="logout-link">
+                                        <i class="fas fa-power-off"></i> Đăng xuất
+                                    </a>
+                                </div>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li><a href="login.jsp">Đăng nhập</a></li>
+                        </c:otherwise>
+                    </c:choose>
+                </ul>
             </div>
         </header>
 
@@ -541,7 +746,7 @@
 
                             <!-- Bộ đếm & hint -->
                             <span class="img-counter" id="imgCounter"></span>
-                            <span class="zoom-hint"><i class="fa-solid fa-magnifying-glass-plus"></i></span>
+                            <span class="zoom-hint"><i class="fa-solid fa-magnifying-glass-plus"></i> Click để phóng to</span>
                         </div>
 
                         <!-- Thumbnail strip -->
@@ -604,6 +809,31 @@
                             <a href="index.jsp#contact" class="btn btn-luxury w-100 mb-3 shadow d-flex align-items-center justify-content-center" style="text-decoration: none;">
                                 Đặt lịch xem xe trực tiếp
                             </a>
+
+                            <%-- Nút thêm vào giỏ hàng --%>
+                            <c:choose>
+                                <c:when test="${CAR_DETAIL.car.status == 'AVAILABLE'}">
+                                    <form action="CartController" method="POST" class="mb-3">
+                                        <input type="hidden" name="action" value="add">
+                                        <input type="hidden" name="carId" value="${CAR_DETAIL.car.carId}">
+                                        <button type="submit" class="btn-add-cart">
+                                            <i class="fas fa-shopping-cart"></i>
+                                            Thêm vào giỏ hàng
+                                        </button>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <button class="btn-add-cart sold-out mb-3" disabled>
+                                        <i class="fas fa-ban"></i>
+                                        <c:choose>
+                                            <c:when test="${CAR_DETAIL.car.status == 'RESERVED'}">Xe đang được đặt trước</c:when>
+                                            <c:when test="${CAR_DETAIL.car.status == 'SOLD'}">Xe đã được bán</c:when>
+                                            <c:otherwise>Không còn sẵn sàng</c:otherwise>
+                                        </c:choose>
+                                    </button>
+                                </c:otherwise>
+                            </c:choose>
+
                             <a href="CustomerController?action=addFav&carId=${CAR_DETAIL.car.carId}"
                                class="btn-wishlist-detail w-100 mb-3 ${isFav ? 'active' : ''}">
                                 <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
@@ -691,143 +921,133 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
         <script>
-                AOS.init({duration: 1000, once: true, offset: 100});
+            AOS.init({ duration: 1000, once: true, offset: 100 });
 
-                /* ============ GALLERY ============ */
-                const slides = Array.from(document.querySelectorAll('.main-slide'));
-                const dotsWrap = document.getElementById('galleryDots');
-                const thumbStrip = document.getElementById('thumbStrip');
-                const counter = document.getElementById('imgCounter');
-                const btnPrev = document.getElementById('btnPrev');
-                const btnNext = document.getElementById('btnNext');
-                let current = 0;
+            /* ============ GALLERY ============ */
+            const slides    = Array.from(document.querySelectorAll('.main-slide'));
+            const dotsWrap  = document.getElementById('galleryDots');
+            const thumbStrip = document.getElementById('thumbStrip');
+            const counter   = document.getElementById('imgCounter');
+            const btnPrev   = document.getElementById('btnPrev');
+            const btnNext   = document.getElementById('btnNext');
+            let current     = 0;
 
-                // Lấy src tất cả ảnh từ slides
-                const imgSrcs = slides.map(s => s.querySelector('img').src);
+            // Lấy src tất cả ảnh từ slides
+            const imgSrcs = slides.map(s => s.querySelector('img').src);
 
-                function buildUI() {
-                    const total = slides.length;
+            function buildUI() {
+                const total = slides.length;
 
-                    if (total <= 1) {
-                        // Chỉ 1 ảnh → ẩn nav, dots, counter
-                        btnPrev.style.display = 'none';
-                        btnNext.style.display = 'none';
-                        return;
-                    }
-
-                    // Tạo dots
-                    slides.forEach((_, i) => {
-                        const d = document.createElement('button');
-                        d.className = 'g-dot' + (i === 0 ? ' active' : '');
-                        d.setAttribute('aria-label', 'Ảnh ' + (i + 1));
-                        d.onclick = () => goToSlide(i);
-                        dotsWrap.appendChild(d);
-                    });
-
-                    // Tạo thumbnails
-                    slides.forEach((s, i) => {
-                        const div = document.createElement('div');
-                        div.className = 'thumb-item' + (i === 0 ? ' active' : '');
-                        const img = document.createElement('img');
-                        img.src = imgSrcs[i];
-                        img.alt = 'Thumbnail ' + (i + 1);
-                        img.loading = 'lazy';
-                        div.appendChild(img);
-                        div.onclick = () => goToSlide(i);
-                        thumbStrip.appendChild(div);
-                    });
-
-                    // Hiện counter
-                    counter.style.display = 'block';
-                    updateCounter();
+                if (total <= 1) {
+                    // Chỉ 1 ảnh → ẩn nav, dots, counter
+                    btnPrev.style.display = 'none';
+                    btnNext.style.display = 'none';
+                    return;
                 }
 
-                function goToSlide(idx) {
-                    const dots = dotsWrap.querySelectorAll('.g-dot');
-                    const thumbs = thumbStrip.querySelectorAll('.thumb-item');
-
-                    slides[current].classList.remove('active');
-                    dots[current] && dots[current].classList.remove('active');
-                    thumbs[current] && thumbs[current].classList.remove('active');
-
-                    current = (idx + slides.length) % slides.length;
-
-                    slides[current].classList.add('active');
-                    dots[current] && dots[current].classList.add('active');
-                    if (thumbs[current]) {
-                        thumbs[current].classList.add('active');
-                        thumbs[current].scrollIntoView({behavior: 'smooth', block: 'nearest', inline: 'center'});
-                    }
-                    updateCounter();
-                }
-
-                function slideGallery(dir) {
-                    goToSlide(current + dir);
-                }
-
-                function updateCounter() {
-                    counter.textContent = (current + 1) + ' / ' + slides.length;
-                }
-
-                // Swipe mobile
-                let touchStartX = 0;
-                const frame = document.getElementById('mainFrame');
-                frame.addEventListener('touchstart', e => {
-                    touchStartX = e.changedTouches[0].clientX;
-                }, {passive: true});
-                frame.addEventListener('touchend', e => {
-                    const dx = e.changedTouches[0].clientX - touchStartX;
-                    if (Math.abs(dx) > 40)
-                        slideGallery(dx < 0 ? 1 : -1);
+                // Tạo dots
+                slides.forEach((_, i) => {
+                    const d = document.createElement('button');
+                    d.className = 'g-dot' + (i === 0 ? ' active' : '');
+                    d.setAttribute('aria-label', 'Ảnh ' + (i + 1));
+                    d.onclick = () => goToSlide(i);
+                    dotsWrap.appendChild(d);
                 });
 
-                // Phím mũi tên
-                document.addEventListener('keydown', e => {
-                    const lb = document.getElementById('lightboxOverlay');
-                    if (lb.classList.contains('open')) {
-                        if (e.key === 'ArrowLeft')
-                            lightboxNav(-1);
-                        if (e.key === 'ArrowRight')
-                            lightboxNav(1);
-                        if (e.key === 'Escape')
-                            closeLightbox();
-                    } else {
-                        if (e.key === 'ArrowLeft')
-                            slideGallery(-1);
-                        if (e.key === 'ArrowRight')
-                            slideGallery(1);
-                    }
+                // Tạo thumbnails
+                slides.forEach((s, i) => {
+                    const div = document.createElement('div');
+                    div.className = 'thumb-item' + (i === 0 ? ' active' : '');
+                    const img = document.createElement('img');
+                    img.src = imgSrcs[i];
+                    img.alt = 'Thumbnail ' + (i + 1);
+                    img.loading = 'lazy';
+                    div.appendChild(img);
+                    div.onclick = () => goToSlide(i);
+                    thumbStrip.appendChild(div);
                 });
 
-                buildUI(); // Khởi tạo
+                // Hiện counter
+                counter.style.display = 'block';
+                updateCounter();
+            }
 
-                /* ============ LIGHTBOX ============ */
+            function goToSlide(idx) {
+                const dots   = dotsWrap.querySelectorAll('.g-dot');
+                const thumbs = thumbStrip.querySelectorAll('.thumb-item');
+
+                slides[current].classList.remove('active');
+                dots[current]  && dots[current].classList.remove('active');
+                thumbs[current] && thumbs[current].classList.remove('active');
+
+                current = (idx + slides.length) % slides.length;
+
+                slides[current].classList.add('active');
+                dots[current]  && dots[current].classList.add('active');
+                if (thumbs[current]) {
+                    thumbs[current].classList.add('active');
+                    thumbs[current].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                }
+                updateCounter();
+            }
+
+            function slideGallery(dir) { goToSlide(current + dir); }
+
+            function updateCounter() {
+                counter.textContent = (current + 1) + ' / ' + slides.length;
+            }
+
+            // Swipe mobile
+            let touchStartX = 0;
+            const frame = document.getElementById('mainFrame');
+            frame.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+            frame.addEventListener('touchend',   e => {
+                const dx = e.changedTouches[0].clientX - touchStartX;
+                if (Math.abs(dx) > 40) slideGallery(dx < 0 ? 1 : -1);
+            });
+
+            // Phím mũi tên
+            document.addEventListener('keydown', e => {
                 const lb = document.getElementById('lightboxOverlay');
+                if (lb.classList.contains('open')) {
+                    if (e.key === 'ArrowLeft')  lightboxNav(-1);
+                    if (e.key === 'ArrowRight') lightboxNav(1);
+                    if (e.key === 'Escape')     closeLightbox();
+                } else {
+                    if (e.key === 'ArrowLeft')  slideGallery(-1);
+                    if (e.key === 'ArrowRight') slideGallery(1);
+                }
+            });
 
-                function openLightbox(idx) {
-                    lb._index = idx !== undefined ? idx : current;
-                    lb.classList.add('open');
+            buildUI(); // Khởi tạo
+
+            /* ============ LIGHTBOX ============ */
+            const lb = document.getElementById('lightboxOverlay');
+
+            function openLightbox(idx) {
+                lb._index = idx !== undefined ? idx : current;
+                lb.classList.add('open');
+                refreshLightbox();
+            }
+
+            function closeLightbox() {
+                lb.classList.remove('open');
+            }
+
+            function lightboxNav(dir) {
+                lb._index = (lb._index + dir + imgSrcs.length) % imgSrcs.length;
+                const imgEl = document.getElementById('lightboxImg');
+                imgEl.style.opacity = '0';
+                setTimeout(() => {
                     refreshLightbox();
-                }
+                    imgEl.style.opacity = '1';
+                }, 120);
+            }
 
-                function closeLightbox() {
-                    lb.classList.remove('open');
-                }
-
-                function lightboxNav(dir) {
-                    lb._index = (lb._index + dir + imgSrcs.length) % imgSrcs.length;
-                    const imgEl = document.getElementById('lightboxImg');
-                    imgEl.style.opacity = '0';
-                    setTimeout(() => {
-                        refreshLightbox();
-                        imgEl.style.opacity = '1';
-                    }, 120);
-                }
-
-                function refreshLightbox() {
-                    document.getElementById('lightboxImg').src = imgSrcs[lb._index];
-                    document.getElementById('lightboxCounter').textContent = (lb._index + 1) + ' / ' + imgSrcs.length;
-                }
+            function refreshLightbox() {
+                document.getElementById('lightboxImg').src = imgSrcs[lb._index];
+                document.getElementById('lightboxCounter').textContent = (lb._index + 1) + ' / ' + imgSrcs.length;
+            }
         </script>
     </body>
 </html>
