@@ -415,8 +415,8 @@
                         <li><a href="MainController" class="nav-link">Trang chủ</a></li>
                         <li><a href="MainController?action=searchCars" class="nav-link active">Xe bán</a></li>
                         <li><a href="brands" class="nav-link">Hãng xe</a></li>
-                        <li><a href="#about" class="nav-link">Về chúng tôi</a></li>
-                        <li><a href="#contact" class="nav-link">Liên hệ</a></li>
+                        <li><a href="MainController#about" class="nav-link">Về chúng tôi</a></li>
+                        <li><a href="MainController#contact" class="nav-link">Liên hệ</a></li>
                             <c:choose>
                                 <c:when test="${not empty user}">
                                     <%-- ĐÃ ĐĂNG NHẬP: Hiện Avatar & Dropdown --%>

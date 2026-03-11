@@ -181,7 +181,7 @@
                     LUXURY<span>CARS</span>
                 </a>
                 <a href="${pageContext.request.contextPath}/MainController" class="btn-home">
-                    <i class="fa-solid fa-chevron-left me-1"></i> QUAY LẠI TRANG CHỦ
+                    <i class="fa-solid fa-chevron-left me-1"></i> QUAY LẠI
                 </a>
             </div>
         </header>
