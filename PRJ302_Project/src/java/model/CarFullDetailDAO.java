@@ -41,14 +41,20 @@ public class CarFullDetailDAO extends DbUtils {
         }
 
         // Xử lý khoảng giá (Đảm bảo đúng số lượng số 0 cho hàng tỷ)
-        if ("under1".equals(priceRange)) {
-            sql.append("AND c.price < 1000000000 ");
-        } else if ("1to3".equals(priceRange)) {
-            sql.append("AND c.price BETWEEN 1000000000 AND 3000000000 ");
-        } else if ("3to5".equals(priceRange)) {
-            sql.append("AND c.price BETWEEN 3000000000 AND 5000000000 ");
-        } else if ("over5".equals(priceRange)) {
-            sql.append("AND c.price > 5000000000 ");
+        if ("under2".equals(priceRange)) {
+            sql.append("AND c.price < 2000000000 ");
+        } else if ("2to4".equals(priceRange)) {
+            sql.append("AND c.price BETWEEN 2000000000 AND 4000000000 ");
+        } else if ("4to7".equals(priceRange)) {
+            sql.append("AND c.price BETWEEN 4000000000 AND 7000000000 ");
+        } else if ("7to15".equals(priceRange)) {
+            sql.append("AND c.price BETWEEN 7000000000 AND 15000000000 ");
+        } else if ("15to30".equals(priceRange)) {
+            sql.append("AND c.price BETWEEN 15000000000 AND 30000000000 ");
+        } else if ("30to50".equals(priceRange)) {
+            sql.append("AND c.price BETWEEN 30000000000 AND 50000000000 ");
+        } else if ("over50".equals(priceRange)) {
+            sql.append("AND c.price > 50000000000 ");
         }
 
         // 3. Thực thi truy vấn
@@ -207,7 +213,7 @@ public class CarFullDetailDAO extends DbUtils {
 
                 // 5. Load TẤT CẢ ảnh của xe (primary trước, sau đó các ảnh còn lại)
                 String imgSql = "SELECT image_url FROM CarImage WHERE car_id = ? AND image_url IS NOT NULL ORDER BY is_primary DESC, image_id ASC";
-                try (PreparedStatement imgPs = conn.prepareStatement(imgSql)) {
+                try ( PreparedStatement imgPs = conn.prepareStatement(imgSql)) {
                     imgPs.setInt(1, carId);
                     ResultSet imgRs = imgPs.executeQuery();
                     List<String> imgs = new ArrayList<>();

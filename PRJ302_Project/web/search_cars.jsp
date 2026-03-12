@@ -492,10 +492,13 @@
                         <label>Khoảng giá</label>
                         <select name="priceRange">
                             <option value="">Mọi mức giá</option>
-                            <option value="under1" ${param.priceRange == 'under1' ? 'selected' : ''}>Dưới 1 tỷ</option>
-                            <option value="1to3" ${param.priceRange == '1to3' ? 'selected' : ''}>1 - 3 tỷ</option>
-                            <option value="3to5" ${param.priceRange == '3to5' ? 'selected' : ''}>3 - 5 tỷ</option>
-                            <option value="over5" ${param.priceRange == 'over5' ? 'selected' : ''}>Trên 5 tỷ</option>
+                            <option value="under2" ${param.priceRange == 'under2' ? 'selected' : ''}>Dưới 2 tỷ</option>
+                            <option value="2to4" ${param.priceRange == '2to4' ? 'selected' : ''}>2 - 4 tỷ</option>
+                            <option value="4to7" ${param.priceRange == '4to7' ? 'selected' : ''}>4 - 7 tỷ</option>
+                            <option value="7to15" ${param.priceRange == '7to15' ? 'selected' : ''}>7 - 15 tỷ</option>
+                            <option value="15to30" ${param.priceRange == '15to30' ? 'selected' : ''}>15 - 30 tỷ</option>
+                            <option value="30to50" ${param.priceRange == '30to50' ? 'selected' : ''}>30 - 50 tỷ</option>
+                            <option value="over50" ${param.priceRange == 'over50' ? 'selected' : ''}>Trên 50 tỷ</option>
                         </select>
                     </div>
 
@@ -510,143 +513,143 @@
                             <c:choose>
                                 <c:when test="${item.car.status == 'SOLD'}">
                                     <div class="luxury-card sold-card" style="cursor:default;">
-                                </c:when>
-                                <c:otherwise>
-                                    <div class="luxury-card" style="cursor:pointer;" onclick="window.location='MainController?action=viewDetail&id=${item.car.carId}'">
-                                </c:otherwise>
-                            </c:choose>
-                                <div class="card-img-wrapper">
-                                    <c:choose>
-                                        <c:when test="${item.car.status == 'SOLD'}">
-                                            <span class="badge-condition badge-sold">Hết Hàng</span>
-                                        </c:when>
-                                        <c:when test="${item.car.mileage == 0}">
-                                            <span class="badge-condition">Mới</span>
-                                        </c:when>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <div class="luxury-card" style="cursor:pointer;" onclick="window.location = 'MainController?action=viewDetail&id=${item.car.carId}'">
+                                        </c:otherwise>
                                     </c:choose>
-                                    <c:if test="${not empty sessionScope.user}">
-                                        <%-- 1. Logic xử lý để xác định trạng thái Tim (Giữ nguyên) --%>
-                                        <c:set var="isFav" value="false" />
-                                        <c:forEach items="${sessionScope.favIds}" var="fId">
-                                            <c:if test="${fId == item.car.carId}">
-                                                <c:set var="isFav" value="true" />
-                                            </c:if>
-                                        </c:forEach>
+                                    <div class="card-img-wrapper">
+                                        <c:choose>
+                                            <c:when test="${item.car.status == 'SOLD'}">
+                                                <span class="badge-condition badge-sold">Hết Hàng</span>
+                                            </c:when>
+                                            <c:when test="${item.car.mileage == 0}">
+                                                <span class="badge-condition">Mới</span>
+                                            </c:when>
+                                        </c:choose>
+                                        <c:if test="${not empty sessionScope.user}">
+                                            <%-- 1. Logic xử lý để xác định trạng thái Tim (Giữ nguyên) --%>
+                                            <c:set var="isFav" value="false" />
+                                            <c:forEach items="${sessionScope.favIds}" var="fId">
+                                                <c:if test="${fId == item.car.carId}">
+                                                    <c:set var="isFav" value="true" />
+                                                </c:if>
+                                            </c:forEach>
 
-                                        <%-- 2. Thẻ <a> phải nằm TRỰC TIẾP ở đây, không bọc thêm div nào hết --%>
-                                        <a href="CustomerController?action=addFav&carId=${item.car.carId}" 
-                                           class="wishlist-icon ${isFav ? 'active' : ''}"
-                                           title="Yêu thích">
-                                            <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
-                                        </a>
-                                    </c:if>
-                                    <img src="${not empty item.primaryImage ? item.primaryImage : 'assets/images/default-car.jpg'}" alt="Car Image">
-                                    <c:if test="${item.car.status == 'SOLD'}">
-                                        <div class="sold-overlay">
-                                            <div class="sold-stamp">Đã Bán</div>
+                                            <%-- 2. Thẻ <a> phải nằm TRỰC TIẾP ở đây, không bọc thêm div nào hết --%>
+                                            <a href="CustomerController?action=addFav&carId=${item.car.carId}" 
+                                               class="wishlist-icon ${isFav ? 'active' : ''}"
+                                               title="Yêu thích">
+                                                <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
+                                            </a>
+                                        </c:if>
+                                        <img src="${not empty item.primaryImage ? item.primaryImage : 'assets/images/default-car.jpg'}" alt="Car Image">
+                                        <c:if test="${item.car.status == 'SOLD'}">
+                                            <div class="sold-overlay">
+                                                <div class="sold-stamp">Đã Bán</div>
+                                            </div>
+                                        </c:if>
+                                    </div>
+
+                                    <div class="card-content">
+                                        <div class="card-brand">${item.brand.brandName}</div>
+                                        <div class="card-name">${item.model.modelName} - ${item.model.year}</div>
+
+                                        <div class="card-meta">
+                                            <span><i class="fas fa-cog"></i> ${item.car.transmission}</span>
+                                            <span><i class="fas fa-road"></i> ${item.car.mileage} km</span>
+                                            <span><i class="fas fa-star" style="color: var(--primary-gold)"></i> ${item.avgRating > 0 ? item.avgRating : "5.0"}</span>
                                         </div>
-                                    </c:if>
-                                </div>
 
-                                <div class="card-content">
-                                    <div class="card-brand">${item.brand.brandName}</div>
-                                    <div class="card-name">${item.model.modelName} - ${item.model.year}</div>
-
-                                    <div class="card-meta">
-                                        <span><i class="fas fa-cog"></i> ${item.car.transmission}</span>
-                                        <span><i class="fas fa-road"></i> ${item.car.mileage} km</span>
-                                        <span><i class="fas fa-star" style="color: var(--primary-gold)"></i> ${item.avgRating > 0 ? item.avgRating : "5.0"}</span>
+                                        <div class="card-price">
+                                            <fmt:formatNumber value="${item.car.price}" type="number" groupingUsed="true" />
+                                            <small style="font-size: 0.6rem; vertical-align: middle;"> VNĐ</small>
+                                        </div>
                                     </div>
-
-                                    <div class="card-price">
-                                        <fmt:formatNumber value="${item.car.price}" type="number" groupingUsed="true" />
-                                        <small style="font-size: 0.6rem; vertical-align: middle;"> VNĐ</small>
-                                    </div>
-                                </div>
-                            </div><%-- /luxury-card --%>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <div style="grid-column: 1/-1; text-align: center; padding: 100px 0;">
-                            <i class="fas fa-search" style="font-size: 3rem; color: #ddd; margin-bottom: 20px;"></i>
-                            <h2 style="color: #999;">Không tìm thấy siêu xe nào phù hợp yêu cầu của bạn.</h2>
-                            <a href="MainController?action=searchCars" style="color: var(--primary-gold);">Xóa tất cả bộ lọc</a>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </div>
-
-        <!-- FOOTER -->
-        <footer class="footer">
-            <div class="container">
-                <div class="footer-content">
-                    <div class="footer-section">
-                        <h3>LUXURY<span style="color: var(--primary-gold);">CARS</span></h3>
-                        <p>Đối tác tin cậy cho những chiếc xe sang đẳng cấp thế giới.</p>
-                        <div class="social-links">
-                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
-                        </div>
-                    </div>
-                    <div class="footer-section">
-                        <h3>Dịch Vụ</h3>
-                        <div class="footer-links">
-                            <a href="MainController?action=searchCars">Bán xe</a>
-                            <a href="#">Tư vấn</a>
-                            <a href="register.jsp">Đăng ký</a>
-                        </div>
-                    </div>
-                    <div class="footer-section">
-                        <h3>Liên Hệ</h3>
-                        <p><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q1, TP.HCM</p>
-                        <p><i class="fas fa-phone"></i> 1900 xxxx</p>
-                        <p><i class="fas fa-envelope"></i> info@luxurycars.vn</p>
-                    </div>
-                </div>
-                <div class="footer-bottom">
-                    <p>&copy; 2024 LuxuryCars. All rights reserved.</p>
+                                </div><%-- /luxury-card --%>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <div style="grid-column: 1/-1; text-align: center; padding: 100px 0;">
+                                <i class="fas fa-search" style="font-size: 3rem; color: #ddd; margin-bottom: 20px;"></i>
+                                <h2 style="color: #999;">Không tìm thấy siêu xe nào phù hợp yêu cầu của bạn.</h2>
+                                <a href="MainController?action=searchCars" style="color: var(--primary-gold);">Xóa tất cả bộ lọc</a>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
-        </footer>
 
-        <script src="assets/js/Script.js"></script>
+            <!-- FOOTER -->
+            <footer class="footer">
+                <div class="container">
+                    <div class="footer-content">
+                        <div class="footer-section">
+                            <h3>LUXURY<span style="color: var(--primary-gold);">CARS</span></h3>
+                            <p>Đối tác tin cậy cho những chiếc xe sang đẳng cấp thế giới.</p>
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+                            </div>
+                        </div>
+                        <div class="footer-section">
+                            <h3>Dịch Vụ</h3>
+                            <div class="footer-links">
+                                <a href="MainController?action=searchCars">Bán xe</a>
+                                <a href="#">Tư vấn</a>
+                                <a href="register.jsp">Đăng ký</a>
+                            </div>
+                        </div>
+                        <div class="footer-section">
+                            <h3>Liên Hệ</h3>
+                            <p><i class="fas fa-map-marker-alt"></i> 123 Nguyễn Huệ, Q1, TP.HCM</p>
+                            <p><i class="fas fa-phone"></i> 1900 xxxx</p>
+                            <p><i class="fas fa-envelope"></i> info@luxurycars.vn</p>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <p>&copy; 2024 LuxuryCars. All rights reserved.</p>
+                    </div>
+                </div>
+            </footer>
 
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                $('.wishlist-icon').click(function (e) {
-                    e.preventDefault(); // Chặn reset trang
+            <script src="assets/js/Script.js"></script>
 
-                    var $this = $(this);
-                    var url = $this.attr('href');
-                    var icon = $this.find('i');
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+                                            $(document).ready(function () {
+                                                $('.wishlist-icon').click(function (e) {
+                                                    e.preventDefault(); // Chặn reset trang
 
-                    $.ajax({
-                        url: url,
-                        type: 'GET',
-                        success: function () {
-                            // Đổi trạng thái icon ngay lập tức
-                            if (icon.hasClass('far')) {
-                                icon.removeClass('far').addClass('fas'); // Tim rỗng thành tim đặc
-                                $this.addClass('active');
-                            } else {
-                                icon.removeClass('fas').addClass('far'); // Tim đặc thành tim rỗng
-                                $this.removeClass('active');
-                                // Nếu đang ở trang Wishlist thì có thể ẩn card đi luôn
-                                if (window.location.href.includes('viewWishlist')) {
-                                    $this.closest('.luxury-card').fadeOut();
-                                }
-                            }
-                        },
-                        error: function () {
-                            alert('Có lỗi xảy ra, vui lòng đăng nhập!');
-                        }
-                    });
-                });
-            });
-        </script>
+                                                    var $this = $(this);
+                                                    var url = $this.attr('href');
+                                                    var icon = $this.find('i');
+
+                                                    $.ajax({
+                                                        url: url,
+                                                        type: 'GET',
+                                                        success: function () {
+                                                            // Đổi trạng thái icon ngay lập tức
+                                                            if (icon.hasClass('far')) {
+                                                                icon.removeClass('far').addClass('fas'); // Tim rỗng thành tim đặc
+                                                                $this.addClass('active');
+                                                            } else {
+                                                                icon.removeClass('fas').addClass('far'); // Tim đặc thành tim rỗng
+                                                                $this.removeClass('active');
+                                                                // Nếu đang ở trang Wishlist thì có thể ẩn card đi luôn
+                                                                if (window.location.href.includes('viewWishlist')) {
+                                                                    $this.closest('.luxury-card').fadeOut();
+                                                                }
+                                                            }
+                                                        },
+                                                        error: function () {
+                                                            alert('Có lỗi xảy ra, vui lòng đăng nhập!');
+                                                        }
+                                                    });
+                                                });
+                                            });
+            </script>
     </body>
 </html>
