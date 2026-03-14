@@ -1,4 +1,3 @@
-
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
@@ -6,22 +5,22 @@
 package controller;
 
 import java.io.IOException;
-import java.util.List;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import model.CarFullDetailDAO;
-import model.CarFullDetailDTO;
+import model.GoogleDTO;
+import model.UserDAO;
+import model.UserDTO;
+import utils.GoogleUtils;
 
 /**
  *
- * @author VNT
+ * @author Lenove
  */
-@WebServlet(name = "MainController", urlPatterns = {"/MainController"})
-public class MainController extends HttpServlet {
+public class LoginGoogleHandler extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,44 +33,33 @@ public class MainController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=UTF-8");
+        String code = request.getParameter("code");
+        if (code != null && !code.isEmpty()) {
+            String accessToken = GoogleUtils.getToken(code);
+            GoogleDTO googleUser = GoogleUtils.getUserInfo(accessToken);
 
-        String action = request.getParameter("action");
-        String url = "index.jsp"; // Mặc định về trang chủ
+            HttpSession session = request.getSession();
+            UserDAO dao = new UserDAO();
 
-        try {
-            CarFullDetailDAO dao = new CarFullDetailDAO();
+            // 1. Kiểm tra xem Email đã có trong DB chưa
+            UserDTO user = dao.getUserByEmail(googleUser.getEmail());
 
-            // TRƯỜNG HỢP 1: Vừa vào trang web hoặc nhấn "Trang chủ"
-            if (action == null || action.trim().isEmpty() || action.equals("home")) {
-                // Lấy danh sách xe nổi bật (Featured) để hiện ở Index
-                List<CarFullDetailDTO> featured = dao.getFeaturedCars();
-                request.setAttribute("featuredCars", featured);
-                url = "index.jsp";
-            } else if (action.equals("searchCars")) {
-                url = "SearchCarController";
-            } else if (action.equals("viewDetail")) {
-                url = "ViewDetailController";
-            } else if (action.equals("login")) {
-                url = "LoginController";
-            } else if (action.equals("logout")) {
-                url = "LogoutController";
-            } else if (action.equals("register")) {
-                url = "RegisterController";
-            } else if (action.equals("updateProfile")) {
-                url = "ProfileController";
-            } else if (action.equals("viewWishlist") || action.equals("addFav") || action.equals("removeFav")) {
-                url = "CustomerController";
-            } else if (action.equals("viewMyCar")) {
-                url = "CustomerController";
+            if (user == null) {
+                // 2. Nếu chưa có: Tạo mới và lưu vào Database
+                user = new UserDTO();
+                user.setFullName(googleUser.getName());
+                user.setEmail(googleUser.getEmail());
+                user.setRole("CUSTOMER");
+                user.setStatus("ACTIVE");
+                user.setPassword(""); // Login Google không cần mật khẩu
+
+                // Hàm này sẽ lưu vào DB và trả về User có chứa ID thật
+                user = dao.insertGoogleUser(user);
             }
 
-        } catch (Exception e) {
-            log("Error at MainController: " + e.toString());
-        } finally {
-            request.getRequestDispatcher(url).forward(request, response);
+            // 3. Lưu User đã có đầy đủ ID vào Session
+            session.setAttribute("user", user);
+            response.sendRedirect(request.getContextPath() + "/MainController");
         }
     }
 

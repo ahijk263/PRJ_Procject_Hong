@@ -12,8 +12,6 @@
         <filter-name>CustomerFilter</filter-name>
         <filter-class>filter.CustomerFilter</filter-class>
     </filter>
-    
-    
     <filter-mapping>
         <filter-name>AuthenFilter</filter-name>
         <url-pattern>/admin/*</url-pattern>
@@ -29,7 +27,6 @@
         <servlet-name>CustomerController</servlet-name>
         <servlet-name>ReviewController</servlet-name>
     </filter-mapping>
-    
     <filter-mapping>
         <filter-name>CustomerFilter</filter-name>
         <url-pattern>/customer/*</url-pattern>
@@ -39,7 +36,6 @@
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
-    
     <filter-mapping>
         <filter-name>AdminFilter</filter-name>
         <url-pattern>/admin/*</url-pattern>
@@ -51,8 +47,6 @@
         <servlet-name>AdminReviewController</servlet-name>
         <servlet-name>AdminUserController</servlet-name>
     </filter-mapping>
-
-
     <servlet>
         <servlet-name>LogoutController</servlet-name>
         <servlet-class>controller.LogoutController</servlet-class>
@@ -81,6 +75,10 @@
         <servlet-name>CustomerController</servlet-name>
         <servlet-class>controller.CustomerController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoginGoogleHandler</servlet-name>
+        <servlet-class>controller.LoginGoogleHandler</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LogoutController</servlet-name>
         <url-pattern>/LogoutController</url-pattern>
@@ -108,6 +106,10 @@
     <servlet-mapping>
         <servlet-name>CustomerController</servlet-name>
         <url-pattern>/CustomerController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginGoogleHandler</servlet-name>
+        <url-pattern>/LoginGoogleHandler</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

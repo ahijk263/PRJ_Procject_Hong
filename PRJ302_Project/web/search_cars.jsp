@@ -433,8 +433,8 @@
                                         </div>
 
                                         <%-- Các link từ file My Profile của bạn --%>
-                                        <a href="customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
-                                        <a href="customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
+                                        <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
+                                        <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
 
                                         <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar">
                                             <i class="fas fa-car"></i> Xe của tôi
@@ -454,7 +454,7 @@
 
                             <c:otherwise>
                                 <%-- CHƯA ĐĂNG NHẬP: Hiện nút đăng nhập --%>
-                                <li><a href="login.jsp" class="nav-link">Đăng nhập</a></li>
+                                <li><a href="${pageContext.request.contextPath}/login.jsp" class="nav-link">Đăng nhập</a></li>
                                 </c:otherwise>
                             </c:choose>
                     </ul>
@@ -537,9 +537,10 @@
                                             </c:forEach>
 
                                             <%-- 2. Thẻ <a> phải nằm TRỰC TIẾP ở đây, không bọc thêm div nào hết --%>
-                                            <a href="CustomerController?action=addFav&carId=${item.car.carId}" 
+                                            <a href="${pageContext.request.contextPath}/CustomerController?action=addFav&carId=${item.car.carId}" 
                                                class="wishlist-icon ${isFav ? 'active' : ''}"
-                                               title="Yêu thích">
+                                               title="Yêu thích"
+                                               onclick="event.stopPropagation();">
                                                 <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
                                             </a>
                                         </c:if>
@@ -619,37 +620,37 @@
 
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script>
-                                            $(document).ready(function () {
-                                                $('.wishlist-icon').click(function (e) {
-                                                    e.preventDefault(); // Chặn reset trang
+                                                    $(document).ready(function () {
+                                                        $('.wishlist-icon').click(function (e) {
+                                                            e.preventDefault(); // Chặn reset trang
 
-                                                    var $this = $(this);
-                                                    var url = $this.attr('href');
-                                                    var icon = $this.find('i');
+                                                            var $this = $(this);
+                                                            var url = $this.attr('href');
+                                                            var icon = $this.find('i');
 
-                                                    $.ajax({
-                                                        url: url,
-                                                        type: 'GET',
-                                                        success: function () {
-                                                            // Đổi trạng thái icon ngay lập tức
-                                                            if (icon.hasClass('far')) {
-                                                                icon.removeClass('far').addClass('fas'); // Tim rỗng thành tim đặc
-                                                                $this.addClass('active');
-                                                            } else {
-                                                                icon.removeClass('fas').addClass('far'); // Tim đặc thành tim rỗng
-                                                                $this.removeClass('active');
-                                                                // Nếu đang ở trang Wishlist thì có thể ẩn card đi luôn
-                                                                if (window.location.href.includes('viewWishlist')) {
-                                                                    $this.closest('.luxury-card').fadeOut();
+                                                            $.ajax({
+                                                                url: url,
+                                                                type: 'GET',
+                                                                success: function () {
+                                                                    // Đổi trạng thái icon ngay lập tức
+                                                                    if (icon.hasClass('far')) {
+                                                                        icon.removeClass('far').addClass('fas'); // Tim rỗng thành tim đặc
+                                                                        $this.addClass('active');
+                                                                    } else {
+                                                                        icon.removeClass('fas').addClass('far'); // Tim đặc thành tim rỗng
+                                                                        $this.removeClass('active');
+                                                                        // Nếu đang ở trang Wishlist thì có thể ẩn card đi luôn
+                                                                        if (window.location.href.includes('viewWishlist')) {
+                                                                            $this.closest('.luxury-card').fadeOut();
+                                                                        }
+                                                                    }
+                                                                },
+                                                                error: function () {
+                                                                    alert('Có lỗi xảy ra, vui lòng đăng nhập!');
                                                                 }
-                                                            }
-                                                        },
-                                                        error: function () {
-                                                            alert('Có lỗi xảy ra, vui lòng đăng nhập!');
-                                                        }
+                                                            });
+                                                        });
                                                     });
-                                                });
-                                            });
             </script>
     </body>
 </html>

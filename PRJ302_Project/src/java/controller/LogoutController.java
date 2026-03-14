@@ -32,11 +32,12 @@ public class LogoutController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
-        HttpSession session = request.getSession();
-        if (session.getAttribute("user") != null) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
             session.invalidate();
         }
-        String url = "index.jsp";
+
+        String url = request.getContextPath() + "/MainController";
         response.sendRedirect(url);
     }
 

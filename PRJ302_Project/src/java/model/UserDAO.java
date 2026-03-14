@@ -568,4 +568,66 @@ public class UserDAO {
         return false;
     }
 
+    // Hàm tìm User theo Email
+    public UserDTO getUserByEmail(String email) {
+        UserDTO user = null;
+        String sql = "SELECT user_id, username, full_name, email, [role], [status] "
+                + "FROM [LuxuryCarSales].[dbo].[User] WHERE email = ?";
+
+        try ( Connection conn = DbUtils.getConnection();  PreparedStatement pst = conn.prepareStatement(sql)) {
+
+            pst.setString(1, email);
+            try ( ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    user = new UserDTO();
+                    // Map chính xác từ cột DB sang thuộc tính DTO
+                    user.setUserId(rs.getInt("user_id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setFullName(rs.getString("full_name"));
+                    user.setEmail(rs.getString("email"));
+                    user.setRole(rs.getString("role"));
+                    user.setStatus(rs.getString("status"));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Lỗi getUserByEmail: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return user;
+    }
+
+    // Hàm lưu User mới và lấy ID tự tăng
+    public UserDTO insertGoogleUser(UserDTO user) {
+        // Mình dùng Email làm Username luôn để không bị trống
+        String sql = "INSERT INTO [LuxuryCarSales].[dbo].[User] "
+                + "(username, password, full_name, email, [role], [status], created_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, GETDATE())";
+
+        try ( Connection conn = DbUtils.getConnection();  PreparedStatement pst = conn.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+
+            pst.setString(1, user.getEmail());    // username lấy từ email
+            pst.setString(2, "");                 // password trống
+            pst.setString(3, user.getFullName()); // full_name
+            pst.setString(4, user.getEmail());    // email
+            pst.setString(5, user.getRole());     // role: CUSTOMER
+            pst.setString(6, user.getStatus());   // status: ACTIVE
+
+            int affectedRows = pst.executeUpdate();
+
+            if (affectedRows > 0) {
+                try ( ResultSet rs = pst.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        // Lấy user_id tự tăng gán ngược lại cho DTO
+                        user.setUserId(rs.getInt(1));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Nếu không vào DB, nhìn vào Console sẽ thấy lỗi ở đây
+            System.out.println("Lỗi insertGoogleUser: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return user;
+    }
+
 }

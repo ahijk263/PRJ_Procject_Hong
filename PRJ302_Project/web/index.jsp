@@ -118,7 +118,9 @@
             }
 
             /* Style cho nút yêu thích trên thẻ xe */
-            .car-card { cursor: pointer; }
+            .car-card {
+                cursor: pointer;
+            }
             /* Trạng thái xe đã bán */
             .car-card.sold-card {
                 pointer-events: none;
@@ -174,8 +176,7 @@
                         <c:choose>
                             <c:when test="${not empty user}">
                                 <li class="user-dropdown">
-                                    <div class="avatar-trigger">
-                                        <%-- Chỉ hiện Avatar với viền Gold --%>
+                                    <div class="avatar-trigger">                                    
                                         <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=C5A021&color=fff&bold=true" class="avatar-img">
                                         <i class="fas fa-chevron-down arrow-icon"></i>
                                     </div>
@@ -201,7 +202,7 @@
 
                                         <%-- Nhóm 3: Thoát --%>
                                         <div class="menu-divider"></div>
-                                        <a href="MainController?action=logout" class="logout-btn">
+                                        <a href="${pageContext.request.contextPath}/MainController?action=logout" class="logout-btn">
                                             <i class="fas fa-power-off"></i> Đăng xuất
                                         </a>
                                     </div>
