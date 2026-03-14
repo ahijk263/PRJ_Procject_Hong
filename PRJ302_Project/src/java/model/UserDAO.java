@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.UserDTO;
 import utils.DbUtils;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -145,7 +146,9 @@ public class UserDAO {
         UserDTO user = searchByUsername(username);
 
         // Kiểm tra password và status
-        if (user != null && user.getPassword().equals(password)) {
+        //if (user != null && user.getPassword().equals(password)) {
+        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+            // BCrypt.checkpw(mật khẩu user nhập, mật khẩu đã băm trong DB)
             // Kiểm tra tài khoản có active không
             if ("ACTIVE".equalsIgnoreCase(user.getStatus())) {
                 return user;
@@ -443,7 +446,9 @@ public class UserDAO {
             conn = DbUtils.getConnection();
             String sql = "UPDATE [User] SET password=?, updated_at=GETDATE() WHERE user_id=?";
             pst = conn.prepareStatement(sql);
-            pst.setString(1, newPassword);
+            //pst.setString(1, newPassword);
+            String hashedNewPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+            pst.setString(1, hashedNewPassword);
             pst.setInt(2, userId);
 
             int rowsAffected = pst.executeUpdate();
@@ -525,7 +530,9 @@ public class UserDAO {
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setString(1, u.getUsername());
-            ps.setString(2, u.getPassword());
+            //ps.setString(2, u.getPassword());
+            String hashedPassword = BCrypt.hashpw(u.getPassword(), BCrypt.gensalt()); // Băm mật khẩu
+            ps.setString(2, hashedPassword);
             ps.setString(3, u.getFullName());
             ps.setString(4, u.getEmail());
             ps.setString(5, u.getPhone());

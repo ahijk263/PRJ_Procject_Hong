@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import model.UserDAO;
 import model.UserDTO;
+import org.mindrot.jbcrypt.BCrypt;
 
 @WebServlet(name = "ProfileController", urlPatterns = {"/ProfileController"})
 public class ProfileController extends HttpServlet {
@@ -124,7 +125,8 @@ public class ProfileController extends HttpServlet {
         if (oldPass == null || oldPass.isEmpty() || newPass == null || newPass.isEmpty()) {
             error = "Vui lòng nhập đầy đủ các trường mật khẩu.";
         } // Kiểm tra mật khẩu cũ có đúng với mật khẩu trong Session không
-        else if (!oldPass.equals(user.getPassword())) {
+        else if (!BCrypt.checkpw(oldPass, user.getPassword())) {
+            // BCrypt.checkpw(chữ_thường_nhập_vào, chuỗi_đã_băm_trong_session)
             error = "Mật khẩu hiện tại không chính xác.";
         } // Kiểm tra mật khẩu mới và xác nhận có khớp nhau không
         else if (!newPass.equals(confirmPass)) {
