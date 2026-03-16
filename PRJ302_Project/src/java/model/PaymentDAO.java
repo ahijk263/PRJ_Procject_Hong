@@ -4,6 +4,7 @@
  */
 package model;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -629,5 +630,41 @@ public class PaymentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Tạo bản ghi Payment mới với trạng thái PENDING Gọi khi user đặt hàng
+     * xong, chưa thanh toán
+     */
+    public boolean createPayment(int orderId, String paymentMethod, BigDecimal amount) {
+        String sql = "INSERT INTO Payment (order_id, payment_method, payment_status, amount, payment_date) "
+                + "VALUES (?, ?, 'PENDING', ?, GETDATE())";
+        try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            ps.setString(2, paymentMethod);
+            ps.setBigDecimal(3, amount);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Cập nhật trạng thái thanh toán và lưu transaction ID Gọi khi user xác
+     * nhận thanh toán thành công
+     */
+    public boolean updatePaymentStatus(int orderId, String status, String transactionId) {
+        String sql = "UPDATE Payment SET payment_status = ?, transaction_id = ?, payment_date = GETDATE() "
+                + "WHERE order_id = ?";
+        try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, status);
+            ps.setString(2, transactionId);
+            ps.setInt(3, orderId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

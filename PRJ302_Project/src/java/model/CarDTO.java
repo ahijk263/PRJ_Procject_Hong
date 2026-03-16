@@ -22,6 +22,7 @@ public class CarDTO {
     private String description;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    private String primaryImage;
 
     // Thuộc tính bổ sung để hiển thị (từ JOIN với CarModel và Brand)
     private String modelName;
@@ -79,6 +80,14 @@ public class CarDTO {
         this.modelName = modelName;
         this.brandName = brandName;
         this.brandId = brandId;
+    }
+
+    public String getPrimaryImage() {
+        return primaryImage;
+    }
+
+    public void setPrimaryImage(String primaryImage) {
+        this.primaryImage = primaryImage;
     }
 
     public int getCarId() {

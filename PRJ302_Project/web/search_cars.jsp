@@ -309,7 +309,7 @@
             }
 
             .dropdown-menu a {
-                padding: 12px 20px !important;
+                padding: 8px 18px !important;
                 color: #444 !important;
                 text-decoration: none !important;
                 font-size: 0.85rem !important;
@@ -417,9 +417,18 @@
                         <li><a href="brands" class="nav-link">Hãng xe</a></li>
                         <li><a href="MainController#about" class="nav-link">Về chúng tôi</a></li>
                         <li><a href="MainController#contact" class="nav-link">Liên hệ</a></li>
-                            <c:choose>
-                                <c:when test="${not empty user}">
-                                    <%-- ĐÃ ĐĂNG NHẬP: Hiện Avatar & Dropdown --%>
+                            <%-- Icon giỏ hàng --%>
+                        <li>
+                            <a href="CartController?action=view" class="cart-icon-wrap" title="Giỏ hàng">
+                                <i class="fas fa-shopping-cart"></i>
+                                <c:if test="${cartCount > 0}">
+                                    <span class="cart-badge">${cartCount}</span>
+                                </c:if>
+                            </a>
+                        </li>
+                        <c:choose>
+                            <c:when test="${not empty user}">
+                                <%-- ĐÃ ĐĂNG NHẬP: Hiện Avatar & Dropdown --%>
                                 <li class="user-dropdown">
                                     <div class="avatar-trigger">
                                         <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=C5A021&color=fff&bold=true" class="avatar-img">
@@ -442,7 +451,7 @@
                                         <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist">
                                             <i class="fas fa-heart"></i> Xe yêu thích
                                         </a>
-
+                                        <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
                                         <div class="menu-divider"></div>
 
                                         <a href="${pageContext.request.contextPath}/MainController?action=logout" class="logout-btn">
@@ -620,37 +629,37 @@
 
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <script>
-                                                    $(document).ready(function () {
-                                                        $('.wishlist-icon').click(function (e) {
-                                                            e.preventDefault(); // Chặn reset trang
+                                                   $(document).ready(function () {
+                                                       $('.wishlist-icon').click(function (e) {
+                                                           e.preventDefault(); // Chặn reset trang
 
-                                                            var $this = $(this);
-                                                            var url = $this.attr('href');
-                                                            var icon = $this.find('i');
+                                                           var $this = $(this);
+                                                           var url = $this.attr('href');
+                                                           var icon = $this.find('i');
 
-                                                            $.ajax({
-                                                                url: url,
-                                                                type: 'GET',
-                                                                success: function () {
-                                                                    // Đổi trạng thái icon ngay lập tức
-                                                                    if (icon.hasClass('far')) {
-                                                                        icon.removeClass('far').addClass('fas'); // Tim rỗng thành tim đặc
-                                                                        $this.addClass('active');
-                                                                    } else {
-                                                                        icon.removeClass('fas').addClass('far'); // Tim đặc thành tim rỗng
-                                                                        $this.removeClass('active');
-                                                                        // Nếu đang ở trang Wishlist thì có thể ẩn card đi luôn
-                                                                        if (window.location.href.includes('viewWishlist')) {
-                                                                            $this.closest('.luxury-card').fadeOut();
-                                                                        }
-                                                                    }
-                                                                },
-                                                                error: function () {
-                                                                    alert('Có lỗi xảy ra, vui lòng đăng nhập!');
-                                                                }
-                                                            });
-                                                        });
-                                                    });
+                                                           $.ajax({
+                                                               url: url,
+                                                               type: 'GET',
+                                                               success: function () {
+                                                                   // Đổi trạng thái icon ngay lập tức
+                                                                   if (icon.hasClass('far')) {
+                                                                       icon.removeClass('far').addClass('fas'); // Tim rỗng thành tim đặc
+                                                                       $this.addClass('active');
+                                                                   } else {
+                                                                       icon.removeClass('fas').addClass('far'); // Tim đặc thành tim rỗng
+                                                                       $this.removeClass('active');
+                                                                       // Nếu đang ở trang Wishlist thì có thể ẩn card đi luôn
+                                                                       if (window.location.href.includes('viewWishlist')) {
+                                                                           $this.closest('.luxury-card').fadeOut();
+                                                                       }
+                                                                   }
+                                                               },
+                                                               error: function () {
+                                                                   alert('Có lỗi xảy ra, vui lòng đăng nhập!');
+                                                               }
+                                                           });
+                                                       });
+                                                   });
             </script>
     </body>
 </html>
