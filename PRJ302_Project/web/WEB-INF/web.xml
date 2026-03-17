@@ -79,6 +79,10 @@
         <servlet-name>LoginGoogleHandler</servlet-name>
         <servlet-class>controller.LoginGoogleHandler</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>ContactController</servlet-name>
+        <servlet-class>controller.ContactController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LogoutController</servlet-name>
         <url-pattern>/LogoutController</url-pattern>
@@ -110,6 +114,10 @@
     <servlet-mapping>
         <servlet-name>LoginGoogleHandler</servlet-name>
         <url-pattern>/LoginGoogleHandler</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ContactController</servlet-name>
+        <url-pattern>/ContactController</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
