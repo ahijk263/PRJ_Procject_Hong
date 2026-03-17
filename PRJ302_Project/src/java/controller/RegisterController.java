@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import model.UserDAO;
 import model.UserDTO;
+import utils.EmailService;
 
 /**
  *
@@ -106,6 +107,11 @@ public class RegisterController extends HttpServlet {
 
                 if (dao.register(user)) {
                     msg = "Đăng ký thành công! Vui lòng đăng nhập.";
+                    // Gửi email chào mừng (async — không block request)
+                    final String emailTo  = email;
+                    final String nameF    = fullName;
+                    final String userF    = username;
+                    new Thread(() -> EmailService.sendWelcome(emailTo, nameF, userF)).start();
                 } else {
                     error = "Đăng ký thất bại!";
                     request.setAttribute("user", user);

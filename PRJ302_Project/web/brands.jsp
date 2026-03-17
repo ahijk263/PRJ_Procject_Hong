@@ -281,7 +281,7 @@
                 color: #333;
             }
             .dropdown-menu a {
-                padding: 12px 20px !important;
+                padding: 8px 18px !important;
                 color: #444 !important;
                 text-decoration: none;
                 font-size: 0.85rem !important;
@@ -327,8 +327,17 @@
                         <li><a href="brands" class="nav-link active">Hãng xe</a></li>
                         <li><a href="MainController#about" class="nav-link">Về chúng tôi</a></li>
                         <li><a href="MainController#contact" class="nav-link">Liên hệ</a></li>
-                            <c:choose>
-                                <c:when test="${not empty user}">
+                            <%-- Icon giỏ hàng --%>
+                        <li>
+                            <a href="CartController?action=view" class="cart-icon-wrap" title="Giỏ hàng">
+                                <i class="fas fa-shopping-cart"></i>
+                                <c:if test="${cartCount > 0}">
+                                    <span class="cart-badge">${cartCount}</span>
+                                </c:if>
+                            </a>
+                        </li>
+                        <c:choose>
+                            <c:when test="${not empty user}">
                                 <li class="user-dropdown">
                                     <div class="avatar-trigger">
                                         <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=C5A021&color=fff&bold=true" class="avatar-img">
@@ -343,6 +352,7 @@
                                         <a href="customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
                                         <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar"><i class="fas fa-car"></i> Xe của tôi</a>
                                         <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist"><i class="fas fa-heart"></i> Xe yêu thích</a>
+                                        <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
                                         <a href="customer/review.jsp"><i class="fas fa-star"></i> Đánh giá của tôi</a>
                                         <div class="menu-divider"></div>
                                         <a href="MainController?action=logout" class="logout-btn"><i class="fas fa-power-off"></i> Đăng xuất</a>
