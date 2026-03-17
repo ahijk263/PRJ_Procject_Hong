@@ -76,7 +76,7 @@
 
             /* Các link trong menu */
             .dropdown-menu a {
-                padding: 8px 18px !important;
+                padding: 12px 20px !important;
                 color: #444 !important;
                 text-decoration: none;
                 font-size: 0.85rem !important;
@@ -171,15 +171,6 @@
                         <li><a href="brands" class="nav-link">Hãng xe</a></li>
                         <li><a href="#about" class="nav-link">Về chúng tôi</a></li>
                         <li><a href="#contact" class="nav-link">Liên hệ</a></li>
-                            <%-- Icon giỏ hàng --%>
-                        <li>
-                            <a href="CartController?action=view" class="cart-icon-wrap" title="Giỏ hàng">
-                                <i class="fas fa-shopping-cart"></i>
-                                <c:if test="${cartCount > 0}">
-                                    <span class="cart-badge">${cartCount}</span>
-                                </c:if>
-                            </a>
-                        </li>
 
                         <%-- Logic hiển thị Đăng nhập hoặc Tên người dùng --%>
                         <c:choose>
@@ -208,7 +199,7 @@
                                         <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist">
                                             <i class="fas fa-heart"></i> Xe yêu thích
                                         </a>
-                                        <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
+
                                         <%-- Nhóm 3: Thoát --%>
                                         <div class="menu-divider"></div>
                                         <a href="${pageContext.request.contextPath}/MainController?action=logout" class="logout-btn">

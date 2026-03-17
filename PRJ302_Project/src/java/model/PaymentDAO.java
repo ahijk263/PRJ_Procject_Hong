@@ -4,7 +4,6 @@
  */
 package model;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -132,6 +131,41 @@ public class PaymentDAO {
             closeResources(conn, pst, rs);
         }
         return payment;
+    }
+
+    // =========================================================
+    // READ - Lấy theo orderId
+    // =========================================================
+    /**
+     * Lấy thông tin thanh toán của một đơn hàng. Một đơn hàng thường chỉ có 1
+     * Payment, nhưng trả List để hỗ trợ trường hợp thanh toán nhiều lần (trả
+     * góp).
+     *
+     * @param orderId ID của đơn hàng
+     * @return List<PaymentDTO>
+     */
+    public List<PaymentDTO> getPaymentsByOrderId(int orderId) {
+        List<PaymentDTO> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pst = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DbUtils.getConnection();
+            String sql = "SELECT * FROM Payment WHERE order_id = ? ORDER BY payment_date ASC";
+            pst = conn.prepareStatement(sql);
+            pst.setInt(1, orderId);
+            rs = pst.executeQuery();
+
+            while (rs.next()) {
+                list.add(extractPaymentFromResultSet(rs));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pst, rs);
+        }
+        return list;
     }
 
     // =========================================================
@@ -595,70 +629,5 @@ public class PaymentDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Tạo bản ghi Payment mới với trạng thái PENDING Gọi khi user đặt hàng
-     * xong, chưa thanh toán
-     */
-    public boolean createPayment(int orderId, String paymentMethod, BigDecimal amount) {
-        String sql = "INSERT INTO Payment (order_id, payment_method, payment_status, amount, payment_date) "
-                + "VALUES (?, ?, 'PENDING', ?, GETDATE())";
-        try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, orderId);
-            ps.setString(2, paymentMethod);
-            ps.setBigDecimal(3, amount);
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
-     * <<<<<<< HEAD Cập nhật trạng thái thanh toán và lưu transaction ID Gọi khi
-     * user xác nhận thanh toán thành công
-     */
-    public boolean updatePaymentStatus(int orderId, String status, String transactionId) {
-        String sql = "UPDATE Payment SET payment_status = ?, transaction_id = ?, payment_date = GETDATE() "
-                + "WHERE order_id = ?";
-        try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, status);
-            ps.setString(2, transactionId);
-            ps.setInt(3, orderId);
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
-     * Lấy danh sách Payment theo orderId Dùng để hiển thị thông tin thanh toán
-     * trong trang chi tiết đơn hàng
-     */
-    public List<PaymentDTO> getPaymentsByOrderId(int orderId) {
-        List<PaymentDTO> list = new ArrayList<>();
-        String sql = "SELECT * FROM Payment WHERE order_id = ? ORDER BY payment_id DESC";
-        try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, orderId);
-            try ( ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    PaymentDTO p = new PaymentDTO();
-                    p.setPaymentId(rs.getInt("payment_id"));
-                    p.setOrderId(rs.getInt("order_id"));
-                    p.setPaymentMethod(rs.getString("payment_method"));
-                    p.setPaymentDate(rs.getTimestamp("payment_date"));
-                    p.setPaymentStatus(rs.getString("payment_status"));
-                    p.setAmount(rs.getDouble("amount"));
-                    p.setTransactionId(rs.getString("transaction_id"));
-                    p.setNotes(rs.getString("notes"));
-                    list.add(p);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return list;
     }
 }

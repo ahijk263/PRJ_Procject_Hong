@@ -119,7 +119,7 @@
                 Vui lòng liên hệ Quản trị viên nếu bạn cho rằng đây là một sự nhầm lẫn.
             </p>
 
-            <a href="${pageContext.request.contextPath}/MainController?action=home" class="btn-back">
+            <a href="MainController?action=home" class="btn-back">
                 <i class="fas fa-home"></i> Quay về trang chủ
             </a>
         </div>

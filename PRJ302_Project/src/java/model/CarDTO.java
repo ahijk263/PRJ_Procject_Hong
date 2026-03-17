@@ -3,10 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-
 /**
  *
  * @author Lenove
@@ -22,7 +20,6 @@ public class CarDTO {
     private int mileage;
     private String status;        // AVAILABLE, SOLD, RESERVED
     private String description;
-    private String primaryImage;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -82,14 +79,6 @@ public class CarDTO {
         this.modelName = modelName;
         this.brandName = brandName;
         this.brandId = brandId;
-    }
-
-    public String getPrimaryImage() {
-        return primaryImage;
-    }
-
-    public void setPrimaryImage(String primaryImage) {
-        this.primaryImage = primaryImage;
     }
 
     public int getCarId() {
@@ -163,7 +152,6 @@ public class CarDTO {
     public void setDescription(String description) {
         this.description = description;
     }
-
 
     public Timestamp getCreatedAt() {
         return createdAt;

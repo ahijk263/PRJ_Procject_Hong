@@ -189,18 +189,6 @@ public class AdminPageController extends HttpServlet {
         req.setAttribute("totalRevenue",    orderDAO.getTotalRevenue());
         req.setAttribute("filterStatus",    filterStatus);
         req.setAttribute("keyword",         keyword);
-
-        // Build paymentMap: orderId → PaymentDTO (payment đầu tiên)
-        PaymentDAO payDAO = new PaymentDAO();
-        Map<Integer, PaymentDTO> paymentMap = new LinkedHashMap<>();
-        for (OrderDTO o : orders) {
-            List<PaymentDTO> pays = payDAO.getPaymentsByOrderId(o.getOrderId());
-            if (!pays.isEmpty()) {
-                paymentMap.put(o.getOrderId(), pays.get(0));
-            }
-        }
-        req.setAttribute("paymentMap", paymentMap);
-
         req.getRequestDispatcher("/admin/manageorders.jsp").forward(req, res);
     }
 

@@ -1,6 +1,5 @@
 package model;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -205,70 +204,6 @@ public class OrderDAO {
             }
         } catch (Exception e) {
             System.err.println("Lỗi tại getMyPurchasedCars: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return list;
-    }
-    /**
-     * Lưu 1 dòng OrderDetail vào DB
-     * Mỗi xe trong đơn hàng = 1 dòng OrderDetail
-     */
-    public boolean addOrderDetail(int orderId, int carId, BigDecimal price) {
-        String sql = "INSERT INTO OrderDetail (order_id, car_id, price) VALUES (?, ?, ?)";
-        try (Connection conn = DbUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, orderId);
-            ps.setInt(2, carId);
-            ps.setBigDecimal(3, price);
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    /**
-     * Lấy danh sách xe (CarDTO) theo orderId
-     * JOIN 3 bảng để lấy đủ thông tin hiển thị
-     */
-    public List<CarDTO> getCarsByOrderId(int orderId) {
-        List<CarDTO> list = new ArrayList<>();
-        String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, "
-                   + "c.transmission, c.mileage, c.status, c.description, "
-                   + "c.created_at, c.updated_at, "
-                   + "cm.model_name, b.brand_name, b.brand_id, "
-                   + "img.image_url AS primary_image "
-                   + "FROM OrderDetail od "
-                   + "INNER JOIN Car c ON od.car_id = c.car_id "
-                   + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
-                   + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
-                   + "LEFT JOIN CarImage img ON c.car_id = img.car_id AND img.is_primary = 1 "
-                   + "WHERE od.order_id = ?";
-        try (Connection conn = DbUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, orderId);
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    CarDTO car = new CarDTO();
-                    car.setCarId(rs.getInt("car_id"));
-                    car.setModelId(rs.getInt("model_id"));
-                    car.setPrice(rs.getBigDecimal("price"));
-                    car.setColor(rs.getString("color"));
-                    car.setEngine(rs.getString("engine"));
-                    car.setTransmission(rs.getString("transmission"));
-                    car.setMileage(rs.getInt("mileage"));
-                    car.setStatus(rs.getString("status"));
-                    car.setDescription(rs.getString("description"));
-                    car.setModelName(rs.getString("model_name"));
-                    car.setBrandName(rs.getString("brand_name"));
-                    car.setBrandId(rs.getInt("brand_id"));
-                    // Lưu ảnh vào description tạm (hoặc thêm field primaryImage vào CarDTO)
-                    // Ta dùng một trick: lưu primaryImage vào một field
-                    // Thực tế nên thêm field primaryImage vào CarDTO
-                    list.add(car);
-                }
-            }
-        } catch (Exception e) {
             e.printStackTrace();
         }
         return list;

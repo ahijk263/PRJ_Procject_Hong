@@ -4,7 +4,6 @@
  */
 package model;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -517,22 +516,6 @@ public class OrderDetailDAO {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Lưu 1 dòng OrderDetail vào DB Mỗi xe trong đơn hàng = 1 dòng OrderDetail
-     */
-    public boolean addOrderDetail(int orderId, int carId, BigDecimal price) {
-        String sql = "INSERT INTO OrderDetail (order_id, car_id, price) VALUES (?, ?, ?)";
-        try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, orderId);
-            ps.setInt(2, carId);
-            ps.setBigDecimal(3, price);
-            return ps.executeUpdate() > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 
 }
