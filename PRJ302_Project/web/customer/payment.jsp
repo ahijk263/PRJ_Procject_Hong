@@ -448,7 +448,7 @@
             }
             .qr-box img {
                 width:210px;
-                height:auto;
+                height:210px;
                 display:block;
             }
             .qr-amount {
@@ -793,7 +793,7 @@
                     <div id="panel-QR_PAY" class="pay-panel ${chosenMethod == 'QR_PAY' || chosenMethod == 'BANK_TRANSFER' ? 'active' : ''}">
                         <div class="qr-bank-info">
                             <div class="info-row"><span class="lbl">Ngân hàng</span><span class="val">Vietcombank (VCB)</span></div>
-                            <div class="info-row"><span class="lbl">Số tài khoản</span><span class="val">1031623227</span></div>
+                            <div class="info-row"><span class="lbl">Số tài khoản</span><span class="val">1234567890</span></div>
                             <div class="info-row"><span class="lbl">Chủ tài khoản</span><span class="val">LUXURY CARS VN</span></div>
                             <div class="info-row"><span class="lbl">Nội dung CK</span><span class="val">DH${order.orderId}</span></div>
                         </div>
@@ -803,8 +803,8 @@
                                 <span>QR hết hạn sau: <strong id="timerDisplay">14:59</strong></span>
                             </div>
                             <div class="qr-box">
-                                <img src="https://img.vietqr.io/image/VCB-1031623227-compact2.png?amount=${order.totalPrice}&addInfo=DH${order.orderId}&accountName=LUXURY%20CARS%20VN"
-                                     alt="QR Thanh Toán" style="width:210px;height:auto;">
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=210x210&data=00020101021238540010A000000727012400069704220110123456789001520400005303704540${order.totalPrice}5802VN5913LUXURY+CARS+VN6008HO+CHI+MINH62180814DH${order.orderId}6304ABCD"
+                                     alt="QR Thanh Toán">
                             </div>
                             <div class="qr-amount"><fmt:formatNumber value="${order.totalPrice}" type="number" groupingUsed="true"/> VNĐ</div>
                             <div class="qr-desc">Quét mã QR bằng ứng dụng ngân hàng hoặc ví điện tử</div>

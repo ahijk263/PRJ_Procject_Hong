@@ -185,6 +185,21 @@
                 color:#c0392b;
                 border:1px solid rgba(192,57,43,0.3);
             }
+            .badge-COMPLETED{
+                background:#e6f9f0;
+                color:#1a7a4a;
+                border:1px solid rgba(26,122,74,0.3);
+            }
+            .badge-FAILED   {
+                background:#fde8e8;
+                color:#c0392b;
+                border:1px solid rgba(192,57,43,0.3);
+            }
+            .badge-REFUNDED {
+                background:#e8f0fe;
+                color:#1a56db;
+                border:1px solid rgba(26,86,219,0.3);
+            }
 
             /* CARDS */
             .card {
@@ -413,18 +428,8 @@
                 <ul class="nav-links">
                     <li><a href="${pageContext.request.contextPath}/MainController">Trang chủ</a></li>
                     <li><a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders">Đơn hàng của tôi</a></li>
-                    <%-- Icon giỏ hàng --%>
-                    <li>
-                        <a href="CartController?action=view" class="cart-icon-wrap" title="Giỏ hàng">
-                            <i class="fas fa-shopping-cart"></i>
-                            <c:if test="${cartCount > 0}">
-                                <span class="cart-badge">${cartCount}</span>
-                            </c:if>
-                        </a>
-                    </li>
                 </ul>
             </div>
-                
         </header>
 
         <div class="page-header">
@@ -566,8 +571,11 @@
                                             <span class="badge badge-${p.paymentStatus}">
                                                 <c:choose>
                                                     <c:when test="${p.paymentStatus == 'PENDING'}">Chờ xác nhận</c:when>
+                                                    <c:when test="${p.paymentStatus == 'COMPLETED'}">Đã thanh toán</c:when>
                                                     <c:when test="${p.paymentStatus == 'PAID'}">Đã thanh toán</c:when>
+                                                    <c:when test="${p.paymentStatus == 'FAILED'}">Giao dịch thất bại</c:when>
                                                     <c:when test="${p.paymentStatus == 'CANCELLED'}">Đã hủy</c:when>
+                                                    <c:when test="${p.paymentStatus == 'REFUNDED'}">Đã hoàn tiền</c:when>
                                                     <c:otherwise>${p.paymentStatus}</c:otherwise>
                                                 </c:choose>
                                             </span>

@@ -135,41 +135,6 @@ public class PaymentDAO {
     }
 
     // =========================================================
-    // READ - Lấy theo orderId
-    // =========================================================
-    /**
-     * Lấy thông tin thanh toán của một đơn hàng. Một đơn hàng thường chỉ có 1
-     * Payment, nhưng trả List để hỗ trợ trường hợp thanh toán nhiều lần (trả
-     * góp).
-     *
-     * @param orderId ID của đơn hàng
-     * @return List<PaymentDTO>
-     */
-    public List<PaymentDTO> getPaymentsByOrderId(int orderId) {
-        List<PaymentDTO> list = new ArrayList<>();
-        Connection conn = null;
-        PreparedStatement pst = null;
-        ResultSet rs = null;
-
-        try {
-            conn = DbUtils.getConnection();
-            String sql = "SELECT * FROM Payment WHERE order_id = ? ORDER BY payment_date ASC";
-            pst = conn.prepareStatement(sql);
-            pst.setInt(1, orderId);
-            rs = pst.executeQuery();
-
-            while (rs.next()) {
-                list.add(extractPaymentFromResultSet(rs));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            closeResources(conn, pst, rs);
-        }
-        return list;
-    }
-
-    // =========================================================
     // READ - Lấy theo trạng thái thanh toán
     // =========================================================
     /**
@@ -651,8 +616,8 @@ public class PaymentDAO {
     }
 
     /**
-     * Cập nhật trạng thái thanh toán và lưu transaction ID Gọi khi user xác
-     * nhận thanh toán thành công
+     * <<<<<<< HEAD Cập nhật trạng thái thanh toán và lưu transaction ID Gọi khi
+     * user xác nhận thanh toán thành công
      */
     public boolean updatePaymentStatus(int orderId, String status, String transactionId) {
         String sql = "UPDATE Payment SET payment_status = ?, transaction_id = ?, payment_date = GETDATE() "
@@ -666,5 +631,34 @@ public class PaymentDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * Lấy danh sách Payment theo orderId Dùng để hiển thị thông tin thanh toán
+     * trong trang chi tiết đơn hàng
+     */
+    public List<PaymentDTO> getPaymentsByOrderId(int orderId) {
+        List<PaymentDTO> list = new ArrayList<>();
+        String sql = "SELECT * FROM Payment WHERE order_id = ? ORDER BY payment_id DESC";
+        try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            try ( ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    PaymentDTO p = new PaymentDTO();
+                    p.setPaymentId(rs.getInt("payment_id"));
+                    p.setOrderId(rs.getInt("order_id"));
+                    p.setPaymentMethod(rs.getString("payment_method"));
+                    p.setPaymentDate(rs.getTimestamp("payment_date"));
+                    p.setPaymentStatus(rs.getString("payment_status"));
+                    p.setAmount(rs.getDouble("amount"));
+                    p.setTransactionId(rs.getString("transaction_id"));
+                    p.setNotes(rs.getString("notes"));
+                    list.add(p);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 }

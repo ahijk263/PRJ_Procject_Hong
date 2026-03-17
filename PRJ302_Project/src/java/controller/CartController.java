@@ -5,16 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
 import model.CarDAO;
 import model.CarDTO;
 import model.UserDTO;
 
 @WebServlet(name = "CartController", urlPatterns = {"/CartController"})
 public class CartController extends HttpServlet {
+
+    private CarDAO carDAO = new CarDAO(); // ✅ FIX thiếu DAO
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -30,12 +29,13 @@ public class CartController extends HttpServlet {
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         request.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute("user");
 
-        // Phải đăng nhập mới dùng được giỏ hàng
+        // Phải login
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
@@ -45,60 +45,59 @@ public class CartController extends HttpServlet {
 
         if ("add".equals(action)) {
             doAddToCart(request, response, session);
+
         } else if ("remove".equals(action)) {
             doRemoveFromCart(request, response, session);
+
         } else if ("clear".equals(action)) {
             session.removeAttribute("cart");
+            session.setAttribute("cartCount", 0);
             response.sendRedirect(request.getContextPath() + "/customer/cart.jsp");
+
         } else {
-            // Mặc định: hiển thị trang giỏ hàng
             response.sendRedirect(request.getContextPath() + "/customer/cart.jsp");
         }
     }
 
     /**
-     * THÊM XE VÀO GIỎ HÀNG
-     * - Mỗi xe chỉ được thêm 1 lần (vì xe luxury mỗi chiếc là duy nhất)
-     * - Lấy thông tin xe từ DB rồi lưu vào Session
+     * THÊM XE VÀO GIỎ
+     * - Mỗi xe chỉ thêm 1 lần
      */
     @SuppressWarnings("unchecked")
     private void doAddToCart(HttpServletRequest request, HttpServletResponse response,
             HttpSession session) throws IOException {
+
         try {
             int carId = Integer.parseInt(request.getParameter("carId"));
 
-            // Lấy giỏ hiện tại từ session, nếu chưa có thì tạo mới
             List<CarDTO> cart = (List<CarDTO>) session.getAttribute("cart");
             if (cart == null) {
                 cart = new ArrayList<>();
             }
 
-            // Kiểm tra xe đã có trong giỏ chưa (tránh thêm trùng)
-            boolean alreadyInCart = false;
+            boolean exists = false;
             for (CarDTO c : cart) {
                 if (c.getCarId() == carId) {
-                    alreadyInCart = true;
+                    exists = true;
                     break;
                 }
             }
 
-            if (!alreadyInCart) {
-                // Lấy thông tin xe từ DB
-                CarDAO carDAO = new CarDAO();
+            if (!exists) {
                 CarDTO car = carDAO.searchById(carId);
 
                 if (car != null && "AVAILABLE".equals(car.getStatus())) {
                     cart.add(car);
-                    session.setAttribute("cart", cart);
-                    session.setAttribute("cartCount", cart.size());
                 }
             }
+
+            session.setAttribute("cart", cart);
+            session.setAttribute("cartCount", cart.size());
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // Quay lại trang trước (trang chi tiết xe hoặc trang tìm kiếm)
         String referer = request.getHeader("Referer");
         if (referer != null && !referer.isEmpty()) {
             response.sendRedirect(referer);
@@ -108,11 +107,12 @@ public class CartController extends HttpServlet {
     }
 
     /**
-     * XÓA XE KHỎI GIỎ HÀNG
+     * XÓA XE KHỎI GIỎ
      */
     @SuppressWarnings("unchecked")
     private void doRemoveFromCart(HttpServletRequest request, HttpServletResponse response,
             HttpSession session) throws IOException {
+
         try {
             int carId = Integer.parseInt(request.getParameter("carId"));
 
