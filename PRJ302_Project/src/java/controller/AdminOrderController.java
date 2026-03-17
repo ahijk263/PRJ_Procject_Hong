@@ -21,6 +21,22 @@ public class AdminOrderController extends HttpServlet {
         catch (UnsupportedEncodingException e) { return s; }
     }
 
+    /**
+     * Map trạng thái logic → giá trị hợp lệ trong DB Payment
+     * DB chỉ cho phép: PENDING, COMPLETED, FAILED, REFUNDED
+     *   PAID      → COMPLETED  (đã thanh toán thành công)
+     *   CANCELLED → FAILED     (giao dịch thất bại/hủy)
+     *   PENDING   → PENDING    (chờ xử lý)
+     */
+    private String toPaymentStatus(String logicStatus) {
+        switch (logicStatus) {
+            case "PAID":
+            case "COMPLETED": return "COMPLETED";
+            case "CANCELLED": return "FAILED";
+            default:          return "PENDING";
+        }
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -35,7 +51,8 @@ public class AdminOrderController extends HttpServlet {
 
         String action       = request.getParameter("action");
         String filterStatus = request.getParameter("filterStatus");
-        OrderDAO orderDAO   = new OrderDAO();
+        OrderDAO  orderDAO  = new OrderDAO();
+        PaymentDAO payDAO   = new PaymentDAO();
 
         String base = request.getContextPath() + "/admin/orders";
         if (filterStatus != null && !filterStatus.isEmpty())
@@ -45,74 +62,55 @@ public class AdminOrderController extends HttpServlet {
 
         try {
             int orderId = Integer.parseInt(request.getParameter("orderId"));
-            String sep = base.contains("?") ? "&" : "?";
-
-            PaymentDAO payDAO = new PaymentDAO();
+            String sep  = base.contains("?") ? "&" : "?";
 
             if ("confirm".equals(action)) {
-                // Hoàn thành đơn → Order=COMPLETED + Payment=PAID
-                boolean o = orderDAO.updateStatus(orderId, "COMPLETED");
-                boolean p = payDAO.updatePaymentStatusByOrderId(orderId, "PAID");
-                redirectUrl = base + sep + ((o && p)
-                        ? "msg=" + enc("Đơn hàng đã hoàn thành")
-                        : "error=" + enc("Thao tác thất bại"));
+                // Hoàn thành → Order=COMPLETED, Payment=COMPLETED
+                orderDAO.updateStatus(orderId, "COMPLETED");
+                payDAO.updatePaymentStatusByOrderId(orderId, toPaymentStatus("COMPLETED"));
+                redirectUrl = base + sep + "msg=" + enc("Đơn hàng đã hoàn thành");
 
             } else if ("paid".equals(action)) {
-                // Đã nhận tiền mặt → Order=PAID + Payment=PAID
-                boolean o = orderDAO.updateStatus(orderId, "PAID");
-                boolean p = payDAO.updatePaymentStatusByOrderId(orderId, "PAID");
-                redirectUrl = base + sep + ((o && p)
-                        ? "msg=" + enc("Đã đánh dấu đã thanh toán")
-                        : "error=" + enc("Thao tác thất bại"));
+                // Đã nhận tiền → Order=PAID, Payment=COMPLETED
+                orderDAO.updateStatus(orderId, "PAID");
+                payDAO.updatePaymentStatusByOrderId(orderId, toPaymentStatus("PAID"));
+                redirectUrl = base + sep + "msg=" + enc("Đã đánh dấu đã thanh toán");
 
             } else if ("cancel".equals(action)) {
-                // Hủy đơn → Order=CANCELLED + Payment=CANCELLED
-                boolean o = orderDAO.updateStatus(orderId, "CANCELLED");
-                boolean p = payDAO.updatePaymentStatusByOrderId(orderId, "CANCELLED");
-                redirectUrl = base + sep + ((o && p)
-                        ? "msg=" + enc("Đã hủy đơn hàng")
-                        : "error=" + enc("Thao tác thất bại"));
+                // Hủy → Order=CANCELLED, Payment=FAILED
+                orderDAO.updateStatus(orderId, "CANCELLED");
+                payDAO.updatePaymentStatusByOrderId(orderId, toPaymentStatus("CANCELLED"));
+                redirectUrl = base + sep + "msg=" + enc("Đã hủy đơn hàng");
 
             } else if ("verifyQR".equals(action)) {
-                // Xác nhận QR chuyển khoản → Order=PAID + Payment=PAID
-                boolean o = orderDAO.updateStatus(orderId, "PAID");
-                boolean p = payDAO.updatePaymentStatusByOrderId(orderId, "PAID");
-                redirectUrl = base + sep + ((o && p)
-                        ? "msg=" + enc("Đã xác nhận thanh toán QR đơn #" + orderId)
-                        : "error=" + enc("Xác nhận thất bại"));
+                // Xác nhận QR → Order=PAID, Payment=COMPLETED
+                orderDAO.updateStatus(orderId, "PAID");
+                payDAO.updatePaymentStatusByOrderId(orderId, toPaymentStatus("PAID"));
+                redirectUrl = base + sep + "msg=" + enc("Đã xác nhận thanh toán QR đơn #" + orderId);
 
             } else if ("approveInstallment".equals(action)) {
-                // Duyệt trả góp → Order=PAID + Payment=PAID
-                boolean o = orderDAO.updateStatus(orderId, "PAID");
-                boolean p = payDAO.updatePaymentStatusByOrderId(orderId, "PAID");
-                redirectUrl = base + sep + ((o && p)
-                        ? "msg=" + enc("Đã duyệt hồ sơ trả góp đơn #" + orderId)
-                        : "error=" + enc("Duyệt thất bại"));
+                // Duyệt trả góp → Order=PAID, Payment=COMPLETED
+                orderDAO.updateStatus(orderId, "PAID");
+                payDAO.updatePaymentStatusByOrderId(orderId, toPaymentStatus("PAID"));
+                redirectUrl = base + sep + "msg=" + enc("Đã duyệt hồ sơ trả góp đơn #" + orderId);
 
             } else if ("rejectInstallment".equals(action)) {
-                // Từ chối trả góp → Order=CANCELLED + Payment=CANCELLED
-                boolean o = orderDAO.updateStatus(orderId, "CANCELLED");
-                boolean p = payDAO.updatePaymentStatusByOrderId(orderId, "CANCELLED");
-                redirectUrl = base + sep + ((o && p)
-                        ? "msg=" + enc("Đã từ chối hồ sơ trả góp đơn #" + orderId)
-                        : "error=" + enc("Từ chối thất bại"));
+                // Từ chối trả góp → Order=CANCELLED, Payment=FAILED
+                orderDAO.updateStatus(orderId, "CANCELLED");
+                payDAO.updatePaymentStatusByOrderId(orderId, toPaymentStatus("CANCELLED"));
+                redirectUrl = base + sep + "msg=" + enc("Đã từ chối hồ sơ trả góp đơn #" + orderId);
 
             } else if ("changeStatus".equals(action)) {
                 String newStatus = request.getParameter("newStatus");
-                boolean o = orderDAO.updateStatus(orderId, newStatus);
-                // Đồng bộ Payment status theo Order status
-                String payStatus = "PENDING";
-                if ("PAID".equals(newStatus) || "COMPLETED".equals(newStatus)) payStatus = "PAID";
-                else if ("CANCELLED".equals(newStatus)) payStatus = "CANCELLED";
-                payDAO.updatePaymentStatusByOrderId(orderId, payStatus);
-                redirectUrl = base + sep + (o
-                        ? "msg=" + enc("Đã cập nhật trạng thái đơn #" + orderId)
-                        : "error=" + enc("Cập nhật thất bại"));
+                orderDAO.updateStatus(orderId, newStatus);
+                payDAO.updatePaymentStatusByOrderId(orderId, toPaymentStatus(newStatus));
+                redirectUrl = base + sep + "msg=" + enc("Đã cập nhật trạng thái đơn #" + orderId);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             String sep = base.contains("?") ? "&" : "?";
-            redirectUrl = base + sep + "error=" + enc("Lỗi hệ thống");
+            redirectUrl = base + sep + "error=" + enc("Lỗi hệ thống: " + e.getMessage());
         }
 
         response.sendRedirect(redirectUrl);
