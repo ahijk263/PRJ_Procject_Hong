@@ -294,6 +294,34 @@
                 background: #f8d7da;
                 color: #721c24;
             }
+            /* Badge phương thức thanh toán */
+            .pay-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                padding: 2px 8px;
+                border-radius: 3px;
+                font-size: 11px;
+                font-weight: 600;
+            }
+            .pay-CASH         { background:#e8f5e9; color:#2e7d32; }
+            .pay-BANK_TRANSFER{ background:#e3f2fd; color:#1565c0; }
+            .pay-INSTALLMENT  { background:#fff8e1; color:#e65100; }
+            /* Modal hồ sơ */
+            .modal-profile { width: 520px; }
+            .profile-row {
+                display: flex;
+                justify-content: space-between;
+                padding: 8px 0;
+                border-bottom: 1px solid #f0f0f0;
+                font-size: 13px;
+            }
+            .profile-row:last-child { border-bottom: none; }
+            .profile-row .pk { color: #888; font-size: 12px; }
+            .profile-row .pv { font-weight: 600; text-align: right; max-width: 65%; }
+            .btn-verify  { background: #1565c0; color: #fff; }
+            .btn-approve { background: #27ae60; color: #fff; }
+            .btn-reject  { background: #e74c3c; color: #fff; }
             /* ===== MODAL ===== */
             .modal-overlay {
                 display: none;
@@ -392,7 +420,7 @@
                         </div>
                         <table>
                             <thead>
-                                <tr><th>Order ID</th><th>Khách hàng</th><th>Xe</th><th>Địa chỉ</th><th>Ngày đặt</th><th>Tổng tiền (VND)</th><th>Trạng thái</th><th>Thao tác</th></tr>
+                                <tr><th>Order ID</th><th>Khách hàng</th><th>Xe</th><th>Địa chỉ</th><th>Ngày đặt</th><th>Tổng tiền (VND)</th><th>Đơn hàng</th><th>Thanh toán</th><th>Thao tác</th></tr>
                             </thead>
                             <tbody>
                                 <c:forEach var="o" items="${orders}">
@@ -408,21 +436,71 @@
                                         <td style="font-size:12px;white-space:nowrap;"><fmt:formatDate value="${o.orderDate}" pattern="dd/MM/yyyy HH:mm"/></td>
                                         <td><strong><fmt:formatNumber value="${o.totalPrice}" type="number" groupingUsed="true"/></strong></td>
                                         <td><span class="badge badge-${o.status}">${o.status}</span></td>
+
+                                        <%-- Cột Thanh toán --%>
                                         <td>
+                                            <c:set var="pay" value="${paymentMap[o.orderId]}"/>
+                                            <c:choose>
+                                                <c:when test="${not empty pay}">
+                                                    <span class="pay-badge pay-${pay.paymentMethod}">
+                                                        <c:choose>
+                                                            <c:when test="${pay.paymentMethod == 'CASH'}">&#128181; Tiền mặt</c:when>
+                                                            <c:when test="${pay.paymentMethod == 'BANK_TRANSFER'}">&#128247; QR Pay</c:when>
+                                                            <c:when test="${pay.paymentMethod == 'INSTALLMENT'}">&#127970; Trả góp</c:when>
+                                                            <c:otherwise>${pay.paymentMethod}</c:otherwise>
+                                                        </c:choose>
+                                                    </span><br>
+                                                    <c:if test="${pay.paymentMethod == 'BANK_TRANSFER' || pay.paymentMethod == 'INSTALLMENT'}">
+                                                        <br><button class="btn btn-secondary btn-sm" style="margin-top:4px;"
+                                                                onclick="openProfile(${o.orderId}, '${pay.paymentMethod}', '${pay.paymentStatus}', '${pay.transactionId}', '${pay.notes}')">
+                                                            &#128269; Xem hồ sơ
+                                                        </button>
+                                                    </c:if>
+                                                </c:when>
+                                                <c:otherwise><span style="color:#aaa;font-size:12px;">Chưa có</span></c:otherwise>
+                                            </c:choose>
+                                        </td>
+
+                                        <%-- Cột Thao tác --%>
+                                        <td>
+                                            <c:set var="pay2" value="${paymentMap[o.orderId]}"/>
                                             <c:choose>
                                                 <c:when test="${o.status == 'PENDING'}">
-                                                    <form method="post" action="${pageContext.request.contextPath}/AdminOrderController" style="display:inline;">
-                                                        <input type="hidden" name="action" value="confirm">
-                                                        <input type="hidden" name="orderId" value="${o.orderId}">
-                                                        <input type="hidden" name="filterStatus" value="${filterStatus}">
-                                                        <button type="submit" class="btn btn-success btn-sm">&#10003; Hoàn thành</button>
-                                                    </form>
-                                                    <form method="post" action="${pageContext.request.contextPath}/AdminOrderController" style="display:inline;">
-                                                        <input type="hidden" name="action" value="paid">
-                                                        <input type="hidden" name="orderId" value="${o.orderId}">
-                                                        <input type="hidden" name="filterStatus" value="${filterStatus}">
-                                                        <button type="submit" class="btn btn-info btn-sm">Đã TT</button>
-                                                    </form>
+                                                    <c:choose>
+                                                        <c:when test="${not empty pay2 && pay2.paymentMethod == 'BANK_TRANSFER' && pay2.paymentStatus == 'PENDING'}">
+                                                            <form method="post" action="${pageContext.request.contextPath}/AdminOrderController" style="display:inline;"
+                                                                  onsubmit="return confirm('Xác nhận đã nhận tiền chuyển khoản đơn #${o.orderId}?')">
+                                                                <input type="hidden" name="action" value="verifyQR">
+                                                                <input type="hidden" name="orderId" value="${o.orderId}">
+                                                                <input type="hidden" name="filterStatus" value="${filterStatus}">
+                                                                <button type="submit" class="btn btn-verify btn-sm">&#10003; Xác nhận CK</button>
+                                                            </form>
+                                                        </c:when>
+                                                        <c:when test="${not empty pay2 && pay2.paymentMethod == 'INSTALLMENT' && pay2.paymentStatus == 'PENDING'}">
+                                                            <form method="post" action="${pageContext.request.contextPath}/AdminOrderController" style="display:inline;"
+                                                                  onsubmit="return confirm('Duyệt hồ sơ trả góp đơn #${o.orderId}?')">
+                                                                <input type="hidden" name="action" value="approveInstallment">
+                                                                <input type="hidden" name="orderId" value="${o.orderId}">
+                                                                <input type="hidden" name="filterStatus" value="${filterStatus}">
+                                                                <button type="submit" class="btn btn-approve btn-sm">&#10003; Duyệt góp</button>
+                                                            </form>
+                                                            <form method="post" action="${pageContext.request.contextPath}/AdminOrderController" style="display:inline;"
+                                                                  onsubmit="return confirm('Từ chối hồ sơ trả góp đơn #${o.orderId}?')">
+                                                                <input type="hidden" name="action" value="rejectInstallment">
+                                                                <input type="hidden" name="orderId" value="${o.orderId}">
+                                                                <input type="hidden" name="filterStatus" value="${filterStatus}">
+                                                                <button type="submit" class="btn btn-danger btn-sm">&#10007; Từ chối</button>
+                                                            </form>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <form method="post" action="${pageContext.request.contextPath}/AdminOrderController" style="display:inline;">
+                                                                <input type="hidden" name="action" value="paid">
+                                                                <input type="hidden" name="orderId" value="${o.orderId}">
+                                                                <input type="hidden" name="filterStatus" value="${filterStatus}">
+                                                                <button type="submit" class="btn btn-info btn-sm">&#128181; Đã nhận tiền</button>
+                                                            </form>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                     <form method="post" action="${pageContext.request.contextPath}/AdminOrderController" style="display:inline;"
                                                           onsubmit="return confirm('Hủy đơn #${o.orderId}?')">
                                                         <input type="hidden" name="action" value="cancel">
@@ -457,7 +535,7 @@
                                     </tr>
                                 </c:forEach>
                                 <c:if test="${empty orders}">
-                                    <tr><td colspan="8" style="text-align:center;padding:28px;color:#aaa;">Không có đơn hàng nào.</td></tr>
+                                    <tr><td colspan="9" style="text-align:center;padding:28px;color:#aaa;">Không có đơn hàng nào.</td></tr>
                                 </c:if>
                             </tbody>
                         </table>
@@ -465,6 +543,17 @@
                 </div>
             </div>
         </div>
+        <!-- MODAL XEM HỒ SƠ THANH TOÁN -->
+        <div class="modal-overlay" id="profileModal">
+            <div class="modal modal-profile">
+                <h3 id="profileTitle">&#128269; Chi tiết thanh toán</h3>
+                <div id="profileContent"></div>
+                <div style="display:flex;justify-content:flex-end;gap:8px;border-top:1px solid #eee;padding-top:12px;margin-top:12px;">
+                    <button class="btn btn-secondary" onclick="document.getElementById('profileModal').classList.remove('open')">Đóng</button>
+                </div>
+            </div>
+        </div>
+
         <!-- MODAL SỬA TRẠNG THÁI -->
         <div class="modal-overlay" id="editStatusModal">
             <div class="modal" style="width:360px;">
@@ -496,7 +585,38 @@
                 </form>
             </div>
         </div>
-        <script>function openEditStatus(orderId, currentStatus) {
+        <script>
+            function openProfile(orderId, method, payStatus, txnId, notes) {
+                var title = method === 'BANK_TRANSFER' ? '📱 Hồ sơ QR Pay' : '🏦 Hồ sơ Trả góp';
+                document.getElementById('profileTitle').textContent = title + ' — Đơn #' + orderId;
+
+                var html = '';
+
+                if (method === 'BANK_TRANSFER') {
+                    html += '<div class="profile-row"><span class="pk">Phương thức</span><span class="pv">QR Pay / Chuyển khoản</span></div>';
+                    html += '<div class="profile-row"><span class="pk">Trạng thái TT</span><span class="pv"><span class="badge badge-' + payStatus + '">' + payStatus + '</span></span></div>';
+                    html += '<div class="profile-row"><span class="pk">Mã giao dịch</span><span class="pv" style="font-family:monospace;">' + (txnId || '(chưa có)') + '</span></div>';
+                    html += '<div class="profile-row"><span class="pk">Ghi chú</span><span class="pv">' + (notes || '') + '</span></div>';
+                } else if (method === 'INSTALLMENT') {
+                    // Parse notes: "TRẢ GÓP | NH: ... | 36 tháng | Trả trước: ... | Hàng tháng: ... | CCCD: ... | Tên: ..."
+                    var parts = notes.split(' | ');
+                    html += '<div class="profile-row"><span class="pk">Phương thức</span><span class="pv">Trả góp ngân hàng</span></div>';
+                    html += '<div class="profile-row"><span class="pk">Trạng thái</span><span class="pv"><span class="badge badge-' + payStatus + '">' + payStatus + '</span></span></div>';
+                    for (var i = 1; i < parts.length; i++) {
+                        var kv = parts[i].split(': ');
+                        if (kv.length >= 2) {
+                            html += '<div class="profile-row"><span class="pk">' + kv[0] + '</span><span class="pv">' + kv.slice(1).join(': ') + '</span></div>';
+                        } else {
+                            html += '<div class="profile-row"><span class="pk">' + parts[i] + '</span><span class="pv"></span></div>';
+                        }
+                    }
+                }
+
+                document.getElementById('profileContent').innerHTML = html;
+                document.getElementById('profileModal').classList.add('open');
+            }
+
+            function openEditStatus(orderId, currentStatus) {
                 document.getElementById('modalOrderId').textContent = orderId;
                 document.getElementById('modalOrderIdInput').value = orderId;
                 document.getElementById('modalCurrentStatus').textContent = currentStatus;
