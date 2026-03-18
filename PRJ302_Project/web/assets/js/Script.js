@@ -126,28 +126,42 @@ function validatePhone(phone) {
     return re.test(phone.replace(/\s/g, ''));
 }
 
-// ===== Contact Form Handler =====
-// Form submit lên ContactController — không dùng preventDefault
+// ===== Contact Form Handler (if exists) =====
 const contactForm = document.querySelector('#contact form');
 if (contactForm) {
     contactForm.addEventListener('submit', function(e) {
-        // Chỉ validate client-side, KHÔNG preventDefault — để form submit lên server
-        const name    = this.querySelector('input[name="fullName"]').value.trim();
-        const email   = this.querySelector('input[name="email"]').value.trim();
-        const message = this.querySelector('textarea[name="message"]').value.trim();
-
-        if (!name || !email || !message) {
-            e.preventDefault();
-            alert('Vui lòng điền đầy đủ họ tên, email và tin nhắn!');
+        e.preventDefault();
+        
+        // Get form values
+        const name = this.querySelector('input[type="text"]').value;
+        const email = this.querySelector('input[type="email"]').value;
+        const phone = this.querySelector('input[type="tel"]').value;
+        const message = this.querySelector('textarea').value;
+        
+        // Basic validation
+        if (!name || !email || !phone || !message) {
+            alert('Vui lòng điền đầy đủ thông tin!');
             return;
         }
-
+        
         if (!validateEmail(email)) {
-            e.preventDefault();
             alert('Email không hợp lệ!');
             return;
         }
-        // Validation OK → form submit bình thường lên ContactController
+        
+        if (!validatePhone(phone)) {
+            alert('Số điện thoại không hợp lệ!');
+            return;
+        }
+        
+        // Here you would normally send the data to your backend
+        console.log('Form submitted:', { name, email, phone, message });
+        
+        // Show success message
+        alert('Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi trong thời gian sớm nhất.');
+        
+        // Reset form
+        this.reset();
     });
 }
 
