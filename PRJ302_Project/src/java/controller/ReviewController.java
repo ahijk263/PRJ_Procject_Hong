@@ -17,6 +17,8 @@ public class ReviewController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        response.setCharacterEncoding("UTF-8");
 
         // 1. Kiểm tra đăng nhập
         HttpSession session = request.getSession();
@@ -28,7 +30,8 @@ public class ReviewController extends HttpServlet {
         }
 
         try {
-            // 2. Lấy dữ liệu từ Modal gửi về
+            // 1. Lấy dữ liệu từ Modal gửi về
+            String action = request.getParameter("action"); // 'insert' hoặc 'update' từ JSP
             String carIdRaw = request.getParameter("carId");
             String ratingRaw = request.getParameter("rating");
             String comment = request.getParameter("comment");
@@ -40,31 +43,37 @@ public class ReviewController extends HttpServlet {
 
                 ReviewDAO dao = new ReviewDAO();
 
-                // 3. HỆ THỐNG KIỂM TRA 2 TẦNG
-                // Tầng 1: Đã mua xe chưa?
-                if (!dao.checkUserBoughtCar(userId, carId)) {
-                    session.setAttribute("error", "Chỉ chủ sở hữu xe mới có quyền để lại đánh giá.");
-                } // Tầng 2: Đã đánh giá xe này bao giờ chưa?
-                else if (dao.hasReviewed(userId, carId)) {
-                    session.setAttribute("error", "Tuyệt tác này bạn đã đánh giá rồi, không thể đánh giá thêm.");
-                } // VƯỢT QUA 2 TẦNG THÌ MỚI LƯU
-                else {
-                    ReviewDTO review = new ReviewDTO();
-                    review.setUserId(userId);
-                    review.setCarId(carId);
-                    review.setRating(rating);
-                    review.setComment(comment);
+                // Tạo đối tượng review để dùng chung
+                ReviewDTO review = new ReviewDTO();
+                review.setUserId(userId);
+                review.setCarId(carId);
+                review.setRating(rating);
+                review.setComment(comment);
 
-                    if (dao.insertReview(review)) {
-                        session.setAttribute("msg", "Cảm ơn bạn! Đánh giá của bạn đã được ghi nhận.");
+                // 2. XỬ LÝ LOGIC THEO ACTION
+                if ("updateReview".equals(action)) {
+                    // Chạy logic cập nhật
+                    if (dao.updateReview(review)) {
+                        session.setAttribute("msg", "Cập nhật đánh giá thành công!");
                     } else {
-                        session.setAttribute("error", "Hệ thống bận, vui lòng thử lại sau.");
+                        session.setAttribute("error", "Lỗi: Không thể cập nhật.");
+                    }
+                } else if ("insertReview".equals(action)) {
+                    // Chạy logic thêm mới (bao gồm kiểm tra 2 tầng như cũ)
+                    if (!dao.checkUserBoughtCar(userId, carId)) {
+                        session.setAttribute("error", "Bạn chưa sở hữu xe này.");
+                    } else if (dao.hasReviewed(userId, carId)) {
+                        session.setAttribute("error", "Xe này đã có đánh giá rồi.");
+                    } else {
+                        if (dao.insertReview(review)) {
+                            session.setAttribute("msg", "Đã lưu đánh giá mới!");
+                        }
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            session.setAttribute("error", "Đã có lỗi xảy ra trong quá trình xử lý.");
+            session.setAttribute("error", "Đã có lỗi xảy ra: " + e.getMessage());
         }
 
         // 5. Quay lại trang Gara

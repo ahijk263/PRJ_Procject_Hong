@@ -201,6 +201,10 @@
                                             <i class="fas fa-heart"></i> Xe yêu thích
                                         </a>
 
+                                        <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders">
+                                            <i class="fas fa-receipt"></i> Đơn hàng của tôi
+                                        </a>
+
                                         <%-- Nhóm 3: Thoát --%>
                                         <div class="menu-divider"></div>
                                         <a href="MainController?action=logout" class="logout-btn">
