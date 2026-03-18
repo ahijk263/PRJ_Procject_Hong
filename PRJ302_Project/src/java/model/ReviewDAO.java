@@ -98,4 +98,24 @@ public class ReviewDAO {
         }
         return list;
     }
+
+    public boolean updateReview(ReviewDTO review) {
+        String sql = "UPDATE Review SET rating = ?, comment = ?, review_date = GETDATE() "
+                + "WHERE user_id = ? AND car_id = ?";
+
+        try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, review.getRating());
+            ps.setString(2, review.getComment());
+            ps.setInt(3, review.getUserId());
+            ps.setInt(4, review.getCarId());
+
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            System.err.println("Lỗi tại updateReview: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

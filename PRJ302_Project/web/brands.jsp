@@ -227,14 +227,16 @@
             /* ===== HEADER DROPDOWN ===== */
             .user-dropdown {
                 position: relative;
-                padding: 10px 0;
+                padding: 10px 0; /* Vùng đệm quan trọng */
             }
+
             .avatar-trigger {
                 display: flex;
                 align-items: center;
                 gap: 8px;
                 cursor: pointer;
             }
+
             .avatar-img {
                 width: 38px;
                 height: 38px;
@@ -242,27 +244,50 @@
                 border: 2px solid var(--primary-gold);
                 object-fit: cover;
             }
+
             .arrow-icon {
-                font-size: 0.7rem;
+                font-size: 0.6rem;
                 color: var(--primary-gold);
+                transition: 0.3s;
             }
-            .dropdown-menu {
+
+            .user-dropdown:hover .arrow-icon {
+                transform: rotate(180deg);
+            }
+
+            .user-dropdown .dropdown-menu {
+                display: none;
                 position: absolute;
                 top: 100%;
                 right: 0;
-                background: white;
+                background: white !important;
                 min-width: 220px;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.2);
                 border-radius: 4px;
-                display: none;
+                border-top: 3px solid var(--primary-gold) !important;
+                z-index: 9999;
                 flex-direction: column;
-                border-top: 3px solid var(--primary-gold);
+                padding: 0;
+                margin-top: 0;
                 overflow: hidden;
-                padding: 5px 0;
+                animation: dropdownFade 0.2s ease;
             }
+
+            @keyframes dropdownFade {
+                from {
+                    opacity: 0;
+                    transform: translateY(5px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
             .user-dropdown:hover .dropdown-menu {
                 display: flex;
             }
+
             .user-profile-header {
                 padding: 15px 20px;
                 background: #f9f9f9;
@@ -270,18 +295,21 @@
                 display: flex;
                 flex-direction: column;
             }
+
             .welcome-text {
                 font-size: 0.7rem;
                 color: #999;
                 text-transform: uppercase;
             }
+
             .user-full-name {
                 font-size: 0.9rem;
                 font-weight: 700;
                 color: #333;
             }
+
             .dropdown-menu a {
-                padding: 8px 18px !important;
+                padding: 12px 20px !important;
                 color: #444 !important;
                 text-decoration: none;
                 font-size: 0.85rem !important;
@@ -289,33 +317,39 @@
                 align-items: center;
                 gap: 12px;
                 transition: 0.2s;
-                text-transform: none !important;
+                text-transform: none !important; /* Không bị in hoa như menu chính */
             }
+
             .dropdown-menu a i {
                 color: #C5A021;
                 width: 18px;
                 text-align: center;
             }
+
             .dropdown-menu a:hover {
                 background: #fdfaf0;
                 color: #C5A021 !important;
                 padding-left: 25px !important;
             }
+
             .menu-divider {
                 height: 1px;
                 background: #eee;
                 margin: 5px 0;
             }
+
             .logout-btn {
                 color: #dc3545 !important;
             }
+
             .logout-btn:hover {
                 background: #fff5f5 !important;
+                color: #dc3545 !important;
             }
         </style>
     </head>
     <body>
-<!-- HEADER (giống index.jsp) -->
+        <!-- HEADER (giống index.jsp) -->
         <header class="header" id="header">
             <div class="container">
                 <nav class="nav">
@@ -348,12 +382,11 @@
                                             <span class="user-full-name">${user.fullName}</span>
                                         </div>
                                         <c:if test="${user.role == 'CUSTOMER'}">
-                                        <a href="customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
-                                        <a href="customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
-                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar"><i class="fas fa-car"></i> Xe của tôi</a>
-                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist"><i class="fas fa-heart"></i> Xe yêu thích</a>
-                                        <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
-                                        <a href="customer/review.jsp"><i class="fas fa-star"></i> Đánh giá của tôi</a>
+                                            <a href="customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
+                                            <a href="customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
+                                            <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar"><i class="fas fa-car"></i> Xe của tôi</a>
+                                            <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist"><i class="fas fa-heart"></i> Xe yêu thích</a>
+                                            <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
                                         </c:if>
                                         <c:if test="${not empty sessionScope.user && sessionScope.user.role == 'ADMIN'}">
                                             <a href="${pageContext.request.contextPath}/admin/dashboard" style="color:#D4AF37;font-weight:700;">

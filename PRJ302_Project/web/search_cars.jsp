@@ -237,99 +237,111 @@
                 border-bottom: 2px solid var(--primary-gold);
             }
 
-            /* Container chính của User Dropdown */
+            /* --- PHẦN USER DROPDOWN --- */
             .user-dropdown {
                 position: relative;
-                list-style: none;
-                display: flex;
-                align-items: center;
-                padding: 10px 0 20px 20px; /* Tạo vùng đệm dưới để giữ hover */
-                margin-bottom: -10px;
-                cursor: pointer;
+                padding: 10px 0; /* Vùng đệm quan trọng */
             }
 
             .avatar-trigger {
                 display: flex;
                 align-items: center;
                 gap: 8px;
+                cursor: pointer;
             }
 
             .avatar-img {
-                width: 35px;
-                height: 35px;
+                width: 38px;
+                height: 38px;
                 border-radius: 50%;
                 border: 2px solid var(--primary-gold);
-                transition: 0.3s;
+                object-fit: cover;
             }
 
             .arrow-icon {
-                font-size: 0.7rem;
+                font-size: 0.6rem;
                 color: var(--primary-gold);
+                transition: 0.3s;
             }
 
-            /* Menu thả xuống */
-            .dropdown-menu {
+            .user-dropdown:hover .arrow-icon {
+                transform: rotate(180deg);
+            }
+
+            .user-dropdown .dropdown-menu {
                 display: none;
                 position: absolute;
-                top: 100%; /* Nằm ngay dưới vùng đệm padding */
+                top: 100%;
                 right: 0;
-                background: white;
-                min-width: 240px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+                background: white !important;
+                min-width: 220px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
                 border-radius: 4px;
-                z-index: 1000;
+                border-top: 3px solid var(--primary-gold) !important;
+                z-index: 9999;
                 flex-direction: column;
-                border-top: 3px solid var(--primary-gold);
+                padding: 0;
+                margin-top: 0;
                 overflow: hidden;
-                margin-top: -5px; /* Kéo gần lại để không có kẽ hở */
+                animation: dropdownFade 0.2s ease;
             }
 
-            /* Hiển thị khi hover */
+            @keyframes dropdownFade {
+                from {
+                    opacity: 0;
+                    transform: translateY(5px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
             .user-dropdown:hover .dropdown-menu {
                 display: flex;
             }
 
-            /* Nội dung bên trong menu */
             .user-profile-header {
                 padding: 15px 20px;
                 background: #f9f9f9;
                 border-bottom: 1px solid #eee;
+                display: flex;
+                flex-direction: column;
             }
 
             .welcome-text {
                 font-size: 0.7rem;
                 color: #999;
                 text-transform: uppercase;
-                display: block;
             }
+
             .user-full-name {
                 font-size: 0.9rem;
                 font-weight: 700;
-                color: var(--primary-dark);
+                color: #333;
             }
 
             .dropdown-menu a {
-                padding: 8px 18px !important;
+                padding: 12px 20px !important;
                 color: #444 !important;
-                text-decoration: none !important;
+                text-decoration: none;
                 font-size: 0.85rem !important;
                 display: flex !important;
                 align-items: center;
                 gap: 12px;
                 transition: 0.2s;
-                text-transform: none !important;
-                font-weight: 500 !important;
+                text-transform: none !important; /* Không bị in hoa như menu chính */
             }
 
             .dropdown-menu a i {
-                color: var(--primary-gold);
+                color: #C5A021;
                 width: 18px;
                 text-align: center;
             }
 
             .dropdown-menu a:hover {
                 background: #fdfaf0;
-                color: var(--primary-gold) !important;
+                color: #C5A021 !important;
                 padding-left: 25px !important;
             }
 
@@ -338,13 +350,16 @@
                 background: #eee;
                 margin: 5px 0;
             }
+
             .logout-btn {
                 color: #dc3545 !important;
             }
+
             .logout-btn:hover {
                 background: #fff5f5 !important;
+                color: #dc3545 !important;
             }
-
+            /* --- PHẦN WISHLIST --- */
             .wishlist-icon {
                 position: absolute;
                 top: 15px;
@@ -404,7 +419,7 @@
         </style>
     </head>
     <body>
-<header class="header" style="background: var(--primary-dark); position: fixed;">
+        <header class="header" style="background: var(--primary-dark); position: fixed;">
             <div class="container">
                 <nav class="nav">
                     <a href="MainController?action=home" class="logo">
@@ -442,16 +457,18 @@
 
                                         <%-- Các link từ file My Profile của bạn --%>
                                         <c:if test="${user.role == 'CUSTOMER'}">
-                                        <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
-                                        <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
+                                            <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
+                                            <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
 
-                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar">
-                                            <i class="fas fa-car"></i> Xe của tôi
-                                        </a>
-                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist">
-                                            <i class="fas fa-heart"></i> Xe yêu thích
-                                        </a>
-                                        <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
+                                            <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar">
+                                                <i class="fas fa-car"></i> Xe của tôi
+                                            </a>
+                                            <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist">
+                                                <i class="fas fa-heart"></i> Xe yêu thích
+                                            </a>
+                                            <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders">
+                                                <i class="fas fa-receipt"></i> Đơn hàng của tôi
+                                            </a>
                                         </c:if>
                                         <c:if test="${not empty sessionScope.user && sessionScope.user.role == 'ADMIN'}">
                                             <a href="${pageContext.request.contextPath}/admin/dashboard" style="color:#D4AF37;font-weight:700;">
