@@ -190,8 +190,8 @@
                                         </div>
 
                                         <%-- Nhóm 1: Quản lý tài khoản --%>
-                                        <a href="customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
-                                        <a href="customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
+                                        <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
+                                        <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
 
                                         <%-- Nhóm 2: Hoạt động của khách hàng --%>
                                         <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar">
@@ -199,6 +199,10 @@
                                         </a>
                                         <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist">
                                             <i class="fas fa-heart"></i> Xe yêu thích
+                                        </a>
+
+                                        <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders">
+                                            <i class="fas fa-receipt"></i> Đơn hàng của tôi
                                         </a>
 
                                         <%-- Nhóm 3: Thoát --%>

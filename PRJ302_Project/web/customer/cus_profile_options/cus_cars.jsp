@@ -265,11 +265,18 @@
                                                style="text-decoration: none; color: #888; font-size: 0.7rem; font-family: 'Montserrat', sans-serif; letter-spacing: 1.5px; border-bottom: 1px solid transparent; transition: 0.3s;"
                                                data-bs-toggle="modal" 
                                                data-bs-target="#reviewModal${order.carId}">
-                                                <i class="fa-solid fa-pen-to-square me-1"></i> Viết đánh giá
+                                                <c:choose>
+                                                    <c:when test="${order.rating > 0}">
+                                                        <i class="fa-solid fa-pen-to-square me-1"></i> Sửa đánh giá
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <i class="fa-solid fa-plus me-1"></i> Viết đánh giá
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </a>
                                         </td>
                                     </tr>
-                                </c:forEach>S
+                                </c:forEach>
                             </tbody>
                         </table>
 
@@ -282,10 +289,16 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content" style="border-radius: 0; border: none;">
                         <form action="ReviewController" method="POST">
+                            <%-- Dòng quan trọng để Controller biết nên INSERT hay UPDATE --%>
+                            <input type="hidden" name="action" value="${order.rating > 0 ? 'updateReview' : 'insertReview'}">
+
                             <div class="modal-header" style="background: var(--dark-accent); color: white; border: none;">
-                                <h5 class="modal-title" style="font-family: 'Playfair Display', serif;">Đánh Giá Tuyệt Tác</h5>
+                                <h5 class="modal-title" style="font-family: 'Playfair Display', serif;">
+                                    ${order.rating > 0 ? 'Chỉnh Sửa Đánh Giá' : 'Đánh Giá Tuyệt Tác'}
+                                </h5>
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
+
                             <div class="modal-body p-4">
                                 <input type="hidden" name="carId" value="${order.carId}">
                                 <input type="hidden" name="orderId" value="${order.orderId}">
@@ -295,31 +308,28 @@
                                 <div class="mb-3 text-center">
                                     <label class="form-label small fw-bold text-uppercase d-block mb-3" style="letter-spacing: 2px;">Xếp hạng trải nghiệm</label>
                                     <div class="star-rating-luxury">
-                                        <input type="radio" id="star5-${order.carId}" name="rating" value="5" />
-                                        <label for="star5-${order.carId}"><i class="fas fa-star"></i></label>
-
-                                        <input type="radio" id="star4-${order.carId}" name="rating" value="4" />
-                                        <label for="star4-${order.carId}"><i class="fas fa-star"></i></label>
-
-                                        <input type="radio" id="star3-${order.carId}" name="rating" value="3" />
-                                        <label for="star3-${order.carId}"><i class="fas fa-star"></i></label>
-
-                                        <input type="radio" id="star2-${order.carId}" name="rating" value="2" />
-                                        <label for="star2-${order.carId}"><i class="fas fa-star"></i></label>
-
-                                        <input type="radio" id="star1-${order.carId}" name="rating" value="1" />
-                                        <label for="star1-${order.carId}"><i class="fas fa-star"></i></label>
+                                        <%-- Vòng lặp đổ 5 sao và tự checked vào sao người dùng đã chọn trước đó --%>
+                                        <c:forEach var="i" begin="1" end="5">
+                                            <input type="radio" id="star${6-i}-${order.carId}" name="rating" value="${6-i}" 
+                                                   ${order.rating == (6-i) ? 'checked' : ''} required />
+                                            <label for="star${6-i}-${order.carId}"><i class="fas fa-star"></i></label>
+                                            </c:forEach>
                                     </div>
                                 </div>
 
                                 <div class="mb-0">
                                     <label class="form-label small fw-bold text-uppercase" style="letter-spacing: 1px;">Cảm nhận</label>
-                                    <textarea name="comment" class="form-control" rows="4" style="border-radius: 0;" placeholder="Điều gì làm bạn ấn tượng nhất..."></textarea>
+                                    <textarea name="comment" class="form-control" rows="4" style="border-radius: 0;" 
+                                              placeholder="Điều gì làm bạn ấn tượng nhất...">${order.comment}</textarea>
                                 </div>
                             </div>
+
                             <div class="modal-footer" style="border: none;">
                                 <button type="button" class="btn text-muted small text-uppercase" data-bs-dismiss="modal">Hủy</button>
-                                <button type="submit" class="btn btn-dark px-4" style="border-radius: 0; background: var(--luxury-gold); border: none;">GỬI ĐÁNH GIÁ</button>
+                                <button type="submit" class="btn btn-dark px-4" 
+                                        style="border-radius: 0; background: var(--luxury-gold); border: none;">
+                                    ${order.rating > 0 ? 'CẬP NHẬT' : 'GỬI ĐÁNH GIÁ'}
+                                </button>
                             </div>
                         </form>
                     </div>

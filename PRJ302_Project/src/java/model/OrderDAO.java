@@ -27,6 +27,15 @@ public class OrderDAO {
         o.setCustomerPhone(rs.getString("phone"));
         o.setCarInfo(rs.getString("car_info"));
         o.setCarId(rs.getInt("car_id"));
+        try {
+            // Kiểm tra xem cột rating có tồn tại trong ResultSet không
+            rs.findColumn("rating");
+            o.setRating(rs.getInt("rating"));
+            o.setComment(rs.getString("comment"));
+        } catch (SQLException e) {
+            o.setRating(0); // Mặc định cho trang Admin
+            o.setComment("");
+        }
         return o;
     }
 
@@ -183,20 +192,25 @@ public class OrderDAO {
         return 0;
     }
 
-    // Lấy danh sách xe đã mua thành công của 1 khách hàng cụ thể
     public List<OrderDTO> getMyPurchasedCars(int userId) {
         List<OrderDTO> list = new ArrayList<>();
-
-        // SQL giờ cực kỳ sạch sẽ vì BASE_SQL đã lo hết phần thông tin xe
-        String sql = BASE_SQL
+        // Viết SQL tường minh, có JOIN Review r
+        String sql = "SELECT o.*, u.full_name, u.email, u.phone, "
+                + " (SELECT TOP 1 od_sub.car_id FROM OrderDetail od_sub WHERE od_sub.order_id = o.order_id) AS car_id, "
+                + " (SELECT TOP 1 b.brand_name + ' ' + cm.model_name + ' - ' + c.color "
+                + "  FROM OrderDetail od INNER JOIN Car c ON od.car_id = c.car_id "
+                + "  INNER JOIN CarModel cm ON c.model_id = cm.model_id "
+                + "  INNER JOIN Brand b ON cm.brand_id = b.brand_id WHERE od.order_id = o.order_id) AS car_info, "
+                + " r.rating, r.comment "
+                + " FROM [Order] o INNER JOIN [User] u ON o.user_id = u.user_id "
+                + " LEFT JOIN Review r ON o.user_id = r.user_id AND r.car_id = "
+                + "     (SELECT TOP 1 od_sub.car_id FROM OrderDetail od_sub WHERE od_sub.order_id = o.order_id) "
                 + " LEFT JOIN Payment p ON o.order_id = p.order_id "
                 + " WHERE o.user_id = ? "
-                + " AND (o.status IN ('PAID', 'COMPLETED') "
-                + "      OR p.payment_status = 'COMPLETED') "
+                + " AND (o.status IN ('PAID', 'COMPLETED') OR p.payment_status = 'COMPLETED') "
                 + " ORDER BY o.order_id DESC";
 
         try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setInt(1, userId);
             try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -204,19 +218,17 @@ public class OrderDAO {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Lỗi tại getMyPurchasedCars: " + e.getMessage());
             e.printStackTrace();
         }
         return list;
     }
+
     /**
-     * Lưu 1 dòng OrderDetail vào DB
-     * Mỗi xe trong đơn hàng = 1 dòng OrderDetail
+     * Lưu 1 dòng OrderDetail vào DB Mỗi xe trong đơn hàng = 1 dòng OrderDetail
      */
     public boolean addOrderDetail(int orderId, int carId, BigDecimal price) {
         String sql = "INSERT INTO OrderDetail (order_id, car_id, price) VALUES (?, ?, ?)";
-        try (Connection conn = DbUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+        try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, orderId);
             ps.setInt(2, carId);
             ps.setBigDecimal(3, price);
@@ -228,26 +240,25 @@ public class OrderDAO {
     }
 
     /**
-     * Lấy danh sách xe (CarDTO) theo orderId
-     * JOIN 3 bảng để lấy đủ thông tin hiển thị
+     * Lấy danh sách xe (CarDTO) theo orderId JOIN 3 bảng để lấy đủ thông tin
+     * hiển thị
      */
     public List<CarDTO> getCarsByOrderId(int orderId) {
         List<CarDTO> list = new ArrayList<>();
         String sql = "SELECT c.car_id, c.model_id, c.price, c.color, c.engine, "
-                   + "c.transmission, c.mileage, c.status, c.description, "
-                   + "c.created_at, c.updated_at, "
-                   + "cm.model_name, b.brand_name, b.brand_id, "
-                   + "img.image_url AS primary_image "
-                   + "FROM OrderDetail od "
-                   + "INNER JOIN Car c ON od.car_id = c.car_id "
-                   + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
-                   + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
-                   + "LEFT JOIN CarImage img ON c.car_id = img.car_id AND img.is_primary = 1 "
-                   + "WHERE od.order_id = ?";
-        try (Connection conn = DbUtils.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                + "c.transmission, c.mileage, c.status, c.description, "
+                + "c.created_at, c.updated_at, "
+                + "cm.model_name, b.brand_name, b.brand_id, "
+                + "img.image_url AS primary_image "
+                + "FROM OrderDetail od "
+                + "INNER JOIN Car c ON od.car_id = c.car_id "
+                + "INNER JOIN CarModel cm ON c.model_id = cm.model_id "
+                + "INNER JOIN Brand b ON cm.brand_id = b.brand_id "
+                + "LEFT JOIN CarImage img ON c.car_id = img.car_id AND img.is_primary = 1 "
+                + "WHERE od.order_id = ?";
+        try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, orderId);
-            try (ResultSet rs = ps.executeQuery()) {
+            try ( ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     CarDTO car = new CarDTO();
                     car.setCarId(rs.getInt("car_id"));

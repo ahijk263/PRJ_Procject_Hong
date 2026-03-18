@@ -451,7 +451,10 @@
                                         <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist">
                                             <i class="fas fa-heart"></i> Xe yêu thích
                                         </a>
-                                        <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
+                                        <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders">
+                                            <i class="fas fa-receipt"></i> Đơn hàng của tôi
+                                        </a>
+
                                         <div class="menu-divider"></div>
 
                                         <a href="${pageContext.request.contextPath}/MainController?action=logout" class="logout-btn">
