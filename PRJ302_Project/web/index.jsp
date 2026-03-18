@@ -76,7 +76,7 @@
 
             /* Các link trong menu */
             .dropdown-menu a {
-                padding: 8px 18px !important;
+                padding: 12px 20px !important;
                 color: #444 !important;
                 text-decoration: none;
                 font-size: 0.85rem !important;
@@ -171,21 +171,13 @@
                         <li><a href="brands" class="nav-link">Hãng xe</a></li>
                         <li><a href="#about" class="nav-link">Về chúng tôi</a></li>
                         <li><a href="#contact" class="nav-link">Liên hệ</a></li>
-                            <%-- Icon giỏ hàng --%>
-                        <li>
-                            <a href="CartController?action=view" class="cart-icon-wrap" title="Giỏ hàng">
-                                <i class="fas fa-shopping-cart"></i>
-                                <c:if test="${cartCount > 0}">
-                                    <span class="cart-badge">${cartCount}</span>
-                                </c:if>
-                            </a>
-                        </li>
 
                         <%-- Logic hiển thị Đăng nhập hoặc Tên người dùng --%>
                         <c:choose>
                             <c:when test="${not empty user}">
                                 <li class="user-dropdown">
-                                    <div class="avatar-trigger">                                    
+                                    <div class="avatar-trigger">
+                                        <%-- Chỉ hiện Avatar với viền Gold --%>
                                         <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=C5A021&color=fff&bold=true" class="avatar-img">
                                         <i class="fas fa-chevron-down arrow-icon"></i>
                                     </div>
@@ -208,10 +200,10 @@
                                         <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist">
                                             <i class="fas fa-heart"></i> Xe yêu thích
                                         </a>
-                                        <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
+
                                         <%-- Nhóm 3: Thoát --%>
                                         <div class="menu-divider"></div>
-                                        <a href="${pageContext.request.contextPath}/MainController?action=logout" class="logout-btn">
+                                        <a href="MainController?action=logout" class="logout-btn">
                                             <i class="fas fa-power-off"></i> Đăng xuất
                                         </a>
                                     </div>
@@ -399,11 +391,34 @@
                 </div>
 
                 <div style="max-width: 600px; margin: 3rem auto;">
-                    <form style="display: flex; flex-direction: column; gap: 1.5rem;">
-                        <input type="text" placeholder="Họ và tên" style="padding: 1rem; border: 2px solid var(--secondary-gray); background: transparent; color: white; font-size: 1rem;">
-                        <input type="email" placeholder="Email" style="padding: 1rem; border: 2px solid var(--secondary-gray); background: transparent; color: white; font-size: 1rem;">
-                        <input type="tel" placeholder="Số điện thoại" style="padding: 1rem; border: 2px solid var(--secondary-gray); background: transparent; color: white; font-size: 1rem;">
-                        <textarea placeholder="Tin nhắn" rows="5" style="padding: 1rem; border: 2px solid var(--secondary-gray); background: transparent; color: white; font-size: 1rem; resize: vertical;"></textarea>
+
+                    <%-- Thông báo kết quả --%>
+                    <c:if test="${param.msg == 'contact_success'}">
+                        <div style="background:#1a7a4a;color:white;padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:0.9rem;">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Tin nhắn đã được gửi thành công! Chúng tôi sẽ phản hồi trong 24 giờ.</span>
+                        </div>
+                    </c:if>
+                    <c:if test="${param.msg == 'contact_error'}">
+                        <div style="background:#c0392b;color:white;padding:14px 20px;margin-bottom:20px;display:flex;align-items:center;gap:10px;font-size:0.9rem;">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Vui lòng điền đầy đủ họ tên, email và tin nhắn.</span>
+                        </div>
+                    </c:if>
+
+                    <form action="ContactController" method="POST" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <input type="text" name="fullName" placeholder="Họ và tên *"
+                               style="padding: 1rem; border: 2px solid var(--secondary-gray); background: transparent; color: white; font-size: 1rem; outline:none;"
+                               onfocus="this.style.borderColor = '#D4AF37'" onblur="this.style.borderColor = 'var(--secondary-gray)'">
+                        <input type="email" name="email" placeholder="Email *"
+                               style="padding: 1rem; border: 2px solid var(--secondary-gray); background: transparent; color: white; font-size: 1rem; outline:none;"
+                               onfocus="this.style.borderColor = '#D4AF37'" onblur="this.style.borderColor = 'var(--secondary-gray)'">
+                        <input type="tel" name="phone" placeholder="Số điện thoại"
+                               style="padding: 1rem; border: 2px solid var(--secondary-gray); background: transparent; color: white; font-size: 1rem; outline:none;"
+                               onfocus="this.style.borderColor = '#D4AF37'" onblur="this.style.borderColor = 'var(--secondary-gray)'">
+                        <textarea name="message" placeholder="Tin nhắn *" rows="5"
+                                  style="padding: 1rem; border: 2px solid var(--secondary-gray); background: transparent; color: white; font-size: 1rem; resize: vertical; outline:none; font-family:inherit;"
+                                  onfocus="this.style.borderColor = '#D4AF37'" onblur="this.style.borderColor = 'var(--secondary-gray)'"></textarea>
                         <button type="submit" class="btn btn-primary" style="width: 100%;">Gửi tin nhắn</button>
                     </form>
                 </div>
@@ -448,7 +463,7 @@
             </div>
         </footer>
 
-        <script src="assets/js/Script.js"></script>
+        <script src="assets/js/Script.js?v=2"></script>
 
     </body>
 
