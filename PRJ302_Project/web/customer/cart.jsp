@@ -10,147 +10,124 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Giỏ Hàng — Luxury Cars</title>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
-            :root {
-                --primary-gold: #D4AF37;
-                --primary-dark: #0A0E27;
-                --secondary-gray: #2C2C2C;
-                --luxury-cream: #F9F7F2;
-                --white: #FFFFFF;
-                --text-light: #666666;
-                --font-display: 'Playfair Display', serif;
-                --font-body: 'Montserrat', sans-serif;
-                --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-                --shadow-sm: 0 2px 10px rgba(0,0,0,0.07);
-                --shadow-md: 0 8px 30px rgba(0,0,0,0.12);
-            }
-            * {
-                box-sizing:border-box;
-                margin:0;
-                padding:0;
-            }
+            /* ===== CHỈ GIỮ CSS ĐẶC THÙ CỦA TRANG NÀY ===== */
+            /* body override — trang này dùng luxury-cream thay vì white */
             body {
-                font-family:var(--font-body);
-                background:var(--luxury-cream);
-                color:var(--secondary-gray);
+                background: #F9F7F2;
             }
 
-            /* HEADER */
-            .header {
-                background:var(--primary-dark);
-                position:fixed;
-                width:100%;
-                top:0;
-                z-index:1000;
-                border-bottom:1px solid rgba(212,175,55,0.2);
-            }
-            .header .container {
-                max-width:1300px;
-                margin:0 auto;
-                padding:0 2rem;
-                display:flex;
-                align-items:center;
-                justify-content:space-between;
-                height:72px;
-            }
-            .logo {
-                font-family:var(--font-display);
-                font-size:1.6rem;
-                font-weight:900;
-                color:var(--white);
-                text-decoration:none;
-                letter-spacing:2px;
-            }
-            .logo span {
-                color:var(--primary-gold);
-            }
-            .nav-links {
-                display:flex;
-                align-items:center;
-                gap:2rem;
-                list-style:none;
-            }
-            .nav-links a {
-                color:rgba(255,255,255,0.7);
-                text-decoration:none;
-                font-size:0.78rem;
-                font-weight:600;
-                text-transform:uppercase;
-                letter-spacing:1.5px;
-                transition:var(--transition);
-            }
-            .nav-links a:hover {
-                color:var(--primary-gold);
-            }
+            /* Dropdown menu trong header */
             .user-dropdown {
-                position:relative;
-                padding-bottom:12px;
-                cursor:pointer;
+                position: relative;
+                padding: 10px 0;
+                cursor: pointer;
+            }
+            .avatar-trigger {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
             }
             .avatar-img {
-                width:36px;
-                height:36px;
-                border-radius:50%;
-                border:2px solid var(--primary-gold);
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                border: 2px solid var(--primary-gold);
+                object-fit: cover;
+            }
+            .arrow-icon {
+                color: var(--text-light);
+                font-size: 0.7rem;
             }
             .dropdown-menu {
-                display:none;
-                position:absolute;
-                top:100%;
-                right:0;
-                background:var(--white);
-                min-width:240px;
-                box-shadow:var(--shadow-md);
-                border-top:3px solid var(--primary-gold);
-                flex-direction:column;
-                z-index:1000;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background: white;
+                min-width: 220px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                border-radius: 4px;
+                display: none;
+                flex-direction: column;
+                border-top: 3px solid var(--primary-gold);
+                overflow: hidden;
+                z-index: 1001;
             }
             .user-dropdown:hover .dropdown-menu {
-                display:flex;
+                display: flex;
             }
             .user-profile-header {
-                padding:14px 18px;
-                background:#fafafa;
-                border-bottom:1px solid #eee;
+                padding: 15px 20px;
+                background: #f9f9f9;
+                border-bottom: 1px solid #eee;
+                display: flex;
+                flex-direction: column;
             }
             .welcome-text {
-                font-size:0.68rem;
-                color:#999;
-                text-transform:uppercase;
-                letter-spacing:1px;
-                display:block;
+                font-size: 0.7rem;
+                color: #999;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                display: block;
             }
             .user-full-name {
-                font-size:0.9rem;
-                font-weight:700;
+                font-size: 0.9rem;
+                font-weight: 700;
+                color: #333;
             }
             .dropdown-menu a {
-                padding:11px 18px;
-                color:#555;
-                text-decoration:none;
-                font-size:0.82rem;
-                display:flex;
-                align-items:center;
-                gap:10px;
-                transition:0.2s;
+                padding: 12px 20px;
+                color: #444;
+                text-decoration: none;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                transition: 0.2s;
+                text-transform: none;
             }
             .dropdown-menu a i {
-                color:var(--primary-gold);
-                width:16px;
+                color: var(--primary-gold);
+                width: 18px;
+                text-align: center;
             }
             .dropdown-menu a:hover {
-                background:#fffbee;
-                color:var(--primary-gold);
+                background: #fdfaf0;
+                color: var(--primary-gold);
+                padding-left: 25px;
             }
             .menu-divider {
-                height:1px;
-                background:#eee;
-                margin:3px 0;
+                height: 1px;
+                background: #eee;
+                margin: 5px 0;
             }
             .logout-btn {
-                color:#c0392b !important;
+                color: #dc3545 !important;
+            }
+            .logout-btn:hover {
+                background: #fff5f5 !important;
+            }
+            /* Cart icon badge */
+            .cart-icon {
+                position: relative;
+            }
+            .cart-badge {
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                background: var(--primary-gold);
+                color: var(--primary-dark);
+                border-radius: 50%;
+                width: 18px;
+                height: 18px;
+                font-size: 0.65rem;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             /* PAGE HEADER */
@@ -167,7 +144,7 @@
                 background:repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(212,175,55,0.02) 40px, rgba(212,175,55,0.02) 80px);
             }
             .page-header .container {
-                max-width:1300px;
+                max-width:1400px;
                 margin:0 auto;
                 padding:0 2rem;
                 position:relative;
@@ -258,11 +235,6 @@
             /* LAYOUT */
             .cart-section {
                 padding:50px 0 90px;
-            }
-            .container {
-                max-width:1300px;
-                margin:0 auto;
-                padding:0 2rem;
             }
             .cart-layout {
                 display:grid;
@@ -574,32 +546,46 @@
         </style>
     </head>
     <body>
-        <header class="header">
+        <header class="header" id="header">
             <div class="container">
-                <a href="${pageContext.request.contextPath}/MainController" class="logo">LUXURY<span>CARS</span></a>
-                <ul class="nav-links">
-                    <li><a href="${pageContext.request.contextPath}/MainController">Trang chủ</a></li>
-                    <li><a href="${pageContext.request.contextPath}/MainController?action=searchCars">Xe bán</a></li>
+                <nav class="nav">
+                    <a href="${pageContext.request.contextPath}/MainController" class="logo">
+                        LUXURY<span>CARS</span>
+                    </a>
+
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="${pageContext.request.contextPath}/MainController" class="nav-link">Trang chủ</a></li>
+                        <li><a href="${pageContext.request.contextPath}/MainController?action=searchCars" class="nav-link active">Xe bán</a></li>
+                        <li><a href="${pageContext.request.contextPath}/brands" class="nav-link">Hãng xe</a></li>
+
                         <c:choose>
                             <c:when test="${not empty user}">
-                            <li class="user-dropdown">
-                                <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=D4AF37&color=0A0E27&bold=true" class="avatar-img">
-                                <div class="dropdown-menu">
-                                    <div class="user-profile-header">
-                                        <span class="welcome-text">Xin chào,</span>
-                                        <span class="user-full-name">${user.fullName}</span>
+                                <li class="user-dropdown">
+                                    <div class="avatar-trigger">
+                                        <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=C5A021&color=fff&bold=true" class="avatar-img" alt="${user.fullName}">
+                                        <i class="fas fa-chevron-down arrow-icon"></i>
                                     </div>
-                                    <a href="cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
-                                    <div class="menu-divider"></div>
-                                    <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
-                                    <div class="menu-divider"></div>
-                                    <a href="${pageContext.request.contextPath}/MainController?action=logout" class="logout-btn"><i class="fas fa-power-off"></i> Đăng xuất</a>
-                                </div>
-                            </li>
-                        </c:when>
-                        <c:otherwise><li><a href="${pageContext.request.contextPath}/login.jsp">Đăng nhập</a></li></c:otherwise>
-                        </c:choose>
-                </ul>
+                                    <div class="dropdown-menu">
+                                        <div class="user-profile-header">
+                                            <span class="welcome-text">Xin chào,</span>
+                                            <span class="user-full-name">${user.fullName}</span>
+                                        </div>
+                                        <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
+                                        <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
+                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar"><i class="fas fa-car"></i> Xe của tôi</a>
+                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist"><i class="fas fa-heart"></i> Xe yêu thích</a>
+                                        <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
+                                        <div class="menu-divider"></div>
+                                        <a href="${pageContext.request.contextPath}/MainController?action=logout" class="logout-btn"><i class="fas fa-power-off"></i> Đăng xuất</a>
+                                    </div>
+                                </li>
+                            </c:when>
+                            <c:otherwise>
+                                <li><a href="${pageContext.request.contextPath}/login.jsp" class="nav-link login-link">Đăng nhập</a></li>
+                                </c:otherwise>
+                            </c:choose>
+                    </ul>
+                </nav>
             </div>
         </header>
 
@@ -648,7 +634,7 @@
                                 <div class="cart-items-box">
                                     <c:forEach items="${cartList}" var="car">
                                         <div class="cart-item">
-                                            <img src="${not empty car.primaryImage ? car.primaryImage : '../assets/images/default-car.jpg'}" alt="${car.brandName} ${car.modelName}" class="item-img">
+                                            <img src="${not empty car.primaryImage ? car.primaryImage : '${pageContext.request.contextPath}/assets/images/default-car.jpg'}" alt="${car.brandName} ${car.modelName}" class="item-img">
                                             <div class="item-info">
                                                 <div class="item-brand">${car.brandName}</div>
                                                 <div class="item-name">${car.modelName}</div>

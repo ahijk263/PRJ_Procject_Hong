@@ -8,6 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Thanh Toán Đơn #${order.orderId} — Luxury Cars</title>
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
             :root {
@@ -35,32 +36,172 @@
             }
 
             /* HEADER */
+            /* ===== HEADER & NAV - đồng bộ với index.jsp ===== */
             .header {
-                background:var(--primary-dark);
-                position:fixed;
-                width:100%;
-                top:0;
-                z-index:1000;
-                border-bottom:1px solid rgba(212,175,55,0.2);
+                background: var(--primary-dark);
+                position: fixed;
+                width: 100%;
+                top: 0;
+                z-index: 1000;
+                border-bottom: 1px solid rgba(212,175,55,0.2);
+                transition: all 0.3s ease;
             }
-            .header .inner {
-                max-width:1300px;
-                margin:0 auto;
-                padding:0 2rem;
-                display:flex;
-                align-items:center;
-                height:72px;
+            .header .container {
+                max-width: 1300px;
+                margin: 0 auto;
+                padding: 0 2rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                height: 72px;
+            }
+            .nav {
+                display: flex;
+                align-items: center;
+                width: 100%;
+                justify-content: space-between;
             }
             .logo {
-                font-family:var(--font-display);
-                font-size:1.6rem;
-                font-weight:900;
-                color:var(--white);
-                text-decoration:none;
-                letter-spacing:2px;
+                font-family: var(--font-display);
+                font-size: 1.6rem;
+                font-weight: 900;
+                color: var(--white);
+                text-decoration: none;
+                letter-spacing: 2px;
             }
             .logo span {
-                color:var(--primary-gold);
+                color: var(--primary-gold);
+            }
+            .nav-menu {
+                display: flex;
+                align-items: center;
+                gap: 2rem;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+            .nav-link {
+                color: rgba(255,255,255,0.7);
+                text-decoration: none;
+                font-size: 0.78rem;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 1.5px;
+                transition: var(--transition);
+                padding: 5px 0;
+                position: relative;
+            }
+            .nav-link:hover, .nav-link.active {
+                color: var(--primary-gold);
+            }
+            .nav-link.active::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 100%;
+                height: 2px;
+                background: var(--primary-gold);
+            }
+            .login-link {
+                border: 1px solid var(--primary-gold);
+                padding: 8px 20px !important;
+                color: var(--primary-gold) !important;
+                border-radius: 2px;
+            }
+            .login-link:hover {
+                background: var(--primary-gold);
+                color: var(--primary-dark) !important;
+            }
+            .user-dropdown {
+                position: relative;
+                padding: 10px 0;
+                cursor: pointer;
+            }
+            .avatar-trigger {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
+            }
+            .avatar-img {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                border: 2px solid var(--primary-gold);
+                object-fit: cover;
+            }
+            .arrow-icon {
+                color: rgba(255,255,255,0.6);
+                font-size: 0.7rem;
+            }
+            .dropdown-menu {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background: white;
+                min-width: 220px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                border-radius: 4px;
+                display: none;
+                flex-direction: column;
+                border-top: 3px solid var(--primary-gold);
+                overflow: hidden;
+                z-index: 1001;
+            }
+            .user-dropdown:hover .dropdown-menu {
+                display: flex;
+            }
+            .user-profile-header {
+                padding: 15px 20px;
+                background: #f9f9f9;
+                border-bottom: 1px solid #eee;
+                display: flex;
+                flex-direction: column;
+            }
+            .welcome-text {
+                font-size: 0.7rem;
+                color: #999;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                display: block;
+            }
+            .user-full-name {
+                font-size: 0.9rem;
+                font-weight: 700;
+                color: #333;
+            }
+            .dropdown-menu a {
+                padding: 12px 20px;
+                color: #444;
+                text-decoration: none;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                transition: 0.2s;
+                text-transform: none;
+            }
+            .dropdown-menu a i {
+                color: #C5A021;
+                width: 18px;
+                text-align: center;
+            }
+            .dropdown-menu a:hover {
+                background: #fdfaf0;
+                color: #C5A021;
+                padding-left: 25px;
+            }
+            .menu-divider {
+                height: 1px;
+                background: #eee;
+                margin: 5px 0;
+            }
+            .logout-btn {
+                color: #dc3545 !important;
+            }
+            .logout-btn:hover {
+                background: #fff5f5 !important;
             }
 
             /* PAGE HEADER */
@@ -68,7 +209,7 @@
                 background:linear-gradient(135deg, var(--primary-dark) 0%, #1a2050 100%);
                 padding:110px 0 50px;
             }
-            .page-header .inner {
+            .page-header .container {
                 max-width:1300px;
                 margin:0 auto;
                 padding:0 2rem;
@@ -661,14 +802,49 @@
         </style>
     </head>
     <body>
-        <header class="header">
-            <div class="inner">
-                <a href="${pageContext.request.contextPath}/MainController" class="logo">LUXURY<span>CARS</span></a>
+        <header class="header" id="header">
+            <div class="container">
+                <nav class="nav">
+                    <a href="${pageContext.request.contextPath}/MainController" class="logo">
+                        LUXURY<span>CARS</span>
+                    </a>
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="${pageContext.request.contextPath}/MainController" class="nav-link">Trang chủ</a></li>
+                        <li><a href="${pageContext.request.contextPath}/MainController?action=searchCars" class="nav-link">Xe bán</a></li>
+                        <li><a href="${pageContext.request.contextPath}/brands" class="nav-link">Hãng xe</a></li>
+                            <c:choose>
+                                <c:when test="${not empty user}">
+                                <li class="user-dropdown">
+                                    <div class="avatar-trigger">
+                                        <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=C5A021&color=fff&bold=true" class="avatar-img" alt="${user.fullName}">
+                                        <i class="fas fa-chevron-down arrow-icon"></i>
+                                    </div>
+                                    <div class="dropdown-menu">
+                                        <div class="user-profile-header">
+                                            <span class="welcome-text">Xin chào,</span>
+                                            <span class="user-full-name">${user.fullName}</span>
+                                        </div>
+                                        <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
+                                        <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
+                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar"><i class="fas fa-car"></i> Xe của tôi</a>
+                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist"><i class="fas fa-heart"></i> Xe yêu thích</a>
+                                        <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
+                                        <div class="menu-divider"></div>
+                                        <a href="${pageContext.request.contextPath}/MainController?action=logout" class="logout-btn"><i class="fas fa-power-off"></i> Đăng xuất</a>
+                                    </div>
+                                </li>
+                            </c:when>
+                            <c:otherwise>
+                                <li><a href="${pageContext.request.contextPath}/login.jsp" class="nav-link login-link">Đăng nhập</a></li>
+                                </c:otherwise>
+                            </c:choose>
+                    </ul>
+                </nav>
             </div>
         </header>
 
         <div class="page-header">
-            <div class="inner">
+            <div class="container">
                 <nav class="breadcrumb-nav">
                     <a href="${pageContext.request.contextPath}/MainController">Trang chủ</a> &nbsp;›&nbsp;
                     <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders">Đơn hàng</a> &nbsp;›&nbsp;
@@ -706,7 +882,7 @@
                     <div class="summary-body">
                         <c:forEach items="${cars}" var="car">
                             <div class="car-row">
-                                <img src="${not empty car.primaryImage ? car.primaryImage : '../assets/images/default-car.jpg'}" class="car-thumb" alt="${car.modelName}">
+                                <img src="${not empty car.primaryImage ? car.primaryImage : '${pageContext.request.contextPath}/assets/images/default-car.jpg'}" class="car-thumb" alt="${car.modelName}">
                                 <div style="flex:1;">
                                     <div class="car-row-brand">${car.brandName}</div>
                                     <div class="car-row-name">${car.modelName}</div>
