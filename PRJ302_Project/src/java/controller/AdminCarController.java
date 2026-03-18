@@ -36,7 +36,7 @@ public class AdminCarController extends HttpServlet {
 
         String action = request.getParameter("action");
         CarDAO carDAO = new CarDAO();
-        String base = request.getContextPath() + "/admin/managecars.jsp";
+        String base = request.getContextPath() + "/admin/cars";
         String redirectUrl = base;
 
         try {
@@ -88,6 +88,6 @@ public class AdminCarController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath() + "/admin/managecars.jsp");
+        response.sendRedirect(request.getContextPath() + "/admin/cars");
     }
 }

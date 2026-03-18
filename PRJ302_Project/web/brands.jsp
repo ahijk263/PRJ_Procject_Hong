@@ -315,8 +315,7 @@
         </style>
     </head>
     <body>
-
-        <!-- HEADER (giống index.jsp) -->
+<!-- HEADER (giống index.jsp) -->
         <header class="header" id="header">
             <div class="container">
                 <nav class="nav">
@@ -348,12 +347,20 @@
                                             <span class="welcome-text">Xin chào,</span>
                                             <span class="user-full-name">${user.fullName}</span>
                                         </div>
+                                        <c:if test="${user.role == 'CUSTOMER'}">
                                         <a href="customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
                                         <a href="customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
                                         <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar"><i class="fas fa-car"></i> Xe của tôi</a>
                                         <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist"><i class="fas fa-heart"></i> Xe yêu thích</a>
                                         <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
                                         <a href="customer/review.jsp"><i class="fas fa-star"></i> Đánh giá của tôi</a>
+                                        </c:if>
+                                        <c:if test="${not empty sessionScope.user && sessionScope.user.role == 'ADMIN'}">
+                                            <a href="${pageContext.request.contextPath}/admin/dashboard" style="color:#D4AF37;font-weight:700;">
+                                                <i class="fas fa-tachometer-alt"></i> Quản trị Dashboard
+                                            </a>
+                                            <div class="menu-divider"></div>
+                                        </c:if>
                                         <div class="menu-divider"></div>
                                         <a href="MainController?action=logout" class="logout-btn"><i class="fas fa-power-off"></i> Đăng xuất</a>
                                     </div>

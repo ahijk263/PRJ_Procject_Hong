@@ -1,6 +1,10 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%-- Nếu vào thẳng index.jsp mà chưa có featuredCars thì redirect qua MainController để load dữ liệu --%>
+<c:if test="${empty featuredCars}">
+    <c:redirect url="MainController"/>
+</c:if>
 <!DOCTYPE html>
 <html lang="vi">
     <head>
@@ -157,7 +161,6 @@
         </style>
     </head>
     <body>
-
         <header class="header" id="header">
             <div class="container">
                 <nav class="nav">
@@ -188,18 +191,26 @@
                                             <span class="welcome-text">Xin chào,</span>
                                             <span class="user-full-name">${user.fullName}</span>
                                         </div>
+                                        <c:if test="${user.role == 'CUSTOMER'}">
+                                            <%-- Nhóm 1: Quản lý tài khoản --%>
+                                            <a href="customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
+                                            <a href="customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
 
-                                        <%-- Nhóm 1: Quản lý tài khoản --%>
-                                        <a href="customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
-                                        <a href="customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
-
-                                        <%-- Nhóm 2: Hoạt động của khách hàng --%>
-                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar">
-                                            <i class="fas fa-car"></i> Xe của tôi
-                                        </a>
-                                        <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist">
-                                            <i class="fas fa-heart"></i> Xe yêu thích
-                                        </a>
+                                            <%-- Nhóm 2: Hoạt động của khách hàng --%>
+                                            <a href="${pageContext.request.contextPath}/CustomerController?action=viewMyCar">
+                                                <i class="fas fa-car"></i> Xe của tôi
+                                            </a>
+                                            <a href="${pageContext.request.contextPath}/CustomerController?action=viewWishlist">
+                                                <i class="fas fa-heart"></i> Xe yêu thích
+                                            </a>
+                                        </c:if>
+                                        <%-- Admin Dashboard link --%>
+                                        <c:if test="${user.role == 'ADMIN'}">
+                                            <div class="menu-divider"></div>
+                                            <a href="${pageContext.request.contextPath}/admin/dashboard" style="color:#D4AF37;font-weight:700;">
+                                                <i class="fas fa-tachometer-alt"></i> Quản trị Dashboard
+                                            </a>
+                                        </c:if>
 
                                         <%-- Nhóm 3: Thoát --%>
                                         <div class="menu-divider"></div>

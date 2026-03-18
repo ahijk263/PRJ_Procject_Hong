@@ -391,7 +391,7 @@
                         </select>
                         <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                         <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-secondary">Reset</a>
-                        <button type="button" class="btn btn-success" onclick="document.getElementById('addModal').classList.add('open')" style="margin-left:auto;">+ Thêm User</button>
+                        
                     </form>
 
                     <!-- TABLE -->
@@ -465,39 +465,6 @@
                         </table>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- MODAL THÊM -->
-        <div class="modal-overlay" id="addModal">
-            <div class="modal">
-                <h3>+ Thêm người dùng mới</h3>
-                <form method="post" action="${pageContext.request.contextPath}/AdminUserController">
-                    <input type="hidden" name="action" value="addUser">
-                    <div class="form-row">
-                        <div class="form-group"><label>Username *</label><input type="text" name="username" required></div>
-                        <div class="form-group"><label>Password *</label><input type="password" name="password" required></div>
-                    </div>
-                    <div class="form-group"><label>Họ tên</label><input type="text" name="fullName"></div>
-                    <div class="form-row">
-                        <div class="form-group"><label>Email</label><input type="email" name="email"></div>
-                        <div class="form-group"><label>Phone</label><input type="text" name="phone"></div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Role</label>
-                            <select name="role"><option value="CUSTOMER">CUSTOMER</option><option value="ADMIN">ADMIN</option></select>
-                        </div>
-                        <div class="form-group">
-                            <label>Trạng thái</label>
-                            <select name="status"><option value="ACTIVE">ACTIVE</option><option value="BLOCKED">BLOCKED</option></select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('addModal').classList.remove('open')">Hủy</button>
-                        <button type="submit" class="btn btn-success">Thêm</button>
-                    </div>
-                </form>
             </div>
         </div>
 

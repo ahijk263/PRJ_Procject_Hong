@@ -35,7 +35,7 @@ public class AdminUserController extends HttpServlet {
 
         String action = request.getParameter("action");
         UserDAO userDAO = new UserDAO();
-        String base = request.getContextPath() + "/admin/manageusers.jsp";
+        String base = request.getContextPath() + "/admin/users";
         String redirectUrl = base;
 
         try {
@@ -133,6 +133,6 @@ public class AdminUserController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath() + "/admin/manageusers.jsp");
+        response.sendRedirect(request.getContextPath() + "/admin/users");
     }
 }

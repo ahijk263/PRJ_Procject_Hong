@@ -638,7 +638,7 @@
         </style>
     </head>
     <body>
-        <header class="header">
+<header class="header">
             <div class="container">
                 <a href="MainController" class="logo">
                     LUXURY<span>CARS</span>
@@ -670,6 +670,7 @@
                                         <span class="welcome-text">Xin chào,</span>
                                         <span class="user-full-name">${user.fullName}</span>
                                     </div>
+                                    <c:if test="${user.role == 'CUSTOMER'}">
                                     <a href="customer/cus_profile_options/cus_view_editProfile.jsp">
                                         <i class="fas fa-user-edit"></i> Hồ sơ cá nhân
                                     </a>
@@ -688,6 +689,13 @@
                                     <a href="CustomerController?action=viewWishlist">
                                         <i class="fas fa-heart"></i> Xe yêu thích
                                     </a>
+                                    </c:if>
+                                    <c:if test="${not empty sessionScope.user && sessionScope.user.role == 'ADMIN'}">
+                                        <a href="${pageContext.request.contextPath}/admin/dashboard" style="color:#D4AF37;font-weight:700;">
+                                            <i class="fas fa-tachometer-alt"></i> Quản trị Dashboard
+                                        </a>
+                                        <div class="menu-divider"></div>
+                                    </c:if>
                                     <div class="menu-divider"></div>
                                     <a href="MainController?action=logout" class="logout-link">
                                         <i class="fas fa-power-off"></i> Đăng xuất

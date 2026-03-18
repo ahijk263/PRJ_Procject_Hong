@@ -404,8 +404,7 @@
         </style>
     </head>
     <body>
-
-        <header class="header" style="background: var(--primary-dark); position: fixed;">
+<header class="header" style="background: var(--primary-dark); position: fixed;">
             <div class="container">
                 <nav class="nav">
                     <a href="MainController?action=home" class="logo">
@@ -442,6 +441,7 @@
                                         </div>
 
                                         <%-- Các link từ file My Profile của bạn --%>
+                                        <c:if test="${user.role == 'CUSTOMER'}">
                                         <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_view_editProfile.jsp"><i class="fas fa-user-edit"></i> Hồ sơ cá nhân</a>
                                         <a href="${pageContext.request.contextPath}/customer/cus_profile_options/cus_changePassword.jsp"><i class="fas fa-key"></i> Đổi mật khẩu</a>
 
@@ -452,6 +452,12 @@
                                             <i class="fas fa-heart"></i> Xe yêu thích
                                         </a>
                                         <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders"><i class="fas fa-receipt"></i> Đơn hàng của tôi</a>
+                                        </c:if>
+                                        <c:if test="${not empty sessionScope.user && sessionScope.user.role == 'ADMIN'}">
+                                            <a href="${pageContext.request.contextPath}/admin/dashboard" style="color:#D4AF37;font-weight:700;">
+                                                <i class="fas fa-tachometer-alt"></i> Quản trị Dashboard
+                                            </a>
+                                        </c:if>
                                         <div class="menu-divider"></div>
 
                                         <a href="${pageContext.request.contextPath}/MainController?action=logout" class="logout-btn">

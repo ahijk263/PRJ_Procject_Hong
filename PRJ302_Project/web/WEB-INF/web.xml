@@ -125,7 +125,6 @@
         </session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>MainController</welcome-file>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
     <servlet>
@@ -137,3 +136,4 @@
         <url-pattern>/brands</url-pattern>
     </servlet-mapping>
 </web-app>
+ 

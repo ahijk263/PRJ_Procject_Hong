@@ -34,7 +34,7 @@ public class AdminReviewController extends HttpServlet {
             return;
         }
 
-        String base = request.getContextPath() + "/admin/managereviews.jsp";
+        String base = request.getContextPath() + "/admin/reviews";
 
         if ("deleteReview".equals(request.getParameter("action"))) {
             try {
@@ -57,6 +57,6 @@ public class AdminReviewController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect(request.getContextPath() + "/admin/managereviews.jsp");
+        response.sendRedirect(request.getContextPath() + "/admin/reviews");
     }
 }
