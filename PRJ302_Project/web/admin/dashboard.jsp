@@ -291,7 +291,6 @@
                         <div class="card-header"><h3>Thao tác nhanh</h3></div>
                         <div class="quick-grid">
                             <a href="${pageContext.request.contextPath}/admin/cars"   class="quick-btn">+ Thêm xe mới</a>
-                            <a href="${pageContext.request.contextPath}/admin/users"  class="quick-btn">+ Thêm người dùng</a>
                             <a href="${pageContext.request.contextPath}/admin/orders?filter=PENDING" class="quick-btn">Đơn chờ (${pendingOrders})</a>
                             <a href="${pageContext.request.contextPath}/admin/reviews" class="quick-btn">Xem đánh giá</a>
                             <a href="${pageContext.request.contextPath}/index.jsp" target="_blank" class="quick-btn">Xem website</a>

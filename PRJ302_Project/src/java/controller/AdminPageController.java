@@ -218,7 +218,7 @@ public class AdminPageController extends HttpServlet {
                 "INNER JOIN Car c ON r.car_id = c.car_id " +
                 "INNER JOIN CarModel cm ON c.model_id = cm.model_id " +
                 "INNER JOIN Brand b ON cm.brand_id = b.brand_id " +
-                "ORDER BY r.review_date DESC");
+                "ORDER BY r.review_id DESC");
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 ReviewDTO r = new ReviewDTO();
