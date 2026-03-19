@@ -638,78 +638,7 @@
         </style>
     </head>
     <body>
-<header class="header">
-            <div class="container">
-                <a href="MainController" class="logo">
-                    LUXURY<span>CARS</span>
-                </a>
-
-                <ul class="header-nav">
-                    <li><a href="MainController">Trang chủ</a></li>
-                    <li><a href="MainController?action=searchCars">Xe bán</a></li>
-                    <li><a href="brands">Thương hiệu</a></li>
-
-                    <%-- Icon giỏ hàng --%>
-                    <li>
-                        <a href="CartController?action=view" class="cart-icon-wrap" title="Giỏ hàng">
-                            <i class="fas fa-shopping-cart"></i>
-                            <c:if test="${cartCount > 0}">
-                                <span class="cart-badge">${cartCount}</span>
-                            </c:if>
-                        </a>
-                    </li>
-
-                    <%-- User dropdown hoặc nút đăng nhập --%>
-                    <c:choose>
-                        <c:when test="${not empty user}">
-                            <li class="user-dropdown">
-                                <img src="https://ui-avatars.com/api/?name=${user.fullName}&background=C5A021&color=fff&bold=true"
-                                     class="avatar-img" alt="${user.fullName}">
-                                <div class="dropdown-menu-custom">
-                                    <div class="dropdown-profile-header">
-                                        <span class="welcome-text">Xin chào,</span>
-                                        <span class="user-full-name">${user.fullName}</span>
-                                    </div>
-                                    <c:if test="${user.role == 'CUSTOMER'}">
-                                    <a href="customer/cus_profile_options/cus_view_editProfile.jsp">
-                                        <i class="fas fa-user-edit"></i> Hồ sơ cá nhân
-                                    </a>
-                                    <div class="menu-divider"></div>
-                                    <a href="OrderController?action=viewMyOrders">
-                                        <i class="fas fa-receipt"></i> Đơn hàng của tôi
-                                    </a>
-                                    <a href="CartController?action=view">
-                                        <i class="fas fa-shopping-cart"></i> Giỏ hàng
-                                        <c:if test="${cartCount > 0}">
-                                            <span style="margin-left:auto;background:var(--luxury-gold);
-                                                         color:#1A1A1A;border-radius:10px;padding:1px 8px;
-                                                         font-size:0.72rem;font-weight:700;">${cartCount}</span>
-                                        </c:if>
-                                    </a>
-                                    <a href="CustomerController?action=viewWishlist">
-                                        <i class="fas fa-heart"></i> Xe yêu thích
-                                    </a>
-                                    </c:if>
-                                    <c:if test="${not empty sessionScope.user && sessionScope.user.role == 'ADMIN'}">
-                                        <a href="${pageContext.request.contextPath}/admin/dashboard" style="color:#D4AF37;font-weight:700;">
-                                            <i class="fas fa-tachometer-alt"></i> Quản trị Dashboard
-                                        </a>
-                                        <div class="menu-divider"></div>
-                                    </c:if>
-                                    <div class="menu-divider"></div>
-                                    <a href="MainController?action=logout" class="logout-link">
-                                        <i class="fas fa-power-off"></i> Đăng xuất
-                                    </a>
-                                </div>
-                            </li>
-                        </c:when>
-                        <c:otherwise>
-                            <li><a href="login.jsp">Đăng nhập</a></li>
-                        </c:otherwise>
-                    </c:choose>
-                </ul>
-            </div>
-        </header>
+<jsp:include page="/_header.jsp"/>
 
         <div class="container py-5 mt-4">
             <div class="row g-5">

@@ -7,71 +7,124 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Thanh Toán Đơn #${order.orderId} — Luxury Cars</title>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
-            :root {
-                --primary-gold:#D4AF37;
-                --primary-dark:#0A0E27;
-                --secondary-gray:#2C2C2C;
-                --luxury-cream:#F9F7F2;
-                --white:#FFFFFF;
-                --text-light:#666666;
-                --font-display:'Playfair Display',serif;
-                --font-body:'Montserrat',sans-serif;
-                --transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
-                --shadow-sm:0 2px 10px rgba(0,0,0,0.07);
-                --shadow-md:0 8px 30px rgba(0,0,0,0.12);
-            }
-            * {
-                box-sizing:border-box;
-                margin:0;
-                padding:0;
-            }
+            /* ===== CHỈ GIỮ CSS ĐẶC THÙ CỦA TRANG NÀY ===== */
             body {
-                font-family:var(--font-body);
-                background:var(--luxury-cream);
-                color:var(--secondary-gray);
+                background: #F9F7F2;
             }
 
-            /* HEADER */
-            .header {
-                background:var(--primary-dark);
-                position:fixed;
-                width:100%;
-                top:0;
-                z-index:1000;
-                border-bottom:1px solid rgba(212,175,55,0.2);
+            /* Dropdown menu trong header */
+            .user-dropdown {
+                position: relative;
+                padding: 10px 0;
+                cursor: pointer;
             }
-            .header .inner {
-                max-width:1300px;
-                margin:0 auto;
-                padding:0 2rem;
-                display:flex;
-                align-items:center;
-                height:72px;
+            .avatar-trigger {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
             }
-            .logo {
-                font-family:var(--font-display);
-                font-size:1.6rem;
-                font-weight:900;
-                color:var(--white);
-                text-decoration:none;
-                letter-spacing:2px;
+            .avatar-img {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                border: 2px solid var(--primary-gold);
+                object-fit: cover;
             }
-            .logo span {
-                color:var(--primary-gold);
+            .arrow-icon {
+                color: var(--text-light);
+                font-size: 0.7rem;
+            }
+            .dropdown-menu {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background: white;
+                min-width: 220px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                border-radius: 4px;
+                display: none;
+                flex-direction: column;
+                border-top: 3px solid var(--primary-gold);
+                overflow: hidden;
+                z-index: 1001;
+            }
+            .user-dropdown:hover .dropdown-menu {
+                display: flex;
+            }
+            .user-profile-header {
+                padding: 15px 20px;
+                background: #f9f9f9;
+                border-bottom: 1px solid #eee;
+                display: flex;
+                flex-direction: column;
+            }
+            .welcome-text {
+                font-size: 0.7rem;
+                color: #999;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                display: block;
+            }
+            .user-full-name {
+                font-size: 0.9rem;
+                font-weight: 700;
+                color: #333;
+            }
+            .dropdown-menu a {
+                padding: 12px 20px;
+                color: #444;
+                text-decoration: none;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                transition: 0.2s;
+                text-transform: none;
+            }
+            .dropdown-menu a i {
+                color: var(--primary-gold);
+                width: 18px;
+                text-align: center;
+            }
+            .dropdown-menu a:hover {
+                background: #fdfaf0;
+                color: var(--primary-gold);
+                padding-left: 25px;
+            }
+            .menu-divider {
+                height: 1px;
+                background: #eee;
+                margin: 5px 0;
+            }
+            .logout-btn {
+                color: #dc3545 !important;
+            }
+            .logout-btn:hover {
+                background: #fff5f5 !important;
             }
 
             /* PAGE HEADER */
             .page-header {
                 background:linear-gradient(135deg, var(--primary-dark) 0%, #1a2050 100%);
                 padding:110px 0 50px;
+                position:relative;
+                overflow:hidden;
             }
-            .page-header .inner {
-                max-width:1300px;
+            .page-header::before {
+                content:'';
+                position:absolute;
+                inset:0;
+                background:repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(212,175,55,0.02) 40px, rgba(212,175,55,0.02) 80px);
+            }
+            .page-header .container {
+                max-width:1400px;
                 margin:0 auto;
                 padding:0 2rem;
+                position:relative;
             }
             .breadcrumb-nav {
                 color:rgba(255,255,255,0.45);
@@ -155,11 +208,6 @@
             /* LAYOUT */
             .payment-section {
                 padding:50px 0 90px;
-            }
-            .container {
-                max-width:820px;
-                margin:0 auto;
-                padding:0 2rem;
             }
 
             /* ORDER SUMMARY CARD */
@@ -433,7 +481,7 @@
                 font-size:0.8rem;
                 font-weight:700;
                 color:#b8860b;
-                margin-bottom:20px;
+                margin:12px auto 20px;
             }
             .qr-timer i {
                 color:var(--primary-gold);
@@ -661,14 +709,10 @@
         </style>
     </head>
     <body>
-        <header class="header">
-            <div class="inner">
-                <a href="${pageContext.request.contextPath}/MainController" class="logo">LUXURY<span>CARS</span></a>
-            </div>
-        </header>
+        <jsp:include page="/_header.jsp"/>
 
         <div class="page-header">
-            <div class="inner">
+            <div class="container">
                 <nav class="breadcrumb-nav">
                     <a href="${pageContext.request.contextPath}/MainController">Trang chủ</a> &nbsp;›&nbsp;
                     <a href="${pageContext.request.contextPath}/OrderController?action=viewMyOrders">Đơn hàng</a> &nbsp;›&nbsp;
@@ -706,7 +750,7 @@
                     <div class="summary-body">
                         <c:forEach items="${cars}" var="car">
                             <div class="car-row">
-                                <img src="${not empty car.primaryImage ? car.primaryImage : '../assets/images/default-car.jpg'}" class="car-thumb" alt="${car.modelName}">
+                                <img src="${not empty car.primaryImage ? pageContext.request.contextPath.concat('/').concat(car.primaryImage) : pageContext.request.contextPath.concat('/assets/images/default-car.jpg')}" class="car-thumb" alt="${car.modelName}">
                                 <div style="flex:1;">
                                     <div class="car-row-brand">${car.brandName}</div>
                                     <div class="car-row-name">${car.modelName}</div>
@@ -798,13 +842,14 @@
                             <div class="info-row"><span class="lbl">Nội dung CK</span><span class="val">DH${order.orderId}</span></div>
                         </div>
                         <div class="qr-wrapper">
-                            <div class="qr-timer" id="qrTimer">
-                                <i class="fas fa-clock"></i>
-                                <span>QR hết hạn sau: <strong id="timerDisplay">14:59</strong></span>
-                            </div>
                             <div class="qr-box">
                                 <img src="https://img.vietqr.io/image/VCB-1031623227-compact2.png?amount=${order.totalPrice}&addInfo=DH${order.orderId}&accountName=LUXURY%20CARS%20VN"
                                      alt="QR Thanh Toán" style="width:210px;height:auto;">
+                            </div>
+                            <br/>
+                            <div class="qr-timer" id="qrTimer">
+                                <i class="fas fa-clock"></i>
+                                <span>QR hết hạn sau: <strong id="timerDisplay">14:59</strong></span>
                             </div>
                             <div class="qr-amount"><fmt:formatNumber value="${order.totalPrice}" type="number" groupingUsed="true"/> VNĐ</div>
                             <div class="qr-desc">Quét mã QR bằng ứng dụng ngân hàng hoặc ví điện tử</div>

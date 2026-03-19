@@ -7,89 +7,124 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Đặt Hàng — Luxury Cars</title>
-        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/style.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>
-            :root {
-                --primary-gold:#D4AF37;
-                --primary-dark:#0A0E27;
-                --secondary-gray:#2C2C2C;
-                --luxury-cream:#F9F7F2;
-                --white:#FFFFFF;
-                --text-light:#666666;
-                --font-display:'Playfair Display',serif;
-                --font-body:'Montserrat',sans-serif;
-                --transition:all 0.4s cubic-bezier(0.4,0,0.2,1);
-                --shadow-sm:0 2px 10px rgba(0,0,0,0.07);
-                --shadow-md:0 8px 30px rgba(0,0,0,0.12);
-            }
-            * {
-                box-sizing:border-box;
-                margin:0;
-                padding:0;
-            }
+            /* ===== CHỈ GIỮ CSS ĐẶC THÙ CỦA TRANG NÀY ===== */
+            /* body override — trang này dùng luxury-cream thay vì white */
             body {
-                font-family:var(--font-body);
-                background:var(--luxury-cream);
-                color:var(--secondary-gray);
+                background: #F9F7F2;
             }
 
-            .header {
-                background:var(--primary-dark);
-                position:fixed;
-                width:100%;
-                top:0;
-                z-index:1000;
-                border-bottom:1px solid rgba(212,175,55,0.2);
+            /* Dropdown menu trong header */
+            .user-dropdown {
+                position: relative;
+                padding: 10px 0;
+                cursor: pointer;
             }
-            .header .container {
-                max-width:1300px;
-                margin:0 auto;
-                padding:0 2rem;
-                display:flex;
-                align-items:center;
-                height:72px;
+            .avatar-trigger {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                cursor: pointer;
             }
-            .logo {
-                font-family:var(--font-display);
-                font-size:1.6rem;
-                font-weight:900;
-                color:var(--white);
-                text-decoration:none;
-                letter-spacing:2px;
+            .avatar-img {
+                width: 38px;
+                height: 38px;
+                border-radius: 50%;
+                border: 2px solid var(--primary-gold);
+                object-fit: cover;
             }
-            .logo span {
-                color:var(--primary-gold);
+            .arrow-icon {
+                color: var(--text-light);
+                font-size: 0.7rem;
             }
-
-            .page-header {
-                background:linear-gradient(135deg, var(--primary-dark) 0%, #1a2050 100%);
-                padding:110px 0 50px;
+            .dropdown-menu {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background: white;
+                min-width: 220px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                border-radius: 4px;
+                display: none;
+                flex-direction: column;
+                border-top: 3px solid var(--primary-gold);
+                overflow: hidden;
+                z-index: 1001;
             }
-            .page-header .container {
-                max-width:1300px;
-                margin:0 auto;
-                padding:0 2rem;
+            .user-dropdown:hover .dropdown-menu {
+                display: flex;
             }
-            .breadcrumb-nav {
-                color:rgba(255,255,255,0.45);
-                font-size:0.78rem;
-                margin-bottom:12px;
+            .user-profile-header {
+                padding: 15px 20px;
+                background: #f9f9f9;
+                border-bottom: 1px solid #eee;
+                display: flex;
+                flex-direction: column;
             }
-            .breadcrumb-nav a {
-                color:var(--primary-gold);
-                text-decoration:none;
+            .welcome-text {
+                font-size: 0.7rem;
+                color: #999;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                display: block;
             }
-            .page-header h1 {
-                font-family:var(--font-display);
-                font-size:clamp(2rem,4vw,2.8rem);
-                color:var(--white);
-                font-weight:900;
+            .user-full-name {
+                font-size: 0.9rem;
+                font-weight: 700;
+                color: #333;
             }
-            .page-header p {
-                color:rgba(255,255,255,0.45);
-                margin-top:8px;
-                font-size:0.88rem;
+            .dropdown-menu a {
+                padding: 12px 20px;
+                color: #444;
+                text-decoration: none;
+                font-size: 0.85rem;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                transition: 0.2s;
+                text-transform: none;
+            }
+            .dropdown-menu a i {
+                color: var(--primary-gold);
+                width: 18px;
+                text-align: center;
+            }
+            .dropdown-menu a:hover {
+                background: #fdfaf0;
+                color: var(--primary-gold);
+                padding-left: 25px;
+            }
+            .menu-divider {
+                height: 1px;
+                background: #eee;
+                margin: 5px 0;
+            }
+            .logout-btn {
+                color: #dc3545 !important;
+            }
+            .logout-btn:hover {
+                background: #fff5f5 !important;
+            }
+            /* Cart icon badge */
+            .cart-icon {
+                position: relative;
+            }
+            .cart-badge {
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                background: var(--primary-gold);
+                color: var(--primary-dark);
+                border-radius: 50%;
+                width: 18px;
+                height: 18px;
+                font-size: 0.65rem;
+                font-weight: 700;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             /* STEPS */
@@ -159,7 +194,7 @@
                 padding:50px 0 90px;
             }
             .container {
-                max-width:1300px;
+                max-width:1400px;
                 margin:0 auto;
                 padding:0 2rem;
             }
@@ -464,11 +499,7 @@
         </style>
     </head>
     <body>
-        <header class="header">
-            <div class="container">
-                <a href="${pageContext.request.contextPath}/MainController" class="logo">LUXURY<span>CARS</span></a>
-            </div>
-        </header>
+        <jsp:include page="/_header.jsp"/>
 
         <div class="page-header">
             <div class="container">
@@ -562,7 +593,7 @@
                         <div class="summary-body">
                             <c:forEach items="${cart}" var="car">
                                 <div class="order-item">
-                                    <img src="${not empty car.primaryImage ? car.primaryImage : '../assets/images/default-car.jpg'}" alt="${car.modelName}" class="order-item-img">
+                                    <img src="${not empty car.primaryImage ? pageContext.request.contextPath.concat('/').concat(car.primaryImage) : pageContext.request.contextPath.concat('/assets/images/default-car.jpg')}" alt="${car.modelName}" class="order-item-img">
                                     <div style="flex:1;">
                                         <div class="order-item-brand">${car.brandName}</div>
                                         <div class="order-item-name">${car.modelName}</div>
