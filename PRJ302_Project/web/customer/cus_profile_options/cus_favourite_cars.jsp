@@ -213,7 +213,7 @@
                                     </a>
 
                                     <div class="card-img-container">
-                                        <img src="${item.carDetail.primaryImage}" class="card-img-top w-100 h-100" alt="Car Image">
+                                        <img src="${not empty item.carDetail.primaryImage ? pageContext.request.contextPath.concat('/').concat(item.carDetail.primaryImage) : pageContext.request.contextPath.concat('/assets/images/default-car.jpg')}" class="card-img-top w-100 h-100" alt="Car Image">
                                     </div>
 
                                     <div class="card-body">

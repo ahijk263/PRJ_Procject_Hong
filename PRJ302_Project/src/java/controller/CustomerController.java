@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package controller;
-
+ 
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -17,26 +17,26 @@ import model.OrderDTO;
 import model.UserDTO;
 import model.WishlistDAO;
 import model.WishlistDTO;
-
+ 
 /**
  *
  * @author Lenove
  */
 @WebServlet(name = "CustomerController", urlPatterns = {"/CustomerController"})
 public class CustomerController extends HttpServlet {
-
+ 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
-
+ 
         if (session == null || session.getAttribute("user") == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
-
+ 
         String action = request.getParameter("action");
-
+ 
         if ("addFav".equals(action)) {
             doAddFavourite(request, response);
         } else if ("viewWishlist".equals(action)) { // THÊM MỚI: Xem trang yêu thích
@@ -49,103 +49,118 @@ public class CustomerController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/index.jsp");
         }
     }
-
+ 
     private void doViewWishlist(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute("user");
-
+ 
         try {
             WishlistDAO dao = new WishlistDAO();
             // Lấy danh sách WishlistDTO (đã bao gồm CarFullDetailDTO bên trong)
             List<WishlistDTO> wishlistData = dao.getWishlistByUserId(user.getUserId());
-
+ 
             request.setAttribute("wishlistData", wishlistData);
             // Cập nhật lại số lượng badge trên header cho chính xác
             session.setAttribute("favCount", wishlistData.size());
-
+ 
         } catch (Exception e) {
             log("Error at doViewWishlist: " + e.toString());
         }
-
+ 
         request.getRequestDispatcher("/customer/cus_profile_options/cus_favourite_cars.jsp").forward(request, response);
     }
-
+ 
     // ===== XÓA KHỎI YÊU THÍCH (Xóa trong DB) =====
     private void doRemoveFav(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute("user");
         int carId = Integer.parseInt(request.getParameter("carId"));
-
+ 
         try {
             WishlistDAO dao = new WishlistDAO();
             dao.removeFromWishlist(user.getUserId(), carId);
-
+ 
             // Sau khi xóa, lấy lại danh sách mới để cập nhật số lượng badge
             int newCount = dao.getWishlistByUserId(user.getUserId()).size();
             session.setAttribute("favCount", newCount);
         } catch (Exception e) {
             log("Error at doRemoveFav: " + e.toString());
         }
-
-        response.sendRedirect("CustomerController?action=viewWishlist");
+ 
+        // Cập nhật lại favIds trong session sau khi xóa
+        try {
+            WishlistDAO refreshDao = new WishlistDAO();
+            List<Integer> favIds = refreshDao.getFavoriteCarIds(user.getUserId());
+            session.setAttribute("favIds", favIds);
+            session.setAttribute("favCount", favIds.size());
+        } catch (Exception ignored) {}
+ 
+        // Quay lại trang trước nếu có, không thì về wishlist
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.isEmpty()
+                && !referer.contains("action=viewWishlist")) {
+            response.sendRedirect(referer);
+        } else {
+            response.sendRedirect(request.getContextPath() + "/CustomerController?action=viewWishlist");
+        }
     }
-
+ 
     // ===== THÊM VÀO YÊU THÍCH (Lưu vào DB) =====
     private void doAddFavourite(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute("user");
         int carId = Integer.parseInt(request.getParameter("carId"));
-
+ 
         try {
             WishlistDAO dao = new WishlistDAO();
             // 1. Lưu vào DB
             dao.addToWishlist(user.getUserId(), carId);
-
+ 
             // 2. Lấy lại list ID mới nhất (Chỉ lấy list số nguyên cho nhẹ)
             List<Integer> favIds = dao.getFavoriteCarIds(user.getUserId());
-
+ 
             // 3. Đè lên Session cũ để JSP thấy dữ liệu mới -> Tim sẽ đỏ
             session.setAttribute("favIds", favIds);
             session.setAttribute("favCount", favIds.size());
-
+ 
         } catch (Exception e) {
             log("Error at doAddFavourite: " + e.toString());
         }
-
+ 
         // Quay lại trang trước đó
         response.sendRedirect(request.getHeader("Referer"));
     }
-
+ 
     // ===== HIỂN THỊ DANH SÁCH XE ĐÃ MUA =====
     private void doViewMyCar(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute("user");
-
+ 
         try {
             OrderDAO dao = new OrderDAO();
             // Đảm bảo getUserId() không trả về null hoặc 0 không hợp lệ
             List<OrderDTO> list = dao.getMyPurchasedCars(user.getUserId());
-
+ 
             request.setAttribute("myCars", list);
         } catch (Exception e) {
             log("Error at doViewMyCar: " + e.toString());
             // Có thể set một thông báo lỗi để JSP hiển thị
             request.setAttribute("ERROR", "Không thể tải danh sách xe. Vui lòng thử lại!");
         }
-
+ 
         request.getRequestDispatcher("/customer/cus_profile_options/cus_cars.jsp").forward(request, response);
     }
-
+ 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
+ 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

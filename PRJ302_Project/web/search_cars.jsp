@@ -496,9 +496,9 @@
                                             </c:forEach>
 
                                             <%-- 2. Thẻ <a> phải nằm TRỰC TIẾP ở đây, không bọc thêm div nào hết --%>
-                                            <a href="${pageContext.request.contextPath}/CustomerController?action=addFav&carId=${item.car.carId}" 
+                                            <a href="${pageContext.request.contextPath}/CustomerController?action=${isFav ? 'removeFav' : 'addFav'}&carId=${item.car.carId}" 
                                                class="wishlist-icon ${isFav ? 'active' : ''}"
-                                               title="Yêu thích"
+                                               title="${isFav ? 'Bỏ yêu thích' : 'Thêm yêu thích'}"
                                                onclick="event.stopPropagation();">
                                                 <i class="${isFav ? 'fas' : 'far'} fa-heart"></i>
                                             </a>

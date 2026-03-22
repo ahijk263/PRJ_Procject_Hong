@@ -771,10 +771,10 @@
                                 </c:otherwise>
                             </c:choose>
 
-                            <a href="CustomerController?action=addFav&carId=${CAR_DETAIL.car.carId}"
+                            <a href="CustomerController?action=${isFav ? 'removeFav' : 'addFav'}&carId=${CAR_DETAIL.car.carId}"
                                class="btn-wishlist-detail w-100 mb-3 ${isFav ? 'active' : ''}">
                                 <i class="${isFav ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
-                                <span>${isFav ? 'Đã lưu vào danh sách' : 'Thêm vào yêu thích'}</span>
+                                <span>${isFav ? 'Bỏ khỏi yêu thích' : 'Thêm vào yêu thích'}</span>
                             </a>
                             <div class="text-center mt-3">
                                 <a href="tel:19001234" class="text-decoration-none text-muted small">
